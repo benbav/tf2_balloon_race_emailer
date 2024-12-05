@@ -1,7 +1,8 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import smtplib
 import requests
+import logging
+import smtplib
 import logging
 import dotenv
 import bs4
@@ -59,28 +60,39 @@ def send_email(message):
         # logging.info("Email sent successfully.")
         print("email sent")
     except Exception as e:
-        pass
+        logging.error('error sending email: ', e)
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+log_file_path = os.path.join(script_dir, 'tf2_balloon_log.txt')
+
+# Configure logging
+logging.basicConfig(
+    filename=log_file_path,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 def main():
 
+    
     dotenv.load_dotenv()
     r = scrape_battlemetrics()
 
     # if any values are greater than 0, send email
     if any(value > 0 for value in r.values()):
+        logging.info(f'found people playing balloong race - sending email')
+        logging.info(f'{max_server} : {r[max_server]}')
         # server with max players
         max_server = max(r, key=r.get)
-
-        print("yes")
-        print(max_server)
-        print(r[max_server])
 
         # send email
         message = f"{max_server} has {r[max_server]} players"
         send_email(message)
         
     else:
-        print("no")
+        logging.info('no one playing balloon race :(')
+        
 
 if __name__ == "__main__":
     main()
