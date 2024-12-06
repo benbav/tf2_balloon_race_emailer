@@ -1,15 +1,14 @@
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from datetime import datetime
 import requests
 import logging
 import smtplib
 import dotenv
 import os
-from datetime import datetime
 
 # Email send limit per day
 EMAIL_SEND_LIMIT = 5
-EMAIL_COUNT_FILE = 'email_count.txt'
+EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
 
 def get_server_list():
     api_key = os.getenv('steam_api_key')
