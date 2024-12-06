@@ -5,8 +5,6 @@ import logging
 import smtplib
 import logging
 import dotenv
-import bs4
-import json
 import os
 
 # scrape website to find when people are playing tf2 balloon race
@@ -14,28 +12,22 @@ import os
 
 def scrape_battlemetrics():
 
-    url = 'https://www.battlemetrics.com/servers/tf2?q=balloon&sort=players'
+    api_key = os.getenv('steam_api_key')
+
+    url = f'https://api.steampowered.com/IGameServersService/GetServerList/v1/?key={api_key}&limit=50&filter=\\appid\\440\\map\\balloon_race_v2b'
 
     r = requests.get(url)
-    r.status_code
 
-    soup = bs4.BeautifulSoup(r.text, 'html.parser')
-
-    # Extract the JSON data
-    script_tag = soup.find('script', id='storeBootstrap')
-    json_data = json.loads(script_tag.string)
-
-    # Navigate to the servers information
-    servers = json_data['state']['servers']['servers']
+    servers = r.json()['response']['servers']
 
     output_dict = {}
 
-    for server_id, server_info in servers.items():
+    # Iterate over each server and extract relevant information
+    for server_info in servers:
         name = server_info['name']
         players = server_info['players']
         output_dict[name] = players
-    
-    return output_dict
+        return output_dict
 
 
 def send_email(message):
@@ -77,17 +69,18 @@ def main():
 
     
     dotenv.load_dotenv()
-    r = scrape_battlemetrics()
+    output_dict = scrape_battlemetrics()
 
-    # if any values are greater than 0, send email
-    if any(value > 0 for value in r.values()):
-        logging.info(f'found people playing balloong race - sending email')
-        logging.info(f'{max_server} : {r[max_server]}')
-        # server with max players
-        max_server = max(r, key=r.get)
-
-        # send email
-        message = f"{max_server} has {r[max_server]} players"
+    # if any server has more than 0 players send email
+    if any(value > 0 for value in output_dict.values()):
+        logging.info('Found people playing Balloon Race - sending email')
+        
+        # Find the server with the maximum players
+        max_server = max(output_dict, key=output_dict.get)
+        logging.info(f'{max_server} : {output_dict[max_server]}')
+        
+        # Send email
+        message = f"PEOPLE ON BALOON RACE - {max_server[:30]}... has {output_dict[max_server]} players"
         send_email(message)
         
     else:
