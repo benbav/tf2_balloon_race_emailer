@@ -102,3 +102,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# can maybe graph it and put it on the readme on github once log is robust enough
