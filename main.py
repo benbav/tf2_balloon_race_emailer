@@ -7,7 +7,7 @@ import dotenv
 import os
 
 # Email send limit per day
-EMAIL_SEND_LIMIT = 5
+EMAIL_SEND_LIMIT = 30
 EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
 
 def get_server_list():
@@ -81,25 +81,22 @@ def main():
     # Retrieve the current email send count
     count, _ = get_email_count()
 
-    if count >= EMAIL_SEND_LIMIT:
-        logging.info(f"Email limit of {EMAIL_SEND_LIMIT} reached for today. No email will be sent.")
-        return
-
+    # Get the server list and check for players
     output_dict = get_server_list()
-
     if any(value > 0 for value in output_dict.values()):
-        logging.info('Found people playing Balloon Race - sending email')
-
-        # Find the server with the maximum players
+        # Log server activity
         max_server = max(output_dict, key=output_dict.get)
+        logging.info(f'Found people playing Balloon Race')
         logging.info(f'{max_server} : {output_dict[max_server]}')
 
-        # Send email
-        message = f"PEOPLE ON BALLOON RACE - {max_server[:30]}... has {output_dict[max_server]} players"
-        send_email(message)
-
-        # Update the email send count
-        update_email_count(count + 1)
+        # Check if we can send more emails
+        if count < EMAIL_SEND_LIMIT:
+            logging.info('Sending email')
+            message = f"PEOPLE ON BALLOON RACE - {max_server[:30]}... has {output_dict[max_server]} players"
+            send_email(message)
+            update_email_count(count + 1)
+        else:
+            logging.info(f"Email limit of {EMAIL_SEND_LIMIT} reached for today. No email will be sent.")
     else:
         logging.info('No one playing balloon race :(')
 
