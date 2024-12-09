@@ -7,7 +7,7 @@ import dotenv
 import os
 
 # Email send limit per day
-EMAIL_SEND_LIMIT = 30
+EMAIL_SEND_LIMIT = 10
 EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
 
 def get_server_list():
