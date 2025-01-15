@@ -58,6 +58,7 @@ for text in plt.gca().texts:
 plt.title('Max Balloon Race Online Players by Day of Week and Hour')
 plt.ylabel('Hour of Day')
 plt.xlabel('Day of Week')
+plt.tight_layout()
 
 # save
 plt.savefig(f"{output_folder}/heatmap.png")
@@ -83,8 +84,10 @@ plt.ylabel('People Online')
 plt.xlabel('Server Name')
 
 plt.title('Max Balloon Race Online Players by Server')
+plt.tight_layout()
 
 plt.savefig(f"{output_folder}/top_servers.png")
+
 
 
 
