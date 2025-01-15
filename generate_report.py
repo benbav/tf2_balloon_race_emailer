@@ -88,7 +88,42 @@ plt.tight_layout()
 
 plt.savefig(f"{output_folder}/heatmap.png", dpi=300, bbox_inches='tight')
 
+monthly_avg = (
+    graph_df.groupby('month')['online_players'].max()
+).reset_index(name='online_players')
 
+
+plot = monthly_avg.plot(
+    x='month', y='online_players', kind='bar'
+)
+plt.xticks(rotation=45)
+plt.ylabel('People Online') 
+plt.xlabel('CST Hour of Day') 
+
+max_value = monthly_avg['online_players'].max()
+# plt.yticks(np.arange(0, np.ceil(max_value) + 1, 1))
+plt.title('Max People On Balloon Race by Month')
+plt.savefig(f"{output_folder}/monthly_avg.png", dpi=300, bbox_inches='tight')
+
+
+plot = (
+    graph_df.query('online_players > 0')
+    .groupby(['server_name'])['online_players']
+    .max()
+    .sort_values(ascending=False)  # Sort values in descending order (largest at the top)
+    .reset_index()
+    .head(10)
+    .iloc[::-1]  # Reverse the order to have the largest bar on top
+    .plot(
+        x='server_name', y='online_players', kind='bar'
+    )
+)
+plt.xticks(rotation=90)
+plt.ylabel('People Online') 
+plt.xlabel('Server Name')
+
+plt.title('Max Balloon Race Online Players by Server')
+plt.savefig('charts/top_servers.png', dpi=300, bbox_inches='tight')
 
 
 # save the image of the charts and tables we want
