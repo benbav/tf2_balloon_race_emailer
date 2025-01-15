@@ -127,7 +127,7 @@ if __name__ == "__main__":
     push_to_github()
 
 
-# cron job runs this "main" script everyday which 
+# cron job runs this "generate_reprort.py" script everyday which 
 # 1. pushes to github the latest data at the end of the day with the updated README.md
 
 
