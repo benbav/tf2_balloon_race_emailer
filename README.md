@@ -3,3 +3,5 @@
 
 
 ![Heatmap](charts/heatmap.png)
+
+![Top Servers](charts/top_servers.png)

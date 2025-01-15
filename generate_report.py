@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import os
 
-
 output_folder = "charts"
 os.makedirs(output_folder, exist_ok=True)
 
@@ -63,14 +62,43 @@ plt.xlabel('Day of Week')
 # save
 plt.savefig(f"{output_folder}/heatmap.png")
 
+# list top servers as well and what time and day people play on them
+
+# bar graph of top server names by player count
+
+plot = (
+    graph_df.query('online_players > 0')
+    .groupby(['server_name'])['online_players']
+    .max()
+    .sort_values(ascending=False)  # Sort values in descending order (largest at the top)
+    .reset_index()
+    .head(10)
+    .iloc[::-1]  # Reverse the order to have the largest bar on top
+    .plot(
+        x='server_name', y='online_players', kind='barh'
+    )
+)
+plt.xticks(rotation=90)
+plt.ylabel('People Online') 
+plt.xlabel('Server Name')
+
+plt.title('Max Balloon Race Online Players by Server')
+
+plt.savefig(f"{output_folder}/top_servers.png")
+
+
 
 # save the image of the charts and tables we want
 
 
 
+def push_to_github():
+    os.system("git add .")
+    os.system("git commit -m 'update'")
+    os.system("git push origin main")
 
-# create README.md file with the updated images
 
+push_to_github()
 
 # cron job runs this "main" script everyday which 
 # 1. pushes to github the latest data at the end of the day with the updated README.md
