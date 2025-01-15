@@ -86,7 +86,7 @@ plt.xlabel('Server Name')
 plt.title('Max Balloon Race Online Players by Server')
 plt.tight_layout()
 
-plt.savefig(f"{output_folder}/top_servers.png")
+plt.savefig(f"{output_folder}/heatmap.png", dpi=300, bbox_inches='tight')
 
 
 
