@@ -127,4 +127,3 @@ if __name__ == "__main__":
     generate_monthly_avg_plot(graph_df)
     push_to_github()
 
-
