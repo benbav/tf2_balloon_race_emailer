@@ -6,6 +6,7 @@ import os
 
 # Define output folder
 OUTPUT_FOLDER = "charts"
+LOG_PATH = '/home/benbav/Desktop/tf2_balloon_race_emailer/tf2_balloon_log.txt'
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # Load and preprocess data
@@ -120,7 +121,7 @@ def push_to_github():
 
 # Main workflow
 if __name__ == "__main__":
-    graph_df = load_and_preprocess_data('tf2_balloon_log.txt')
+    graph_df = load_and_preprocess_data(LOG_PATH)
     generate_heatmap(graph_df)
     generate_top_servers_plot(graph_df)
     generate_monthly_avg_plot(graph_df)
