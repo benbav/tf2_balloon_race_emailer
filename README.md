@@ -1,8 +1,7 @@
 ### When Are People On Balloon Race?
-#### No more randomly checking and hoping you get lucky - here is the cold hard data
+#### No more randomly checking and hoping people are on - here is the cold hard data
 
 ##### updates everyday unless something goes wrong with the wifi
-
 
 ![Heatmap](charts/heatmap.png)
 
