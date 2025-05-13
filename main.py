@@ -7,7 +7,7 @@ import dotenv
 import os
 
 # Email send limit per day
-EMAIL_SEND_LIMIT = 0
+EMAIL_SEND_LIMIT = 2
 EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
 
 def get_server_list():
@@ -18,6 +18,7 @@ def get_server_list():
     return {server['name']: server['players'] for server in servers}
 
 def send_email(message):
+    to_emails = os.getenv("to_email").split(",")
     try:
         # Create an SMTP connection
         server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -30,9 +31,10 @@ def send_email(message):
 
         msg = MIMEMultipart()
         msg["Subject"] = message
-        server.sendmail(email_username, os.getenv("to_email"), msg.as_string())
+        for to_email in to_emails:
+            server.sendmail(email_username, to_email, msg.as_string())
 
-        # Close the SMTP connection
+        # # Close the SMTP connection
         server.quit()
 
         print("email sent")
@@ -104,4 +106,5 @@ if __name__ == "__main__":
     main()
 
 
-# can maybe graph it and put it on the readme on github once log is robust enough
+# cron to run every 5 minutes - can also integrate with fishstick bot?
+# 
