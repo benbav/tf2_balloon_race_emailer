@@ -7,8 +7,9 @@ import dotenv
 import os
 
 # Email send limit per day
-EMAIL_SEND_LIMIT = 2
+EMAIL_SEND_LIMIT = 4
 EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
+MIN_PLAYER_THRESHOLD = 10
 
 def get_server_list():
     api_key = os.getenv('steam_api_key')
@@ -92,9 +93,9 @@ def main():
         logging.info(f'{max_server} : {output_dict[max_server]}')
 
         # Check if we can send more emails
-        if count < EMAIL_SEND_LIMIT:
+        if count < EMAIL_SEND_LIMIT and output_dict[max_server] > MIN_PLAYER_THRESHOLD:
             logging.info('Sending email')
-            message = f"PEOPLE ON BALLOON RACE - {max_server[:30]}... has {output_dict[max_server]} players"
+            message = f"PEOPLE ON BALLOON RACE: {max_server[:30]}... has {output_dict[max_server]} players"
             send_email(message)
             update_email_count(count + 1)
         else:
