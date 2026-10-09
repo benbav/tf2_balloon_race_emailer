@@ -6,4 +6,5 @@ email_count.txt
 email_count.txt
 analysis.ipynb
 test.py
-cron.log__pycache__/
+cron.log
+__pycache__/
