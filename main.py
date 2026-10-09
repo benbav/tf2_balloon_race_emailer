@@ -16,7 +16,11 @@ def get_server_list():
     url = f'https://api.steampowered.com/IGameServersService/GetServerList/v1/?key={api_key}&limit=50&filter=\\appid\\440\\map\\balloon_race_v2b'
     r = requests.get(url)
     servers = r.json()['response'].get('servers', [])
-    return {server['name']: server['players'] for server in servers}
+    # Human players only - some idle servers fill up with bots
+    return [
+        {'addr': s['addr'], 'name': s['name'], 'players': s['players'] - s.get('bots', 0)}
+        for s in servers
+    ]
 
 def send_email(message):
     to_emails = os.getenv("to_email").split(",")
@@ -85,12 +89,17 @@ def main():
     count, _ = get_email_count()
 
     # Get the server list and check for players
-    output_dict = get_server_list()
+    servers = get_server_list()
+    output_dict = {s['name']: s['players'] for s in servers}
     if any(value > 0 for value in output_dict.values()):
         # Log server activity
         max_server = max(output_dict, key=output_dict.get)
         logging.info(f'Found people playing Balloon Race')
         logging.info(f'{max_server} : {output_dict[max_server]}')
+        # Log every active server so the report can rank them
+        for s in servers:
+            if s['players'] > 0:
+                logging.info(f"SERVER {s['addr']} | {s['name']} : {s['players']}")
 
         # Check if we can send more emails
         if count < EMAIL_SEND_LIMIT and output_dict[max_server] > MIN_PLAYER_THRESHOLD:

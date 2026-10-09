@@ -5,7 +5,17 @@
 
 ![Best Time](charts/best_time.png)
 
+![Top 5 Times](charts/top_windows.png)
+
 ![Heatmap](charts/heatmap.png)
+
+![Busy Lobby Heatmap](charts/busy_heatmap.png)
+
+![Weekdays vs Weekends](charts/weekday_vs_weekend.png)
+
+![Session Length](charts/session_length.png)
+
+![Weekly Trend](charts/weekly_trend.png)
 
 ![Monthly Max](charts/monthly_avg.png)
 
@@ -13,12 +23,22 @@
 
 ![Top Servers](charts/top_servers.png)
 
+### Top 5 Balloon Race servers
+
+Ranked by how often they have people on. Favorite these so they're one click away.
+
+<!-- TOP_SERVERS_START -->
+_No server data yet - check back after a few days._
+<!-- TOP_SERVERS_END -->
+
+![Server Heatmaps](charts/server_heatmaps.png)
+
 ---
 
 ### How it works
 
-- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs the busiest one to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day).
-- `generate_report.py` runs once a day. It turns the log into the charts above and pushes them to GitHub.
+- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day).
+- `generate_report.py` runs once a day. It turns the log into the charts above, rewrites the top servers table, and pushes the charts, README and log to GitHub. The log lives in the repo so the history is never lost.
 
 ### First-time setup
 
@@ -76,4 +96,4 @@ The daily report pushes to GitHub, so the repo remote needs to use SSH (`git rem
 ### Settings
 
 - `main.py`: `EMAIL_SEND_LIMIT`, `MIN_PLAYER_THRESHOLD`
-- `generate_report.py`: `DISPLAY_TIMEZONE` / `TZ_LABEL` (chart timezone), `LOG_TIMEZONE` (clock the log was written in), `MIN_DAYS_FOR_SCORECARD`
+- `generate_report.py`: `DISPLAY_TIMEZONE` / `TZ_LABEL` (chart timezone), `LOG_TIMEZONE` (clock the log was written in), `MIN_DAYS_FOR_SCORECARD`, `SCORECARD_RECENT_DAYS`, `BUSY_THRESHOLD`, `TOP_SERVER_COUNT`
