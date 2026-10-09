@@ -15,7 +15,7 @@ def get_server_list():
     api_key = os.getenv('steam_api_key')
     url = f'https://api.steampowered.com/IGameServersService/GetServerList/v1/?key={api_key}&limit=50&filter=\\appid\\440\\map\\balloon_race_v2b'
     r = requests.get(url)
-    servers = r.json()['response']['servers']
+    servers = r.json()['response'].get('servers', [])
     return {server['name']: server['players'] for server in servers}
 
 def send_email(message):
@@ -98,7 +98,7 @@ def main():
             message = f"PEOPLE ON BALLOON RACE: {max_server[:30]}... has {output_dict[max_server]} players"
             send_email(message)
             update_email_count(count + 1)
-        else:
+        elif count >= EMAIL_SEND_LIMIT:
             logging.info(f"Email limit of {EMAIL_SEND_LIMIT} reached for today. No email will be sent.")
     else:
         logging.info('No one playing balloon race :(')
