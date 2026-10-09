@@ -1,4 +1,6 @@
 from plotly.subplots import make_subplots
+import datetime as dt
+import holidays
 import plotly.graph_objects as go
 import pandas as pd
 import re
@@ -24,6 +26,8 @@ SCORECARD_RECENT_DAYS = 28
 BUSY_THRESHOLD = 10
 TOP_SERVER_COUNT = 5
 CHECK_MINUTES = 5
+# A day needs at least this many checks to count in the holiday comparison
+MIN_CHECKS_PER_DAY = 144
 
 DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -430,6 +434,119 @@ def generate_monthly_daily_avg_plot(df):
     save(fig, 'monthly_daily_avg.png')
 
 
+# US holidays plus a few unofficial gaming days and school-break periods
+def holiday_calendar(years):
+    rename = {"Washington's Birthday": "Presidents' Day",
+              'Juneteenth National Independence Day': 'Juneteenth'}
+    days = {}
+    for d, name in holidays.US(years=years).items():
+        name = name.replace(' (observed)', '')
+        days.setdefault(rename.get(name, name), []).append(d)
+    for y in years:
+        days.setdefault('Halloween', []).append(dt.date(y, 10, 31))
+        days.setdefault('Christmas Eve', []).append(dt.date(y, 12, 24))
+        days.setdefault("New Year's Eve", []).append(dt.date(y, 12, 31))
+        thanksgiving = next(d for d, n in holidays.US(years=y).items() if n == 'Thanksgiving Day')
+        days.setdefault('Thanksgiving weekend (Thu–Sun)', []).extend(
+            thanksgiving + dt.timedelta(days=i) for i in range(4))
+        days.setdefault('Winter break (Dec 20 – Jan 3)', []).extend(
+            dt.date(y, 12, 20) + dt.timedelta(days=i) for i in range(15))
+    return days
+
+
+# Table: how much busier each holiday is than a normal day of the same weekday
+def generate_holiday_table(df):
+    daily = (
+        df.assign(active=df['online_players'] > 0, date=df['ts'].dt.date)
+        .groupby('date')
+        .agg(rate=('active', 'mean'), checks=('active', 'size'), peak=('online_players', 'max'))
+    )
+    daily = daily[daily['checks'] >= MIN_CHECKS_PER_DAY]
+    years = sorted({d.year for d in daily.index} | {dt.date.today().year}) if len(daily) else [dt.date.today().year]
+    calendar = holiday_calendar(range(years[0] - 1, years[-1] + 2))
+    holiday_dates = {d for dates in calendar.values() for d in dates}
+
+    # Baseline: average day of the same weekday that isn't a holiday
+    normal = daily[[d not in holiday_dates for d in daily.index]]
+    baseline = (normal.groupby([d.weekday() for d in normal.index])['rate'].mean()
+                if len(normal) else pd.Series(dtype=float))
+
+    rows = []
+    for name, dates in calendar.items():
+        seen = [d for d in dates if d in daily.index]
+        if not seen or baseline.empty:
+            continue
+        rate = daily.loc[seen, 'rate'].mean()
+        base = pd.Series([baseline.get(d.weekday()) for d in seen]).mean()
+        if pd.isna(base):
+            continue
+        rows.append({
+            'name': name,
+            'last': max(seen),
+            'days': len(seen),
+            'rate': rate,
+            'base': base,
+            'lift': rate / base if base > 0 else float('inf') if rate > 0 else 1.0,
+            'peak': int(daily.loc[seen, 'peak'].max()),
+        })
+    rows.sort(key=lambda r: r['lift'], reverse=True)
+
+    today = dt.date.today()
+    upcoming = sorted((min(d for d in dates if d >= today), name)
+                      for name, dates in calendar.items() if any(d >= today for d in dates))[:3]
+    next_up = ' · '.join(f"{name} ({d.strftime('%b %d')})" for d, name in upcoming)
+
+    fig = go.Figure()
+    if rows:
+        def lift_text(r):
+            if r['lift'] == float('inf'):
+                return '<b>New activity</b>'
+            lift = round(r['lift'], 1)
+            arrow = '▲' if lift >= 1.1 else '▼' if lift <= 0.9 else '–'
+            return f"<b>{r['lift']:.1f}×</b> {arrow}"
+
+        def lift_fill(r):
+            if r['lift'] >= 2:
+                return SEQUENTIAL[2]
+            if r['lift'] >= 1.25:
+                return SEQUENTIAL[1]
+            return SURFACE
+
+        fig.add_trace(go.Table(
+            columnwidth=[3.2, 1.6, 1.4, 1.4, 1.3, 0.9],
+            header=dict(
+                values=['<b>Holiday</b>', '<b>Last seen</b>', '<b>Players on</b>', '<b>Normal day</b>',
+                        '<b>vs normal</b>', '<b>Peak</b>'],
+                fill_color=SURFACE, line_color=GRID, align=['left'] + ['right'] * 5, height=40,
+                font=dict(size=14, color=TEXT_SECONDARY, family=FONT),
+            ),
+            cells=dict(
+                values=[
+                    [f"<b>{r['name']}</b>" for r in rows],
+                    [r['last'].strftime('%b %d, %Y') for r in rows],
+                    [f"{r['rate']:.0%}" for r in rows],
+                    [f"{r['base']:.0%}" for r in rows],
+                    [lift_text(r) for r in rows],
+                    [r['peak'] for r in rows],
+                ],
+                fill_color=[[SURFACE] * len(rows)] * 4 + [[lift_fill(r) for r in rows], [SURFACE] * len(rows)],
+                line_color=GRID, align=['left'] + ['right'] * 5, height=38,
+                font=dict(size=14, color=TEXT_PRIMARY, family=FONT),
+            ),
+        ))
+    fig.update_layout(base_layout(
+        'Holidays vs normal days',
+        '"Players on" = % of checks with at least one player · compared with non-holiday days of the same weekday'
+        + f'<br>Next up: {next_up}',
+        height=200 + 38 * max(len(rows), 4),
+        margin=dict(l=24, r=24, t=130, b=16),
+    ))
+    fig.update_layout(title=dict(y=1, yanchor='top', pad=dict(t=24)))
+    if not rows:
+        empty_state(fig, 'No holidays in the data yet')
+    save(fig, 'holidays.png')
+
+
 # Rank servers by how often they have people on, with each one's best times
 def top_server_stats(df, server_df):
     stats = []
@@ -565,6 +682,7 @@ if __name__ == "__main__":
     generate_top_servers_plot(graph_df)
     generate_monthly_avg_plot(graph_df)
     generate_monthly_daily_avg_plot(graph_df)
+    generate_holiday_table(graph_df)
     stats = top_server_stats(graph_df, server_df)
     generate_server_heatmaps(stats)
     if '--no-readme' not in sys.argv:

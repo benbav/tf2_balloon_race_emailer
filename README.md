@@ -17,6 +17,8 @@
 
 ![Weekly Trend](charts/weekly_trend.png)
 
+![Holidays](charts/holidays.png)
+
 ![Monthly Max](charts/monthly_avg.png)
 
 ![Monthly Avg Daily Peak](charts/monthly_daily_avg.png)

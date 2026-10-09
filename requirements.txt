@@ -3,3 +3,4 @@ Requests==2.32.3
 pandas
 plotly
 kaleido
+holidays
