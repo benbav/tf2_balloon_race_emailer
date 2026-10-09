@@ -218,6 +218,28 @@ def generate_monthly_avg_plot(df):
     save(fig, 'monthly_avg.png')
 
 
+# Generate bar plot for average daily peak by month
+def generate_monthly_daily_avg_plot(df):
+    daily_peak = df.groupby(df['ts'].dt.date)['online_players'].max()
+    months = pd.to_datetime(daily_peak.index).strftime('%Y-%m')
+    monthly = daily_peak.groupby(months).mean().sort_index()
+    labels = [pd.Timestamp(m + '-01').strftime('%b %Y') for m in monthly.index]
+
+    fig = go.Figure(go.Bar(
+        x=labels, y=monthly.values, marker_color=BAR,
+        text=[f"{v:.1f}" for v in monthly.values], textposition='outside', cliponaxis=False,
+        textfont=dict(color=TEXT_PRIMARY),
+    ))
+    fig.update_layout(base_layout(
+        'Average daily peak players by month',
+        "Each day's most players seen at once, averaged over the month (days nobody played count as 0)",
+        barcornerradius=4, bargap=0.45,
+    ))
+    fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players', rangemode='tozero')
+    fig.update_xaxes(showgrid=False, ticks='')
+    save(fig, 'monthly_daily_avg.png')
+
+
 # Push updates to GitHub
 def push_to_github():
     os.chdir(SCRIPT_DIR)
@@ -239,5 +261,6 @@ if __name__ == "__main__":
     generate_heatmap(graph_df)
     generate_top_servers_plot(graph_df)
     generate_monthly_avg_plot(graph_df)
+    generate_monthly_daily_avg_plot(graph_df)
     if '--no-push' not in sys.argv:
         push_to_github()

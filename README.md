@@ -9,6 +9,8 @@
 
 ![Monthly Max](charts/monthly_avg.png)
 
+![Monthly Avg Daily Peak](charts/monthly_daily_avg.png)
+
 ![Top Servers](charts/top_servers.png)
 
 ---
