@@ -5,27 +5,27 @@
 
 **Website with a live "who's on now" list and server filters: https://benbav.github.io/tf2_balloon_race_emailer/**
 
-![Best Time](charts/best_time.png)
+![Best Time](https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time.png)
 
-![Top 5 Times](charts/top_windows.png)
+![Top 5 Times](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows.png)
 
-![Heatmap](charts/heatmap.png)
+![Heatmap](https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap.png)
 
-![Busy Lobby Heatmap](charts/busy_heatmap.png)
+![Busy Lobby Heatmap](https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap.png)
 
-![Weekdays vs Weekends](charts/weekday_vs_weekend.png)
+![Weekdays vs Weekends](https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend.png)
 
-![Session Length](charts/session_length.png)
+![Session Length](https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length.png)
 
-![Weekly Trend](charts/weekly_trend.png)
+![Weekly Trend](https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend.png)
 
-![Holidays](charts/holidays.png)
+![Holidays](https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays.png)
 
-![Monthly Max](charts/monthly_avg.png)
+![Monthly Max](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg.png)
 
-![Monthly Avg Daily Peak](charts/monthly_daily_avg.png)
+![Monthly Avg Daily Peak](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg.png)
 
-![Top Servers](charts/top_servers.png)
+![Top Servers](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers.png)
 
 ### Top 5 Balloon Race servers
 
@@ -43,7 +43,7 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
 <!-- TOP_SERVERS_END -->
 
-![Server Heatmaps](charts/server_heatmaps.png)
+![Server Heatmaps](https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps.png)
 
 ### Dedicated 24/7 servers vs rotating servers
 
@@ -51,18 +51,18 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 
 <table>
 <tr><th width="50%">Dedicated 24/7 servers</th><th width="50%">Rotating servers</th></tr>
-<tr><td><img src="charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
-<tr><td><img src="charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
-<tr><td><img src="charts/heatmap_dedicated.png" alt="Heatmap - dedicated"></td><td><img src="charts/heatmap_rotating.png" alt="Heatmap - rotating"></td></tr>
-<tr><td><img src="charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
-<tr><td><img src="charts/weekday_vs_weekend_dedicated.png" alt="Weekdays vs Weekends - dedicated"></td><td><img src="charts/weekday_vs_weekend_rotating.png" alt="Weekdays vs Weekends - rotating"></td></tr>
-<tr><td><img src="charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
-<tr><td><img src="charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
-<tr><td><img src="charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
-<tr><td><img src="charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
-<tr><td><img src="charts/monthly_daily_avg_dedicated.png" alt="Monthly Avg Daily Peak - dedicated"></td><td><img src="charts/monthly_daily_avg_rotating.png" alt="Monthly Avg Daily Peak - rotating"></td></tr>
-<tr><td><img src="charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
-<tr><td><img src="charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap_dedicated.png" alt="Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap_rotating.png" alt="Heatmap - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend_dedicated.png" alt="Weekdays vs Weekends - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend_rotating.png" alt="Weekdays vs Weekends - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_dedicated.png" alt="Monthly Avg Daily Peak - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_rotating.png" alt="Monthly Avg Daily Peak - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
 </table>
 
 ---
@@ -70,8 +70,9 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 ### How it works
 
 - `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day).
-- `index.html` is the website, served free by GitHub Pages straight from `main`. It shows the charts in `charts/`, the top servers from `charts/site_data.json`, and the live server list.
-- `generate_report.py` runs once a day. It turns the log into the charts above, rewrites the top servers table, and pushes the charts, README and log to GitHub. The log lives in the repo so the history is never lost.
+- `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
+- `generate_report.py` runs once a day. It turns the log into the charts above, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
+- `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
 
 ### First-time setup
 
@@ -126,7 +127,7 @@ Where to get each value:
 
 The daily report pushes to GitHub, so the repo remote needs to use SSH (`git remote set-url origin git@github.com:benbav/tf2_balloon_race_emailer.git`) with a key added to your GitHub account.
 
-**5. Turn on the website**: on GitHub, go to **Settings → Pages → Build and deployment → Deploy from a branch**, pick `main` and `/ (root)`, and save. Free Pages needs a public repo. The site is live at `https://<user>.github.io/tf2_balloon_race_emailer/` a minute later.
+**5. Turn on the website**: on GitHub, go to **Settings → Pages → Build and deployment → Deploy from a branch**, pick the `site` branch and `/ (root)` (the branch appears after the first `generate_report.py` run), and save. Free Pages needs a public repo. The site is live at `https://<user>.github.io/tf2_balloon_race_emailer/` a minute later.
 
 ### Settings
 

@@ -4,6 +4,7 @@ import holidays
 import plotly.graph_objects as go
 import pandas as pd
 from server_types import clean_name, is_dedicated
+import subprocess
 import json
 import re
 import os
@@ -705,12 +706,39 @@ def write_site_data(stats_by_zone):
         json.dump(data, f, ensure_ascii=False, indent=1)
 
 
-# Push updates to GitHub
+# Push the log and README to main, and the website (page + charts) to its own branch
 def push_to_github():
     os.chdir(SCRIPT_DIR)
-    os.system("git add charts README.md tf2_balloon_log.txt")
-    os.system("git commit -m 'update charts and log'")
+    os.system("git add README.md tf2_balloon_log.txt")
+    os.system("git commit -m 'update log'")
     os.system("git push origin main")
+    publish_site()
+
+
+# GitHub Pages serves SITE_BRANCH, which is replaced by a single fresh commit each day so the
+# ~16MB of charts never pile up in the repo history
+SITE_BRANCH = 'site'
+SITE_FILES = ['index.html', '.nojekyll', 'charts']
+
+
+def publish_site():
+    # A throwaway index, so the main branch's staging area is never touched
+    env = dict(os.environ, GIT_INDEX_FILE=os.path.join(SCRIPT_DIR, '.git', 'site-index'))
+
+    def git(*args):
+        return subprocess.run(['git', *args], cwd=SCRIPT_DIR, env=env, capture_output=True,
+                              text=True, check=True).stdout.strip()
+
+    try:
+        git('read-tree', '--empty')
+        git('add', '-f', *SITE_FILES)
+        commit = git('commit-tree', git('write-tree'), '-m', 'update site')
+        git('push', '-fq', 'origin', f'{commit}:refs/heads/{SITE_BRANCH}')
+    except subprocess.CalledProcessError as e:
+        print(f'Error publishing site: {e.stderr}')
+    finally:
+        if os.path.exists(env['GIT_INDEX_FILE']):
+            os.remove(env['GIT_INDEX_FILE'])
 
 
 # Main workflow

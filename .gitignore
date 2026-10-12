@@ -8,3 +8,4 @@ analysis.ipynb
 test.py
 cron.log
 __pycache__/
+charts/
