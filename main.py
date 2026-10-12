@@ -1,14 +1,20 @@
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime
+from datetime import datetime, timezone
+from server_types import clean_name, is_dedicated
+import subprocess
 import requests
 import logging
 import smtplib
 import dotenv
+import json
 import os
 
 # Email send limit per day
 EMAIL_SEND_LIMIT = 4
-EMAIL_COUNT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'email_count.txt')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+EMAIL_COUNT_FILE = os.path.join(SCRIPT_DIR, 'email_count.txt')
+# Branch the website reads "who's on now" from; force-pushed every check so it stays one commit
+LIVE_BRANCH = 'live'
 MIN_PLAYER_THRESHOLD = 10
 
 def get_server_list():
@@ -18,7 +24,8 @@ def get_server_list():
     servers = r.json()['response'].get('servers', [])
     # Human players only - some idle servers fill up with bots
     return [
-        {'addr': s['addr'], 'name': s['name'], 'players': s['players'] - s.get('bots', 0)}
+        {'addr': s['addr'], 'name': s['name'], 'players': s['players'] - s.get('bots', 0),
+         'max_players': s.get('max_players')}
         for s in servers
     ]
 
@@ -45,6 +52,26 @@ def send_email(message):
         print("email sent")
     except Exception as e:
         logging.error(f'Error sending email: {e}')
+
+def publish_status(servers):
+    """Push the current server list to the live branch without touching the working tree."""
+    status = {
+        'checked': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'servers': [dict(s, name=clean_name(s['name']), dedicated=is_dedicated(s['name'], s['addr'])) for s in servers],
+    }
+
+    def git(*args, stdin=None):
+        return subprocess.run(['git', *args], cwd=SCRIPT_DIR, input=stdin, capture_output=True,
+                              text=True, check=True, timeout=60).stdout.strip()
+
+    try:
+        blob = git('hash-object', '-w', '--stdin', stdin=json.dumps(status, ensure_ascii=False))
+        tree = git('mktree', stdin=f'100644 blob {blob}\tstatus.json\n')
+        commit = git('commit-tree', tree, '-m', 'live status')
+        git('push', '-fq', 'origin', f'{commit}:refs/heads/{LIVE_BRANCH}')
+    except (subprocess.SubprocessError, OSError) as e:
+        # Printed to cron.log rather than logged, so failures don't clutter the activity log
+        print(f'Error publishing live status: {getattr(e, "stderr", None) or e}')
 
 def get_email_count():
     """Retrieve the email count and the date from the file."""
@@ -90,6 +117,7 @@ def main():
 
     # Get the server list and check for players
     servers = get_server_list()
+    publish_status(servers)
     output_dict = {s['name']: s['players'] for s in servers}
     if any(value > 0 for value in output_dict.values()):
         # Log server activity

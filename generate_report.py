@@ -3,6 +3,8 @@ import datetime as dt
 import holidays
 import plotly.graph_objects as go
 import pandas as pd
+from server_types import clean_name, is_dedicated
+import json
 import re
 import os
 import sys
@@ -42,6 +44,11 @@ SEQUENTIAL = ['#f3f2ef', '#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', 
 COLORSCALE = [[i / (len(SEQUENTIAL) - 1), c] for i, c in enumerate(SEQUENTIAL)]
 FONT = 'Inter, "Helvetica Neue", Helvetica, Arial, sans-serif'
 
+# Every chart is drawn for all servers, then again for each server type: (file suffix, label, color)
+ALL_SERVERS = ('', None, None)
+DEDICATED = ('_dedicated', 'Dedicated 24/7 servers', SERIES[0])
+ROTATING = ('_rotating', 'Rotating servers', SERIES[1])
+
 LINE_RE = re.compile(r'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) - INFO - (.*)$')
 SERVER_RE = re.compile(r'^SERVER (\S+) \| (.*) : (\d+)$')
 PLAYERS_RE = re.compile(r'^(.*) : (\d+)$')
@@ -73,11 +80,6 @@ def add_time_columns(df):
     return df
 
 
-# Some servers pad their names with control characters, which plotly.js can't render
-def clean_name(name):
-    return re.sub(r'[\x00-\x1f\x7f]', '', name).strip()
-
-
 # Load and preprocess data: one row per 5-minute check, plus one row per active server per check
 def load_and_preprocess_data(file_path):
     checks, servers = [], []
@@ -100,11 +102,26 @@ def load_and_preprocess_data(file_path):
 
     df = add_time_columns(pd.DataFrame(checks, columns=['ts', 'server_name', 'online_players']))
     server_df = add_time_columns(pd.DataFrame(servers, columns=['ts', 'addr', 'name', 'players']))
+    server_df['dedicated'] = [is_dedicated(n, a) for n, a in zip(server_df['name'], server_df['addr'])]
     return df, server_df
 
 
-def base_layout(title, subtitle=None, **kwargs):
+# The checks again, but only counting one type of server: each check keeps its busiest server of that type
+def split_checks(df, server_df, dedicated):
+    top = server_df[server_df['dedicated'] == dedicated].sort_values('players').groupby('ts').last()
+    # Older checks were logged before per-server lines existed, so only the busiest server is known
+    legacy = ~df['ts'].isin(server_df['ts']) & (df['online_players'] > 0)
+    legacy &= df['server_name'].fillna('').map(is_dedicated) == dedicated
+    out = df.copy()
+    out['online_players'] = df['ts'].map(top['players']).where(~legacy, df['online_players']).fillna(0).astype(int)
+    out['server_name'] = df['ts'].map(top['name']).where(~legacy, df['server_name'])
+    return out
+
+
+def base_layout(title, subtitle=None, variant=ALL_SERVERS, **kwargs):
     text = f"<b>{title}</b>"
+    if variant[1]:
+        text += f" <span style='color:{variant[2]}'><b>· {variant[1]}</b></span>"
     if subtitle:
         text += f"<br><span style='font-size:14px;color:{TEXT_SECONDARY}'>{subtitle}</span>"
     layout = dict(
@@ -128,8 +145,8 @@ def empty_state(fig, message='Not enough data yet'):
     fig.update_yaxes(visible=False)
 
 
-def save(fig, name):
-    fig.write_image(os.path.join(OUTPUT_FOLDER, name), scale=2)
+def save(fig, name, variant=ALL_SERVERS):
+    fig.write_image(os.path.join(OUTPUT_FOLDER, name.replace('.png', f'{variant[0]}.png')), scale=2)
 
 
 def days_of_data(df):
@@ -163,7 +180,7 @@ def top_windows(window, n):
 
 
 # Big scorecard: the single 2-hour window of the week most likely to have players
-def generate_scorecard(df):
+def generate_scorecard(df, variant=ALL_SERVERS):
     total_days = days_of_data(df)
     recent = df[df['ts'] >= df['ts'].max() - pd.Timedelta(days=SCORECARD_RECENT_DAYS)] if len(df) else df
     window = window_rates(recent, recent['online_players'] > 0)
@@ -180,6 +197,8 @@ def generate_scorecard(df):
         )
 
     text(0.88, 'BEST TIME TO FIND PEOPLE ON BALLOON RACE', 16, TEXT_SECONDARY, bold=True)
+    if variant[1]:
+        text(0.77, variant[1].upper(), 14, variant[2], bold=True)
     if total_days < MIN_DAYS_FOR_SCORECARD or window['sum'].max() == 0:
         text(0.55, 'Not enough data yet', 56, TEXT_PRIMARY, bold=True)
         text(0.28, f'{total_days} of {MIN_DAYS_FOR_SCORECARD} days of checks collected', 18, TEXT_SECONDARY)
@@ -191,11 +210,11 @@ def generate_scorecard(df):
                    f"over the last {min(SCORECARD_RECENT_DAYS, total_days)} days", 20, TEXT_SECONDARY)
         text(0.2, f"All-time best: {window_label(all_time_best)} ({all_time.loc[all_time_best, 'pct']:.0%}) "
                   f"· {total_days} days of data", 14, TEXT_SECONDARY)
-    save(fig, 'best_time.png')
+    save(fig, 'best_time.png', variant)
 
 
 # Ranked bars: the 5 best non-overlapping 2-hour windows
-def generate_top_windows_plot(df):
+def generate_top_windows_plot(df, variant=ALL_SERVERS):
     window = window_rates(df, df['online_players'] > 0)
     picked = top_windows(window, 5) if days_of_data(df) >= MIN_DAYS_FOR_SCORECARD else []
     picked = picked[::-1]
@@ -210,16 +229,17 @@ def generate_top_windows_plot(df):
         'Top 5 times to play',
         'Best 2-hour windows (no overlaps) · % of checks with at least one player',
         height=480, barcornerradius=4, bargap=0.35,
+        variant=variant,
     ))
     if not picked:
         empty_state(fig)
     fig.update_xaxes(showgrid=True, gridcolor=GRID, zeroline=False, ticksuffix='%', rangemode='tozero')
     fig.update_yaxes(showgrid=False, ticks='', tickfont=dict(size=15, color=TEXT_PRIMARY))
-    save(fig, 'top_windows.png')
+    save(fig, 'top_windows.png', variant)
 
 
 # Day x hour heatmap of how often a condition held
-def generate_heatmap(df, active, title, subtitle, filename):
+def generate_heatmap(df, active, title, subtitle, filename, variant=ALL_SERVERS):
     heatmap_data = (
         df.assign(active=active * 100)
         .pivot_table(index='hour', columns='day_of_week', values='active',
@@ -249,15 +269,15 @@ def generate_heatmap(df, active, title, subtitle, filename):
                 fig.add_annotation(x=d, y=hour_label(h), text=f"{v:.0f}%", showarrow=False,
                                    font=dict(size=11, color='#ffffff' if v / zmax > 0.45 else TEXT_PRIMARY))
 
-    fig.update_layout(base_layout(title, subtitle, height=820))
+    fig.update_layout(base_layout(title, subtitle, variant=variant, height=820))
     fig.update_yaxes(autorange='reversed', showgrid=False, ticks='')
     fig.update_xaxes(side='top', showgrid=False, ticks='')
     fig.update_layout(margin=dict(l=24, r=32, t=130, b=24))
-    save(fig, filename)
+    save(fig, filename, variant)
 
 
 # Two lines: share of checks with players by hour, weekdays vs weekends
-def generate_weekday_weekend_plot(df):
+def generate_weekday_weekend_plot(df, variant=ALL_SERVERS):
     hours = list(range(24))
     labels = [hour_label(h) for h in hours]
     groups = [
@@ -293,16 +313,17 @@ def generate_weekday_weekend_plot(df):
         showlegend=True,
         legend=dict(orientation='h', x=0.02, y=1.02, xanchor='left', yanchor='bottom'),
         margin=dict(l=24, r=110, t=130, b=48),
+        variant=variant,
     ))
     if df.empty:
         empty_state(fig)
     fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, ticksuffix='%', rangemode='tozero')
     fig.update_xaxes(showgrid=False, ticks='', tickangle=-45)
-    save(fig, 'weekday_vs_weekend.png')
+    save(fig, 'weekday_vs_weekend.png', variant)
 
 
 # How long people stick around once they show up
-def generate_session_length_plot(df):
+def generate_session_length_plot(df, variant=ALL_SERVERS):
     active = (df.sort_values('ts')['online_players'] > 0).values
     ts = df.sort_values('ts')['ts'].values
     sessions, run = [], 0
@@ -330,16 +351,16 @@ def generate_session_length_plot(df):
     if median is not None:
         subtitle += f' · median session: {median:.0f} min'
     fig.update_layout(base_layout('How long sessions last', subtitle,
-                                  barcornerradius=4, bargap=0.4))
+                                  barcornerradius=4, bargap=0.4, variant=variant))
     if not sessions:
         empty_state(fig, 'No sessions seen yet')
     fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Sessions', rangemode='tozero')
     fig.update_xaxes(showgrid=False, ticks='')
-    save(fig, 'session_length.png')
+    save(fig, 'session_length.png', variant)
 
 
 # Weekly trend: is the scene growing or dying?
-def generate_weekly_trend_plot(df):
+def generate_weekly_trend_plot(df, variant=ALL_SERVERS):
     week = df['ts'].dt.tz_localize(None).dt.to_period('W-SUN').dt.start_time
     grouped = (df['online_players'] > 0).groupby(week)
     # Skip weeks with under 3 days of checks (e.g. the week logging started) so they don't skew the line
@@ -359,6 +380,7 @@ def generate_weekly_trend_plot(df):
     fig.update_layout(base_layout(
         'Weekly trend',
         '% of checks each week with at least one player · latest week may be partial',
+        variant=variant,
     ))
     if len(weekly) < 2:
         empty_state(fig, 'Needs at least 2 weeks of data')
@@ -366,11 +388,11 @@ def generate_weekly_trend_plot(df):
     fig.update_xaxes(showgrid=False, ticks='', tickformat='%b %d')
     if len(weekly):
         fig.update_xaxes(range=[weekly.index[0] - pd.Timedelta(days=3), weekly.index[-1] + pd.Timedelta(days=3)])
-    save(fig, 'weekly_trend.png')
+    save(fig, 'weekly_trend.png', variant)
 
 
 # Generate bar plot for top servers
-def generate_top_servers_plot(df):
+def generate_top_servers_plot(df, variant=ALL_SERVERS):
     top_servers = (
         df.query('online_players > 0')
         .groupby('server_name')['online_players']
@@ -389,16 +411,17 @@ def generate_top_servers_plot(df):
         'Busiest Balloon Race servers',
         'Most players seen at once, top 10 servers',
         barcornerradius=4, bargap=0.35,
+        variant=variant,
     ))
     if top_servers.empty:
         empty_state(fig, 'No players seen yet')
     fig.update_xaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players')
     fig.update_yaxes(showgrid=False, ticks='')
-    save(fig, 'top_servers.png')
+    save(fig, 'top_servers.png', variant)
 
 
 # Generate bar plot for monthly max
-def generate_monthly_avg_plot(df):
+def generate_monthly_avg_plot(df, variant=ALL_SERVERS):
     monthly = df.groupby('month')['online_players'].max().sort_index()
     labels = [pd.Timestamp(m + '-01').strftime('%b %Y') for m in monthly.index]
 
@@ -411,14 +434,15 @@ def generate_monthly_avg_plot(df):
         'Max Balloon Race players by month',
         'Most players seen at once on any server',
         barcornerradius=4, bargap=0.45,
+        variant=variant,
     ))
     fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players', rangemode='tozero')
     fig.update_xaxes(showgrid=False, ticks='')
-    save(fig, 'monthly_avg.png')
+    save(fig, 'monthly_avg.png', variant)
 
 
 # Generate bar plot for average daily peak by month
-def generate_monthly_daily_avg_plot(df):
+def generate_monthly_daily_avg_plot(df, variant=ALL_SERVERS):
     daily_peak = df.groupby(df['ts'].dt.date)['online_players'].max()
     months = pd.to_datetime(daily_peak.index).strftime('%Y-%m')
     monthly = daily_peak.groupby(months).mean().sort_index()
@@ -433,10 +457,11 @@ def generate_monthly_daily_avg_plot(df):
         'Average daily peak players by month',
         "Each day's most players seen at once, averaged over the month (days nobody played count as 0)",
         barcornerradius=4, bargap=0.45,
+        variant=variant,
     ))
     fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players', rangemode='tozero')
     fig.update_xaxes(showgrid=False, ticks='')
-    save(fig, 'monthly_daily_avg.png')
+    save(fig, 'monthly_daily_avg.png', variant)
 
 
 # US holidays plus a few unofficial gaming days and school-break periods
@@ -460,7 +485,7 @@ def holiday_calendar(years):
 
 
 # Table: how much busier each holiday is than a normal day of the same weekday
-def generate_holiday_table(df):
+def generate_holiday_table(df, variant=ALL_SERVERS):
     daily = (
         df.assign(active=df['online_players'] > 0, date=df['ts'].dt.date)
         .groupby('date')
@@ -545,11 +570,12 @@ def generate_holiday_table(df):
         + f'<br>Next up: {next_up}',
         height=200 + 38 * max(len(rows), 4),
         margin=dict(l=24, r=24, t=130, b=16),
+        variant=variant,
     ))
     fig.update_layout(title=dict(y=1, yanchor='top', pad=dict(t=24)))
     if not rows:
         empty_state(fig, 'No holidays in the data yet')
-    save(fig, 'holidays.png')
+    save(fig, 'holidays.png', variant)
 
 
 # Rank servers by how often they have people on, with each one's best times
@@ -580,12 +606,12 @@ def top_server_stats(df, server_df):
 
 
 # Small multiples: one day x hour heatmap per top server, on a shared scale
-def generate_server_heatmaps(stats):
+def generate_server_heatmaps(stats, variant=ALL_SERVERS):
     if not stats:
         fig = go.Figure()
-        fig.update_layout(base_layout('When the top servers are busy', height=300))
+        fig.update_layout(base_layout('When the top servers are busy', height=300, variant=variant))
         empty_state(fig, 'No server data yet')
-        save(fig, 'server_heatmaps.png')
+        save(fig, 'server_heatmaps.png', variant)
         return
 
     grids = []
@@ -612,12 +638,13 @@ def generate_server_heatmaps(stats):
         'When the top servers are busy',
         f'% of checks each server had at least one player · times in {TZ_LABEL}',
         height=170 + 260 * len(stats),
+        variant=variant,
     ))
     fig.update_annotations(font=dict(size=14, color=TEXT_PRIMARY), xanchor='left', x=0)
     fig.update_xaxes(showgrid=False, ticks='', tickfont=dict(size=10), tickangle=-45)
     fig.update_yaxes(showgrid=False, ticks='')
     fig.update_layout(margin=dict(l=24, r=32, t=130, b=40))
-    save(fig, 'server_heatmaps.png')
+    save(fig, 'server_heatmaps.png', variant)
 
 
 # Write the top servers table into the README between the marker comments
@@ -650,6 +677,24 @@ def update_readme(stats):
         f.write(pattern.sub(lambda _: section, readme))
 
 
+# Top servers for each filter on the website
+def write_site_data(stats_by_variant):
+    data = {'updated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'top_servers': {}}
+    for key, stats in stats_by_variant.items():
+        data['top_servers'][key] = [{
+            'name': s['name'],
+            'addr': s['addr'],
+            'best_time': f"{window_label(s['best_window'], short=True)} {TZ_LABEL}",
+            'best_time_pct': round(float(s['best_window_pct']), 3),
+            'best_day': s['best_day'],
+            'pct_active': round(float(s['pct_active']), 3),
+            'avg_players': round(float(s['avg_players']), 1),
+            'peak': int(s['peak']),
+        } for s in stats]
+    with open(os.path.join(OUTPUT_FOLDER, 'site_data.json'), 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=1)
+
+
 # Push updates to GitHub
 def push_to_github():
     os.chdir(SCRIPT_DIR)
@@ -667,29 +712,39 @@ if __name__ == "__main__":
         OUTPUT_FOLDER = args[1]
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     graph_df, server_df = load_and_preprocess_data(log_path)
-    generate_scorecard(graph_df)
-    generate_top_windows_plot(graph_df)
-    generate_heatmap(
-        graph_df, graph_df['online_players'] > 0,
-        'How often people are on Balloon Race',
-        f'% of 5-minute checks with at least one player · times in {TZ_LABEL} · blank = never seen',
-        'heatmap.png',
-    )
-    generate_heatmap(
-        graph_df, graph_df['online_players'] >= BUSY_THRESHOLD,
-        f'How often there is a busy lobby ({BUSY_THRESHOLD}+ players)',
-        f'% of 5-minute checks with a server at {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
-        'busy_heatmap.png',
-    )
-    generate_weekday_weekend_plot(graph_df)
-    generate_session_length_plot(graph_df)
-    generate_weekly_trend_plot(graph_df)
-    generate_top_servers_plot(graph_df)
-    generate_monthly_avg_plot(graph_df)
-    generate_monthly_daily_avg_plot(graph_df)
-    generate_holiday_table(graph_df)
-    stats = top_server_stats(graph_df, server_df)
-    generate_server_heatmaps(stats)
+    variants = [
+        (ALL_SERVERS, graph_df, server_df),
+        (DEDICATED, split_checks(graph_df, server_df, True), server_df[server_df['dedicated']]),
+        (ROTATING, split_checks(graph_df, server_df, False), server_df[~server_df['dedicated']]),
+    ]
+    stats_by_variant = {}
+    for variant, df, servers in variants:
+        generate_scorecard(df, variant)
+        generate_top_windows_plot(df, variant)
+        generate_heatmap(
+            df, df['online_players'] > 0,
+            'How often people are on Balloon Race',
+            f'% of 5-minute checks with at least one player · times in {TZ_LABEL} · blank = never seen',
+            'heatmap.png', variant,
+        )
+        generate_heatmap(
+            df, df['online_players'] >= BUSY_THRESHOLD,
+            f'How often there is a busy lobby ({BUSY_THRESHOLD}+ players)',
+            f'% of 5-minute checks with a server at {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
+            'busy_heatmap.png', variant,
+        )
+        generate_weekday_weekend_plot(df, variant)
+        generate_session_length_plot(df, variant)
+        generate_weekly_trend_plot(df, variant)
+        generate_top_servers_plot(df, variant)
+        generate_monthly_avg_plot(df, variant)
+        generate_monthly_daily_avg_plot(df, variant)
+        generate_holiday_table(df, variant)
+        server_stats = top_server_stats(graph_df, servers)
+        generate_server_heatmaps(server_stats, variant)
+        stats_by_variant[variant[0].lstrip('_') or 'all'] = server_stats
+    stats = stats_by_variant['all']
+    write_site_data(stats_by_variant)
     if '--no-readme' not in sys.argv:
         update_readme(stats)
     if '--no-push' not in sys.argv:

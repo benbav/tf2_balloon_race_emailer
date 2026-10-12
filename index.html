@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balloon Race Tracker</title>
+<meta name="description" content="When are people on TF2 Balloon Race? Live server status and charts from checks every 5 minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Light only, to match the chart images */
+  :root {
+    --surface: #fcfcfb;
+    --card: #ffffff;
+    --text: #0b0b0b;
+    --muted: #52514e;
+    --line: #e6e5e0;
+    --dedicated: #2a78d6;
+    --rotating: #eb6834;
+    --live: #1f9d55;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--text);
+    font: 15px/1.5 Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; margin: 48px 0 16px; letter-spacing: -0.01em; }
+  .lede { color: var(--muted); margin: 0 0 24px; }
+  a { color: var(--dedicated); }
+
+  /* Filter */
+  .filter-bar {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(6px);
+    padding: 12px 0; margin: 0 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .filter { display: inline-flex; background: #f0efeb; border-radius: 999px; padding: 4px; gap: 2px; flex-wrap: wrap; }
+  .filter button {
+    border: 0; background: none; font: inherit; font-weight: 500; color: var(--muted);
+    padding: 7px 16px; border-radius: 999px; cursor: pointer;
+  }
+  .filter button[aria-pressed="true"] { background: var(--card); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  .filter button:focus-visible { outline: 2px solid var(--dedicated); outline-offset: 2px; }
+
+  /* Live panel */
+  .live { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-top: 24px; }
+  .live-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .live-head h2 { margin: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.on { background: var(--live); box-shadow: 0 0 0 0 rgba(31,157,85,.5); animation: pulse 2s infinite; }
+  @keyframes pulse { to { box-shadow: 0 0 0 10px rgba(31,157,85,0); } }
+  @media (prefers-reduced-motion: reduce) { .dot.on { animation: none; } }
+  .checked { color: var(--muted); font-size: 13px; margin-left: auto; }
+  .empty { color: var(--muted); margin: 4px 0; }
+
+  .server { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .server:first-child { border-top: 0; }
+  .server .info { flex: 1; min-width: 0; }
+  .server .name { font-weight: 600; overflow-wrap: anywhere; }
+  .server .addr { color: var(--muted); font-size: 13px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .count { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; min-width: 64px; }
+  .count small { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .count.zero { color: var(--muted); }
+
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+         padding: 1px 7px; border-radius: 4px; margin-left: 6px; vertical-align: 2px; }
+  .tag.dedicated { color: var(--dedicated); background: #e7f0fb; }
+  .tag.rotating { color: #b8471a; background: #fdece4; }
+
+  .actions { display: flex; gap: 6px; flex: none; }
+  .btn {
+    font: inherit; font-size: 13px; font-weight: 500; text-decoration: none; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--text);
+    padding: 6px 12px; border-radius: 6px; white-space: nowrap;
+  }
+  .btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
+  .btn:focus-visible { outline: 2px solid var(--dedicated); outline-offset: 2px; }
+
+  /* Charts */
+  .chart { margin: 0 0 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .chart img { display: block; width: 100%; height: auto; }
+  .chart a { display: block; }
+
+  /* Top servers table */
+  .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td .addr { color: var(--muted); font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+  footer { color: var(--muted); font-size: 13px; margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 24px; }
+    .server { flex-wrap: wrap; }
+    .server .info { flex-basis: calc(100% - 80px); }
+    .actions { width: 100%; }
+    .checked { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>When are people on Balloon Race?</h1>
+  <p class="lede">Every TF2 server on <code>balloon_race_v2b</code> is checked every 5 minutes. Charts update daily, times in Mountain Time.</p>
+
+  <div class="filter-bar">
+    <div class="filter" role="group" aria-label="Server type">
+      <button type="button" data-filter="all" aria-pressed="true">All servers</button>
+      <button type="button" data-filter="dedicated" aria-pressed="false">Dedicated 24/7</button>
+      <button type="button" data-filter="rotating" aria-pressed="false">Rotating</button>
+    </div>
+  </div>
+
+  <section class="live" aria-live="polite">
+    <div class="live-head">
+      <span class="dot" id="live-dot"></span>
+      <h2 id="live-title">Who's on right now</h2>
+      <span class="checked" id="live-checked"></span>
+    </div>
+    <div id="live-list"><p class="empty">Loading…</p></div>
+  </section>
+
+  <div id="charts"></div>
+
+  <footer>
+    Dedicated = runs Balloon Race all day. Rotating = lands on the map now and then as part of a map cycle.
+    Player counts are humans only, bots excluded.
+    <span id="updated"></span>
+    · <a href="https://github.com/benbav/tf2_balloon_race_emailer">Source on GitHub</a>
+  </footer>
+</main>
+
+<script>
+  // status.json lives on its own branch so the 5-minute updates stay out of main's history
+  const LIVE_URL = 'https://raw.githubusercontent.com/benbav/tf2_balloon_race_emailer/live/status.json';
+  const LIVE_REFRESH_MS = 60 * 1000;
+  // A check older than this means the tracker has stopped
+  const STALE_MINUTES = 15;
+
+  const FILTERS = {
+    all: { suffix: '', label: 'All servers' },
+    dedicated: { suffix: '_dedicated', label: 'Dedicated 24/7' },
+    rotating: { suffix: '_rotating', label: 'Rotating' },
+  };
+
+  const SECTIONS = [
+    { title: 'When to play', charts: [
+      ['best_time', 'Best time to find people'],
+      ['top_windows', 'Top 5 times to play'],
+      ['heatmap', 'How often people are on, by day and hour'],
+      ['busy_heatmap', 'How often there is a busy lobby'],
+      ['weekday_vs_weekend', 'Weekdays vs weekends'],
+    ]},
+    { title: 'Servers', table: true, charts: [
+      ['top_servers', 'Busiest servers'],
+      ['server_heatmaps', 'When the top servers are busy'],
+    ]},
+    { title: 'Trends', charts: [
+      ['weekly_trend', 'Weekly trend'],
+      ['session_length', 'How long sessions last'],
+      ['holidays', 'Holidays vs normal days'],
+      ['monthly_avg', 'Max players by month'],
+      ['monthly_daily_avg', 'Average daily peak players by month'],
+    ]},
+  ];
+
+  let filter = 'all';
+  let siteData = null;
+  let liveData = null;
+
+  const $ = (sel) => document.querySelector(sel);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const matches = (dedicated) => filter === 'all' || (filter === 'dedicated') === dedicated;
+  const tag = (dedicated) => dedicated
+    ? '<span class="tag dedicated">24/7</span>'
+    : '<span class="tag rotating">Rotating</span>';
+
+  function connectButtons(addr) {
+    return `<div class="actions">
+      <a class="btn primary" href="steam://connect/${esc(addr)}">Join</a>
+      <button class="btn" type="button" data-copy="connect ${esc(addr)}">Copy connect</button>
+    </div>`;
+  }
+
+  function timeAgo(date) {
+    const mins = Math.round((Date.now() - date) / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins} min ago`;
+    const hrs = Math.round(mins / 60);
+    return hrs < 48 ? `${hrs} hr ago` : `${Math.round(hrs / 24)} days ago`;
+  }
+
+  function renderLive() {
+    const list = $('#live-list');
+    const dot = $('#live-dot');
+    if (!liveData) {
+      dot.classList.remove('on');
+      $('#live-checked').textContent = '';
+      list.innerHTML = '<p class="empty">Live status isn\'t available right now.</p>';
+      return;
+    }
+    const checked = new Date(liveData.checked);
+    const stale = Date.now() - checked > STALE_MINUTES * 60000;
+    $('#live-checked').textContent = `Checked ${timeAgo(checked)}${stale ? ' · tracker may be down' : ''}`;
+
+    const servers = liveData.servers
+      .filter((s) => matches(s.dedicated))
+      .sort((a, b) => b.players - a.players);
+    const playing = servers.filter((s) => s.players > 0);
+    dot.classList.toggle('on', playing.length > 0 && !stale);
+
+    if (!servers.length) {
+      const which = filter === 'all' ? '' : ` ${FILTERS[filter].label.toLowerCase()}`;
+      list.innerHTML = `<p class="empty">No${which} servers are on Balloon Race right now.</p>`;
+      return;
+    }
+    const intro = playing.length ? '' : '<p class="empty">Servers are up but nobody\'s playing. Be the first.</p>';
+    list.innerHTML = intro + servers.map((s) => `
+      <div class="server">
+        <div class="info">
+          <div class="name">${esc(s.name)}${tag(s.dedicated)}</div>
+          <div class="addr">${esc(s.addr)}</div>
+        </div>
+        <div class="count${s.players ? '' : ' zero'}">${s.players}${s.max_players ? `<small>/${s.max_players}</small>` : ''}</div>
+        ${connectButtons(s.addr)}
+      </div>`).join('');
+  }
+
+  async function loadLive() {
+    try {
+      // Bust caches roughly once a minute
+      const res = await fetch(`${LIVE_URL}?t=${Math.floor(Date.now() / 60000)}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      liveData = await res.json();
+    } catch {
+      liveData = null;
+    }
+    renderLive();
+  }
+
+  function renderTable() {
+    const rows = siteData?.top_servers?.[filter];
+    if (!rows) return '';
+    if (!rows.length) return '<p class="empty">No server data yet.</p>';
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>#</th><th>Server</th><th>Best time</th><th>Best day</th>
+        <th class="num">Has players</th><th class="num">Avg when on</th><th class="num">Peak</th><th></th></tr></thead>
+      <tbody>${rows.map((s, i) => `<tr>
+        <td>${i + 1}</td>
+        <td><strong>${esc(s.name)}</strong><div class="addr">${esc(s.addr)}</div></td>
+        <td>${esc(s.best_time)} (${Math.round(s.best_time_pct * 100)}%)</td>
+        <td>${esc(s.best_day)}</td>
+        <td class="num">${Math.round(s.pct_active * 100)}%</td>
+        <td class="num">${s.avg_players}</td>
+        <td class="num">${s.peak}</td>
+        <td>${connectButtons(s.addr)}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function renderCharts() {
+    const { suffix, label } = FILTERS[filter];
+    // New version each daily update so browsers don't show yesterday's charts
+    const v = siteData ? `?v=${encodeURIComponent(siteData.updated)}` : '';
+    $('#charts').innerHTML = SECTIONS.map((section) => `
+      <h2>${section.title}</h2>
+      ${section.table ? renderTable() : ''}
+      ${section.charts.map(([file, alt]) => {
+        const src = `charts/${file}${suffix}.png${v}`;
+        return `<figure class="chart"><a href="${src}" target="_blank" rel="noopener">
+          <img src="${src}" alt="${esc(alt)} (${label})" loading="lazy"></a></figure>`;
+      }).join('')}`).join('');
+  }
+
+  function setFilter(next, push = true) {
+    filter = FILTERS[next] ? next : 'all';
+    document.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.filter === filter));
+    if (push) history.replaceState(null, '', filter === 'all' ? location.pathname : `#${filter}`);
+    renderLive();
+    renderCharts();
+  }
+
+  document.addEventListener('click', async (e) => {
+    const f = e.target.closest('[data-filter]');
+    if (f) setFilter(f.dataset.filter);
+    const copy = e.target.closest('[data-copy]');
+    if (copy) {
+      try {
+        await navigator.clipboard.writeText(copy.dataset.copy);
+        copy.textContent = 'Copied';
+      } catch {
+        copy.textContent = copy.dataset.copy;
+      }
+      setTimeout(() => { copy.textContent = 'Copy connect'; }, 1800);
+    }
+  });
+  window.addEventListener('hashchange', () => setFilter(location.hash.slice(1), false));
+
+  async function init() {
+    setFilter(location.hash.slice(1), false);
+    try {
+      const res = await fetch('charts/site_data.json', { cache: 'no-cache' });
+      if (res.ok) siteData = await res.json();
+    } catch { /* charts still render without the table */ }
+    if (siteData) {
+      $('#updated').textContent = `· Charts updated ${new Date(siteData.updated).toLocaleString()}`;
+    }
+    renderCharts();
+    loadLive();
+    setInterval(loadLive, LIVE_REFRESH_MS);
+  }
+  init();
+</script>
+</body>
+</html>
