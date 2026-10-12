@@ -73,6 +73,11 @@ def add_time_columns(df):
     return df
 
 
+# Some servers pad their names with control characters, which plotly.js can't render
+def clean_name(name):
+    return re.sub(r'[\x00-\x1f\x7f]', '', name).strip()
+
+
 # Load and preprocess data: one row per 5-minute check, plus one row per active server per check
 def load_and_preprocess_data(file_path):
     checks, servers = [], []
@@ -87,10 +92,10 @@ def load_and_preprocess_data(file_path):
             elif not checks or checks[-1]['ts'] != ts:
                 continue
             elif s := SERVER_RE.match(msg):
-                servers.append({'ts': ts, 'addr': s.group(1), 'name': s.group(2).strip(),
+                servers.append({'ts': ts, 'addr': s.group(1), 'name': clean_name(s.group(2)),
                                 'players': int(s.group(3))})
             elif p := PLAYERS_RE.match(msg):
-                checks[-1]['server_name'] = p.group(1).strip()
+                checks[-1]['server_name'] = clean_name(p.group(1))
                 checks[-1]['online_players'] = int(p.group(2))
 
     df = add_time_columns(pd.DataFrame(checks, columns=['ts', 'server_name', 'online_players']))
