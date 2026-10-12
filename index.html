@@ -28,7 +28,14 @@
     color: var(--text);
     font: 15px/1.5 Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
-  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+  /* Faded, tiled airship screenshot behind everything */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: url(assets/balloon_race.jpg) repeat; background-size: 420px auto;
+    opacity: .16;
+  }
+  /* clip, not hidden, so the sticky filter bar keeps working while the alarm shakes */
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; overflow-x: clip; }
   h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
   h2 { font-size: 20px; margin: 48px 0 16px; letter-spacing: -0.01em; }
   .lede { color: var(--muted); margin: 0 0 24px; }
@@ -60,6 +67,39 @@
   @keyframes pulse { to { box-shadow: 0 0 0 10px rgba(31,157,85,0); } }
   @media (prefers-reduced-motion: reduce) { .dot.on { animation: none; } }
   .checked { color: var(--muted); font-size: 13px; margin-left: auto; }
+
+  /* Alarm: a server has a real lobby going */
+  .alarm-banner { display: none; }
+  .live.alarm {
+    position: relative; overflow: hidden; border: 3px solid #d10000;
+    background: #300 url(assets/siren.jpg) repeat; background-size: 150px auto;
+    animation: shake 3s infinite;
+  }
+  .live.alarm::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: rgba(230,0,0,.5); animation: flash .5s steps(1) infinite;
+  }
+  .live.alarm > * { position: relative; }
+  .live.alarm .alarm-banner {
+    display: block; text-align: center; color: #fff; background: #d10000;
+    border-radius: 8px; padding: 14px 12px; margin-bottom: 12px;
+    font-size: clamp(22px, 5vw, 40px); font-weight: 800; line-height: 1.1; text-transform: uppercase;
+    animation: blink .5s steps(1) infinite;
+  }
+  .live.alarm .alarm-banner small { display: block; font-size: 15px; font-weight: 600; text-transform: none; margin-top: 6px; }
+  .live.alarm .live-head, .live.alarm .server { background: rgba(255,255,255,.94); border-radius: 8px; padding: 10px 12px; }
+  .live.alarm .server { border-top: 0; margin-top: 8px; }
+  @keyframes flash { 50% { background: rgba(255,230,0,.25); } }
+  @keyframes blink { 50% { background: #fff; color: #d10000; } }
+  /* Short burst of shaking every few seconds so the Join buttons stay clickable */
+  @keyframes shake {
+    0%, 20%, 100% { transform: none; }
+    2%, 10%, 18% { transform: translate(-4px, 1px) rotate(-.6deg); }
+    6%, 14% { transform: translate(4px, -1px) rotate(.6deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live.alarm, .live.alarm::before, .live.alarm .alarm-banner { animation: none; }
+  }
   .empty { color: var(--muted); margin: 4px 0; }
 
   .server { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
@@ -131,7 +171,8 @@
     </div>
   </div>
 
-  <section class="live" aria-live="polite">
+  <section class="live" id="live" aria-live="polite">
+    <div class="alarm-banner" id="alarm-banner"></div>
     <div class="live-head">
       <span class="dot" id="live-dot"></span>
       <h2 id="live-title">Who's on right now</h2>
@@ -156,6 +197,9 @@
   const LIVE_REFRESH_MS = 60 * 1000;
   // A check older than this means the tracker has stopped
   const STALE_MINUTES = 15;
+  // One server with at least this many players sets off the alarm
+  const ALARM_PLAYERS = 10;
+  const PAGE_TITLE = document.title;
 
   const FILTERS = {
     all: { suffix: '', label: 'All servers' },
@@ -220,10 +264,19 @@
     return hrs < 48 ? `${hrs} hr ago` : `${Math.round(hrs / 24)} days ago`;
   }
 
+  function setAlarm(server) {
+    $('#live').classList.toggle('alarm', !!server);
+    $('#alarm-banner').innerHTML = server
+      ? `People are active on Balloon Race right now<small>${server.players} players on ${esc(server.name)}</small>`
+      : '';
+    document.title = server ? `🚨 ${server.players} ON NOW · ${PAGE_TITLE}` : PAGE_TITLE;
+  }
+
   function renderLive() {
     const list = $('#live-list');
     const dot = $('#live-dot');
     if (!liveData) {
+      setAlarm(null);
       dot.classList.remove('on');
       $('#live-checked').textContent = '';
       list.innerHTML = '<p class="empty">Live status isn\'t available right now.</p>';
@@ -238,6 +291,7 @@
       .sort((a, b) => b.players - a.players);
     const playing = servers.filter((s) => s.players > 0);
     dot.classList.toggle('on', playing.length > 0 && !stale);
+    setAlarm(!stale && servers[0]?.players >= ALARM_PLAYERS ? servers[0] : null);
 
     if (!servers.length) {
       const which = filter === 'all' ? '' : ` ${FILTERS[filter].label.toLowerCase()}`;

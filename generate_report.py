@@ -718,7 +718,7 @@ def push_to_github():
 # GitHub Pages serves SITE_BRANCH, which is replaced by a single fresh commit each day so the
 # ~16MB of charts never pile up in the repo history
 SITE_BRANCH = 'site'
-SITE_FILES = ['index.html', '.nojekyll', 'charts']
+SITE_FILES = ['index.html', '.nojekyll', 'assets', 'charts']
 
 
 def publish_site():
