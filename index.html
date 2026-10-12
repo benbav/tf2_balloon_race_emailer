@@ -32,7 +32,7 @@
   body::before {
     content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background: url(assets/balloon_race.jpg) repeat; background-size: 420px auto;
-    opacity: .16;
+    opacity: .4;
   }
   /* clip, not hidden, so the sticky filter bar keeps working while the alarm shakes */
   main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; overflow-x: clip; }
@@ -298,7 +298,7 @@
       list.innerHTML = `<p class="empty">No${which} servers are on Balloon Race right now.</p>`;
       return;
     }
-    const intro = playing.length ? '' : '<p class="empty">Servers are up but nobody\'s playing. Be the first.</p>';
+    const intro = playing.length ? '' : '<p class="empty">Servers are up but nobody\'s playing. Be the change.</p>';
     list.innerHTML = intro + servers.map((s) => `
       <div class="server">
         <div class="info">
