@@ -42,6 +42,7 @@
     padding: 12px 0; margin: 0 0 8px;
     border-bottom: 1px solid var(--line);
   }
+  .filter-bar .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   .filter { display: inline-flex; background: #f0efeb; border-radius: 999px; padding: 4px; gap: 2px; flex-wrap: wrap; }
   .filter button {
     border: 0; background: none; font: inherit; font-weight: 500; color: var(--muted);
@@ -112,13 +113,21 @@
 <body>
 <main>
   <h1>When are people on Balloon Race?</h1>
-  <p class="lede">Every TF2 server on <code>balloon_race_v2b</code> is checked every 5 minutes. Charts update daily, times in Mountain Time.</p>
+  <p class="lede">Every TF2 server on <code>balloon_race_v2b</code> is checked every 5 minutes. Charts update daily.</p>
 
   <div class="filter-bar">
-    <div class="filter" role="group" aria-label="Server type">
-      <button type="button" data-filter="all" aria-pressed="true">All servers</button>
-      <button type="button" data-filter="dedicated" aria-pressed="false">Dedicated 24/7</button>
-      <button type="button" data-filter="rotating" aria-pressed="false">Rotating</button>
+    <div class="row">
+      <div class="filter" role="group" aria-label="Server type">
+        <button type="button" data-filter="all" aria-pressed="true">All servers</button>
+        <button type="button" data-filter="dedicated" aria-pressed="false">Dedicated 24/7</button>
+        <button type="button" data-filter="rotating" aria-pressed="false">Rotating</button>
+      </div>
+      <div class="filter" role="group" aria-label="Timezone">
+        <button type="button" data-tz="pt" aria-pressed="false" title="Pacific Time">PT</button>
+        <button type="button" data-tz="mt" aria-pressed="true" title="Mountain Time">MT</button>
+        <button type="button" data-tz="ct" aria-pressed="false" title="Central Time">CT</button>
+        <button type="button" data-tz="et" aria-pressed="false" title="Eastern Time">ET</button>
+      </div>
     </div>
   </div>
 
@@ -154,17 +163,26 @@
     rotating: { suffix: '_rotating', label: 'Rotating' },
   };
 
+  // Charts that depend on the time of day are drawn once per zone; MT has no file suffix
+  const ZONES = {
+    pt: { suffix: '_pt', label: 'Pacific Time' },
+    mt: { suffix: '', label: 'Mountain Time' },
+    ct: { suffix: '_ct', label: 'Central Time' },
+    et: { suffix: '_et', label: 'Eastern Time' },
+  };
+  const DEFAULT_ZONE = 'mt';
+
   const SECTIONS = [
     { title: 'When to play', charts: [
-      ['best_time', 'Best time to find people'],
-      ['top_windows', 'Top 5 times to play'],
-      ['heatmap', 'How often people are on, by day and hour'],
-      ['busy_heatmap', 'How often there is a busy lobby'],
-      ['weekday_vs_weekend', 'Weekdays vs weekends'],
+      ['best_time', 'Best time to find people', true],
+      ['top_windows', 'Top 5 times to play', true],
+      ['heatmap', 'How often people are on, by day and hour', true],
+      ['busy_heatmap', 'How often there is a busy lobby', true],
+      ['weekday_vs_weekend', 'Weekdays vs weekends', true],
     ]},
     { title: 'Servers', table: true, charts: [
       ['top_servers', 'Busiest servers'],
-      ['server_heatmaps', 'When the top servers are busy'],
+      ['server_heatmaps', 'When the top servers are busy', true],
     ]},
     { title: 'Trends', charts: [
       ['weekly_trend', 'Weekly trend'],
@@ -176,6 +194,7 @@
   ];
 
   let filter = 'all';
+  let zone = DEFAULT_ZONE;
   let siteData = null;
   let liveData = null;
 
@@ -250,7 +269,7 @@
   }
 
   function renderTable() {
-    const rows = siteData?.top_servers?.[filter];
+    const rows = siteData?.top_servers?.[zone]?.[filter];
     if (!rows) return '';
     if (!rows.length) return '<p class="empty">No server data yet.</p>';
     return `<div class="table-wrap"><table>
@@ -275,24 +294,41 @@
     $('#charts').innerHTML = SECTIONS.map((section) => `
       <h2>${section.title}</h2>
       ${section.table ? renderTable() : ''}
-      ${section.charts.map(([file, alt]) => {
-        const src = `charts/${file}${suffix}.png${v}`;
+      ${section.charts.map(([file, alt, timed]) => {
+        const src = `charts/${file}${suffix}${timed ? ZONES[zone].suffix : ''}.png${v}`;
+        const zoneNote = timed ? `, ${ZONES[zone].label}` : '';
         return `<figure class="chart"><a href="${src}" target="_blank" rel="noopener">
-          <img src="${src}" alt="${esc(alt)} (${label})" loading="lazy"></a></figure>`;
+          <img src="${src}" alt="${esc(alt)} (${label}${zoneNote})" loading="lazy"></a></figure>`;
       }).join('')}`).join('');
   }
 
-  function setFilter(next, push = true) {
-    filter = FILTERS[next] ? next : 'all';
+  // Choices live in the URL (?server=dedicated&tz=et) so filtered links can be shared
+  function setView({ server = filter, tz = zone } = {}, push = true) {
+    filter = FILTERS[server] ? server : 'all';
+    zone = ZONES[tz] ? tz : DEFAULT_ZONE;
     document.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.filter === filter));
-    if (push) history.replaceState(null, '', filter === 'all' ? location.pathname : `#${filter}`);
+    document.querySelectorAll('[data-tz]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.tz === zone));
+    if (push) {
+      const params = new URLSearchParams();
+      if (filter !== 'all') params.set('server', filter);
+      if (zone !== DEFAULT_ZONE) params.set('tz', zone);
+      history.replaceState(null, '', location.pathname + (params.size ? `?${params}` : ''));
+    }
     renderLive();
     renderCharts();
   }
 
+  function viewFromUrl() {
+    const params = new URLSearchParams(location.search);
+    // Older links used #dedicated / #rotating
+    return { server: params.get('server') || location.hash.slice(1) || 'all', tz: params.get('tz') || DEFAULT_ZONE };
+  }
+
   document.addEventListener('click', async (e) => {
     const f = e.target.closest('[data-filter]');
-    if (f) setFilter(f.dataset.filter);
+    if (f) setView({ server: f.dataset.filter });
+    const t = e.target.closest('[data-tz]');
+    if (t) setView({ tz: t.dataset.tz });
     const copy = e.target.closest('[data-copy]');
     if (copy) {
       try {
@@ -304,10 +340,10 @@
       setTimeout(() => { copy.textContent = 'Copy connect'; }, 1800);
     }
   });
-  window.addEventListener('hashchange', () => setFilter(location.hash.slice(1), false));
+  window.addEventListener('popstate', () => setView(viewFromUrl(), false));
 
   async function init() {
-    setFilter(location.hash.slice(1), false);
+    setView(viewFromUrl(), false);
     try {
       const res = await fetch('charts/site_data.json', { cache: 'no-cache' });
       if (res.ok) siteData = await res.json();

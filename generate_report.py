@@ -15,10 +15,17 @@ OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "charts")
 LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
 README_PATH = os.path.join(SCRIPT_DIR, 'README.md')
 
-# Log timestamps are written in the server's clock (UTC); charts are shown in this zone
+# Log timestamps are written in the server's clock (UTC); charts are shown in these zones.
+# The first zone is the default (README, all charts); the rest only redraw the charts that depend on the hour.
 LOG_TIMEZONE = 'UTC'
-DISPLAY_TIMEZONE = 'America/Denver'
-TZ_LABEL = 'MT'
+ZONES = [
+    # (timezone, label, file suffix)
+    ('America/Denver', 'MT', ''),
+    ('America/New_York', 'ET', '_et'),
+    ('America/Chicago', 'CT', '_ct'),
+    ('America/Los_Angeles', 'PT', '_pt'),
+]
+DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
 
 # Scorecard needs at least this many days of checks before it names a winner
 MIN_DAYS_FOR_SCORECARD = 7
@@ -68,11 +75,14 @@ def window_label(hour_of_week, short=False):
 
 
 def add_time_columns(df):
-    df['ts'] = (
-        pd.to_datetime(df['ts'])
-        .dt.tz_localize(LOG_TIMEZONE)
-        .dt.tz_convert(DISPLAY_TIMEZONE)
-    )
+    df['ts'] = pd.to_datetime(df['ts']).dt.tz_localize(LOG_TIMEZONE)
+    return in_zone(df)
+
+
+# Recompute the clock columns in the current DISPLAY_TIMEZONE
+def in_zone(df):
+    df = df.copy()
+    df['ts'] = df['ts'].dt.tz_convert(DISPLAY_TIMEZONE)
     df['day_of_week'] = pd.Categorical(df['ts'].dt.day_name(), categories=DAYS, ordered=True)
     df['hour'] = df['ts'].dt.hour
     df['hour_of_week'] = df['ts'].dt.dayofweek * 24 + df['hour']
@@ -146,7 +156,7 @@ def empty_state(fig, message='Not enough data yet'):
 
 
 def save(fig, name, variant=ALL_SERVERS):
-    fig.write_image(os.path.join(OUTPUT_FOLDER, name.replace('.png', f'{variant[0]}.png')), scale=2)
+    fig.write_image(os.path.join(OUTPUT_FOLDER, name.replace('.png', f'{variant[0]}{ZONE_SUFFIX}.png')), scale=2)
 
 
 def days_of_data(df):
@@ -677,14 +687,14 @@ def update_readme(stats):
         f.write(pattern.sub(lambda _: section, readme))
 
 
-# Top servers for each filter on the website
-def write_site_data(stats_by_variant):
+# Top servers for each timezone and filter on the website
+def write_site_data(stats_by_zone):
     data = {'updated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'top_servers': {}}
-    for key, stats in stats_by_variant.items():
-        data['top_servers'][key] = [{
+    for (zone_key, key), (stats, label) in stats_by_zone.items():
+        data['top_servers'].setdefault(zone_key, {})[key] = [{
             'name': s['name'],
             'addr': s['addr'],
-            'best_time': f"{window_label(s['best_window'], short=True)} {TZ_LABEL}",
+            'best_time': f"{window_label(s['best_window'], short=True)} {label}",
             'best_time_pct': round(float(s['best_window_pct']), 3),
             'best_day': s['best_day'],
             'pct_active': round(float(s['pct_active']), 3),
@@ -712,39 +722,45 @@ if __name__ == "__main__":
         OUTPUT_FOLDER = args[1]
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     graph_df, server_df = load_and_preprocess_data(log_path)
-    variants = [
-        (ALL_SERVERS, graph_df, server_df),
-        (DEDICATED, split_checks(graph_df, server_df, True), server_df[server_df['dedicated']]),
-        (ROTATING, split_checks(graph_df, server_df, False), server_df[~server_df['dedicated']]),
-    ]
-    stats_by_variant = {}
-    for variant, df, servers in variants:
-        generate_scorecard(df, variant)
-        generate_top_windows_plot(df, variant)
-        generate_heatmap(
-            df, df['online_players'] > 0,
-            'How often people are on Balloon Race',
-            f'% of 5-minute checks with at least one player · times in {TZ_LABEL} · blank = never seen',
-            'heatmap.png', variant,
-        )
-        generate_heatmap(
-            df, df['online_players'] >= BUSY_THRESHOLD,
-            f'How often there is a busy lobby ({BUSY_THRESHOLD}+ players)',
-            f'% of 5-minute checks with a server at {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
-            'busy_heatmap.png', variant,
-        )
-        generate_weekday_weekend_plot(df, variant)
-        generate_session_length_plot(df, variant)
-        generate_weekly_trend_plot(df, variant)
-        generate_top_servers_plot(df, variant)
-        generate_monthly_avg_plot(df, variant)
-        generate_monthly_daily_avg_plot(df, variant)
-        generate_holiday_table(df, variant)
-        server_stats = top_server_stats(graph_df, servers)
-        generate_server_heatmaps(server_stats, variant)
-        stats_by_variant[variant[0].lstrip('_') or 'all'] = server_stats
-    stats = stats_by_variant['all']
-    write_site_data(stats_by_variant)
+    stats_by_zone = {}
+    for DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX in ZONES:
+        default_zone = ZONE_SUFFIX == ZONES[0][2]
+        zone_df, zone_servers = in_zone(graph_df), in_zone(server_df)
+        variants = [
+            (ALL_SERVERS, zone_df, zone_servers),
+            (DEDICATED, split_checks(zone_df, zone_servers, True), zone_servers[zone_servers['dedicated']]),
+            (ROTATING, split_checks(zone_df, zone_servers, False), zone_servers[~zone_servers['dedicated']]),
+        ]
+        for variant, df, servers in variants:
+            generate_scorecard(df, variant)
+            generate_top_windows_plot(df, variant)
+            generate_heatmap(
+                df, df['online_players'] > 0,
+                'How often people are on Balloon Race',
+                f'% of 5-minute checks with at least one player · times in {TZ_LABEL} · blank = never seen',
+                'heatmap.png', variant,
+            )
+            generate_heatmap(
+                df, df['online_players'] >= BUSY_THRESHOLD,
+                f'How often there is a busy lobby ({BUSY_THRESHOLD}+ players)',
+                f'% of 5-minute checks with a server at {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
+                'busy_heatmap.png', variant,
+            )
+            generate_weekday_weekend_plot(df, variant)
+            server_stats = top_server_stats(zone_df, servers)
+            generate_server_heatmaps(server_stats, variant)
+            stats_by_zone[(TZ_LABEL.lower(), variant[0].lstrip('_') or 'all')] = (server_stats, TZ_LABEL)
+            # These don't depend on the time of day, so they're only drawn once
+            if default_zone:
+                generate_session_length_plot(df, variant)
+                generate_weekly_trend_plot(df, variant)
+                generate_top_servers_plot(df, variant)
+                generate_monthly_avg_plot(df, variant)
+                generate_monthly_daily_avg_plot(df, variant)
+                generate_holiday_table(df, variant)
+    DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
+    stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
+    write_site_data(stats_by_zone)
     if '--no-readme' not in sys.argv:
         update_readme(stats)
     if '--no-push' not in sys.argv:
