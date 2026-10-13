@@ -287,52 +287,6 @@ def generate_heatmap(df, active, title, subtitle, filename, variant=ALL_SERVERS)
     save(fig, filename, variant)
 
 
-# Two lines: share of checks with players by hour, weekdays vs weekends
-def generate_weekday_weekend_plot(df, variant=ALL_SERVERS):
-    hours = list(range(24))
-    labels = [hour_label(h) for h in hours]
-    groups = [
-        ('Weekdays (Mon–Fri)', df['ts'].dt.dayofweek < 5),
-        ('Weekends (Sat–Sun)', df['ts'].dt.dayofweek >= 5),
-    ]
-    fig = go.Figure()
-    ends = []
-    for (name, mask), color in zip(groups, SERIES):
-        sub = df[mask]
-        pct = (sub['online_players'] > 0).groupby(sub['hour']).mean().reindex(hours) * 100
-        fig.add_trace(go.Scatter(
-            x=labels, y=pct.values, name=name, mode='lines+markers',
-            line=dict(color=color, width=2), marker=dict(size=8, color=color, line=dict(color=SURFACE, width=2)),
-            connectgaps=False,
-        ))
-        last = pct.last_valid_index()
-        if last is not None:
-            ends.append((name.split(' ')[0], last, pct[last]))
-    # Direct labels at the line ends, pushed apart when the lines finish close together
-    if len(ends) == 2 and abs(ends[0][2] - ends[1][2]) < 5:
-        ends.sort(key=lambda e: e[2])
-        shifts = [-9, 9]
-    else:
-        shifts = [0] * len(ends)
-    for (label, last, y), shift in zip(ends, shifts):
-        fig.add_annotation(x=hour_label(last), y=y, text=f"<b>{label}</b>", yshift=shift,
-                           xanchor='left', xshift=10, showarrow=False, font=dict(color=TEXT_PRIMARY))
-
-    fig.update_layout(base_layout(
-        'Weekdays vs weekends',
-        f'% of checks with at least one player, by hour ({TZ_LABEL})',
-        showlegend=True,
-        legend=dict(orientation='h', x=0.02, y=1.02, xanchor='left', yanchor='bottom'),
-        margin=dict(l=24, r=110, t=130, b=48),
-        variant=variant,
-    ))
-    if df.empty:
-        empty_state(fig)
-    fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, ticksuffix='%', rangemode='tozero')
-    fig.update_xaxes(showgrid=False, ticks='', tickangle=-45)
-    save(fig, 'weekday_vs_weekend.png', variant)
-
-
 # How long people stick around once they show up
 def generate_session_length_plot(df, variant=ALL_SERVERS):
     active = (df.sort_values('ts')['online_players'] > 0).values
@@ -596,6 +550,7 @@ def top_server_stats(df, server_df):
         # Only count checks since the server was first seen, so new servers aren't penalized
         checks = df[df['ts'] >= rows['ts'].min()]
         active_ts = set(rows.loc[rows['players'] > 0, 'ts'])
+        busy_ts = set(rows.loc[rows['players'] >= BUSY_THRESHOLD, 'ts'])
         active = checks['ts'].isin(active_ts)
         window = window_rates(checks, active)
         best = int(window['pct'].idxmax())
@@ -611,24 +566,28 @@ def top_server_stats(df, server_df):
             'peak': rows['players'].max(),
             'checks': checks,
             'active': active,
+            'busy': checks['ts'].isin(busy_ts),
         })
     stats.sort(key=lambda s: s['pct_active'], reverse=True)
-    return stats[:TOP_SERVER_COUNT]
+    return stats
 
 
 # Small multiples: one day x hour heatmap per top server, on a shared scale
 def generate_server_heatmaps(stats, variant=ALL_SERVERS):
+    # Pick the servers that most often have a busy lobby, not just someone on
+    stats = sorted((s for s in stats if s['busy'].any()), key=lambda s: s['busy'].mean(), reverse=True)
+    stats = stats[:TOP_SERVER_COUNT]
     if not stats:
         fig = go.Figure()
         fig.update_layout(base_layout('When the top servers are busy', height=300, variant=variant))
-        empty_state(fig, 'No server data yet')
+        empty_state(fig, 'No busy lobbies seen yet')
         save(fig, 'server_heatmaps.png', variant)
         return
 
     grids = []
     for s in stats:
         grids.append(
-            (s['active'] * 100).groupby([s['checks']['day_of_week'], s['checks']['hour']], observed=False)
+            (s['busy'] * 100).groupby([s['checks']['day_of_week'], s['checks']['hour']], observed=False)
             .mean().unstack().reindex(index=DAYS, columns=range(24)).fillna(0)
         )
     zmax = max(max(float(g.values.max()) for g in grids), 1)
@@ -647,7 +606,7 @@ def generate_server_heatmaps(stats, variant=ALL_SERVERS):
 
     fig.update_layout(base_layout(
         'When the top servers are busy',
-        f'% of checks each server had at least one player · times in {TZ_LABEL}',
+        f'% of checks each server had {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
         height=170 + 260 * len(stats),
         variant=variant,
     ))
@@ -763,20 +722,14 @@ if __name__ == "__main__":
             generate_scorecard(df, variant)
             generate_top_windows_plot(df, variant)
             generate_heatmap(
-                df, df['online_players'] > 0,
-                'How often people are on Balloon Race',
-                f'% of 5-minute checks with at least one player · times in {TZ_LABEL} · blank = never seen',
-                'heatmap.png', variant,
-            )
-            generate_heatmap(
                 df, df['online_players'] >= BUSY_THRESHOLD,
                 f'How often there is a busy lobby ({BUSY_THRESHOLD}+ players)',
                 f'% of 5-minute checks with a server at {BUSY_THRESHOLD}+ human players · times in {TZ_LABEL}',
                 'busy_heatmap.png', variant,
             )
-            generate_weekday_weekend_plot(df, variant)
-            server_stats = top_server_stats(zone_df, servers)
-            generate_server_heatmaps(server_stats, variant)
+            all_server_stats = top_server_stats(zone_df, servers)
+            server_stats = all_server_stats[:TOP_SERVER_COUNT]
+            generate_server_heatmaps(all_server_stats, variant)
             stats_by_zone[(TZ_LABEL.lower(), variant[0].lstrip('_') or 'all')] = (server_stats, TZ_LABEL)
             # These don't depend on the time of day, so they're only drawn once
             if default_zone:

@@ -9,11 +9,7 @@
 
 ![Top 5 Times](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows.png)
 
-![Heatmap](https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap.png)
-
 ![Busy Lobby Heatmap](https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap.png)
-
-![Weekdays vs Weekends](https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend.png)
 
 ![Session Length](https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length.png)
 
@@ -53,9 +49,7 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 <tr><th width="50%">Dedicated 24/7 servers</th><th width="50%">Rotating servers</th></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap_dedicated.png" alt="Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/heatmap_rotating.png" alt="Heatmap - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend_dedicated.png" alt="Weekdays vs Weekends - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekday_vs_weekend_rotating.png" alt="Weekdays vs Weekends - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
