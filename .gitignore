@@ -9,3 +9,4 @@ test.py
 cron.log
 __pycache__/
 charts/
+bls_unemployment.json

@@ -1,6 +1,7 @@
 from plotly.subplots import make_subplots
 import datetime as dt
 import holidays
+import requests
 import plotly.graph_objects as go
 import pandas as pd
 from server_types import clean_name, is_dedicated
@@ -15,6 +16,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "charts")
 LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
 README_PATH = os.path.join(SCRIPT_DIR, 'README.md')
+# BLS v1 has a tight daily request limit, so the series is cached and refetched at most once a day
+BLS_URL = 'https://api.bls.gov/publicAPI/v1/timeseries/data/LNS14000000'
+BLS_CACHE_PATH = os.path.join(SCRIPT_DIR, 'bls_unemployment.json')
 
 # Log timestamps are written in the server's clock (UTC); charts are shown in these zones.
 # The first zone is the default (README, all charts); the rest only redraw the charts that depend on the hour.
@@ -217,9 +221,10 @@ def generate_scorecard(df, variant=ALL_SERVERS):
         best = int(window['pct'].idxmax())
         all_time_best = int(all_time['pct'].idxmax())
         text(0.62, f"{window_label(best)} {TZ_LABEL}", 60, TEXT_PRIMARY, bold=True)
-        text(0.38, f"People were online in <b>{window.loc[best, 'pct']:.0%}</b> of checks in this window "
-                   f"over the last {min(SCORECARD_RECENT_DAYS, total_days)} days", 20, TEXT_SECONDARY)
-        text(0.2, f"All-time best: {window_label(all_time_best)} ({all_time.loc[all_time_best, 'pct']:.0%}) "
+        text(0.4, f"<b>{window.loc[best, 'pct']:.0%}</b> chance people are on", 30, TEXT_PRIMARY)
+        text(0.24, f"Based on checks in this window over the last {min(SCORECARD_RECENT_DAYS, total_days)} days",
+             16, TEXT_SECONDARY)
+        text(0.1, f"All-time best: {window_label(all_time_best)} ({all_time.loc[all_time_best, 'pct']:.0%}) "
                   f"· {total_days} days of data", 14, TEXT_SECONDARY)
     save(fig, 'best_time.png', variant)
 
@@ -427,6 +432,71 @@ def generate_monthly_daily_avg_plot(df, variant=ALL_SERVERS):
     fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players', rangemode='tozero')
     fig.update_xaxes(showgrid=False, ticks='')
     save(fig, 'monthly_daily_avg.png', variant)
+
+
+# Monthly US unemployment rate (seasonally adjusted) from BLS, as a Series indexed by month start
+def load_unemployment():
+    cached = None
+    if os.path.exists(BLS_CACHE_PATH):
+        with open(BLS_CACHE_PATH, encoding='utf-8') as f:
+            cached = json.load(f)
+    fresh = cached and dt.datetime.now().timestamp() - os.path.getmtime(BLS_CACHE_PATH) < 86400
+    if not fresh:
+        try:
+            r = requests.get(BLS_URL, timeout=30)
+            r.raise_for_status()
+            body = r.json()
+            if body.get('status') != 'REQUEST_SUCCEEDED':
+                raise ValueError(body.get('message'))
+            cached = body['Results']['series'][0]['data']
+            with open(BLS_CACHE_PATH, 'w', encoding='utf-8') as f:
+                json.dump(cached, f)
+        except Exception as e:
+            print(f'Error fetching BLS unemployment data: {e}')
+    rows = [(pd.Timestamp(f"{d['year']}-{d['period'][1:]}-01"), float(d['value']))
+            for d in cached or []
+            if d['period'].startswith('M') and d['period'] != 'M13' and d['value'] != '-']  # '-' = not published
+    return pd.Series(dict(rows), dtype=float).sort_index()
+
+
+# Two lines on two axes: the US unemployment rate vs Balloon Race's daily peak players
+def generate_unemployment_plot(df, unemployment, variant=ALL_SERVERS):
+    daily_peak = df.groupby(df['ts'].dt.date)['online_players'].max()
+    daily_peak.index = pd.to_datetime(daily_peak.index)
+    end = daily_peak.index.max() if len(daily_peak) else pd.Timestamp.now()
+    rate = unemployment[unemployment.index >= end - pd.DateOffset(months=12)]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=rate.index, y=rate.values, name='US unemployment rate', mode='lines+markers',
+        line=dict(color=SERIES[0], width=2), marker=dict(size=8),
+    ))
+    fig.add_trace(go.Scatter(
+        x=daily_peak.index, y=daily_peak.values, name='Balloon Race daily peak players', yaxis='y2',
+        mode='lines+markers', line=dict(color=SERIES[1], width=2), marker=dict(size=8),
+    ))
+    # Direct labels at the end of each line, in text ink
+    for series, axis, label in [(rate, 'y', f"Unemployment {rate.iloc[-1]:.1f}%" if len(rate) else None),
+                                (daily_peak, 'y2', f"Players {daily_peak.iloc[-1]}" if len(daily_peak) else None)]:
+        if label:
+            fig.add_annotation(x=series.index[-1], y=series.iloc[-1], yref=axis, text=f"<b>{label}</b>",
+                               showarrow=False, xanchor='left', xshift=10, font=dict(color=TEXT_PRIMARY))
+    fig.update_layout(base_layout(
+        'Unemployment vs Balloon Race players',
+        'US unemployment rate (BLS, monthly, seasonally adjusted) · most Balloon Race players seen at once each day',
+        variant=variant, showlegend=True,
+        legend=dict(orientation='h', x=0, y=1.02, yanchor='bottom'),
+        margin=dict(l=24, r=24, t=130, b=48),
+        yaxis=dict(title=dict(text='Unemployment rate', font=dict(color=TEXT_PRIMARY)), ticksuffix='%',
+                   tickformat='.1f', dtick=0.1, showgrid=True, gridcolor=GRID, zeroline=False),
+        yaxis2=dict(title=dict(text='Daily peak players', font=dict(color=TEXT_PRIMARY)), overlaying='y',
+                    side='right', showgrid=False, zeroline=False, tickformat='d', tickmode='auto',
+                    range=[0, max(float(daily_peak.max()) if len(daily_peak) else 0, 1) * 1.1]),
+        xaxis=dict(showgrid=False, ticks='', tickformat='%b %Y'),
+    ))
+    if not len(rate) and not len(daily_peak):
+        empty_state(fig)
+    save(fig, 'unemployment.png', variant)
 
 
 # US holidays plus a few unofficial gaming days and school-break periods
@@ -709,6 +779,7 @@ if __name__ == "__main__":
         OUTPUT_FOLDER = args[1]
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     graph_df, server_df = load_and_preprocess_data(log_path)
+    unemployment = load_unemployment()
     stats_by_zone = {}
     for DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX in ZONES:
         default_zone = ZONE_SUFFIX == ZONES[0][2]
@@ -739,6 +810,7 @@ if __name__ == "__main__":
                 generate_monthly_avg_plot(df, variant)
                 generate_monthly_daily_avg_plot(df, variant)
                 generate_holiday_table(df, variant)
+                generate_unemployment_plot(df, unemployment, variant)
     DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
     stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
     write_site_data(stats_by_zone)

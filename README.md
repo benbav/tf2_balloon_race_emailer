@@ -1,4 +1,4 @@
-### When Are People On Balloon Race?
+### WHEN ARE PEOPLE PLAYING BALLOON RACE????
 #### No more randomly checking and hoping people are on - here is the cold hard data
 
 ##### Checks every 5 minutes, charts update every day (times in Mountain Time)
@@ -20,6 +20,8 @@
 ![Monthly Max](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg.png)
 
 ![Monthly Avg Daily Peak](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg.png)
+
+![Unemployment vs Players](https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment.png)
 
 ![Top Servers](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers.png)
 
@@ -55,6 +57,7 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_dedicated.png" alt="Monthly Avg Daily Peak - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_rotating.png" alt="Monthly Avg Daily Peak - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment_dedicated.png" alt="Unemployment vs Players - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment_rotating.png" alt="Unemployment vs Players - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
 <tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
 </table>
