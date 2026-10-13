@@ -207,7 +207,7 @@ def generate_scorecard(df, variant=ALL_SERVERS):
     all_time = window_rates(df, df['online_players'] > 0)
 
     fig = go.Figure()
-    fig.update_layout(base_layout('', height=360), xaxis=dict(visible=False), yaxis=dict(visible=False))
+    fig.update_layout(base_layout('', height=480), xaxis=dict(visible=False), yaxis=dict(visible=False))
     fig.update_layout(title=None, margin=dict(l=0, r=0, t=0, b=0))
 
     def text(y, s, size, color, bold=False):
@@ -608,7 +608,7 @@ def generate_holiday_table(df, variant=ALL_SERVERS):
         'Holidays vs normal days',
         '"Players on" = % of checks with at least one player · compared with non-holiday days of the same weekday'
         + f'<br>Next up: {next_up}',
-        height=200 + 38 * max(len(rows), 4),
+        height=max(600, 200 + 38 * len(rows)),  # at least as tall as the chart beside it on the site
         margin=dict(l=24, r=24, t=130, b=16),
         variant=variant,
     ))
