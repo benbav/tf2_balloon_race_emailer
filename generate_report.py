@@ -3,7 +3,12 @@ import datetime as dt
 import holidays
 import requests
 import plotly.graph_objects as go
+import numpy as np
 import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import log_loss
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from server_types import clean_name, is_dedicated
 import subprocess
 import json
@@ -469,11 +474,11 @@ def generate_unemployment_plot(df, unemployment, variant=ALL_SERVERS):
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=rate.index, y=rate.values, name='US unemployment rate', mode='lines+markers',
-        line=dict(color=SERIES[0], width=2), marker=dict(size=8),
+        line=dict(color=SERIES[0], width=2, shape='spline'), marker=dict(size=8),
     ))
     fig.add_trace(go.Scatter(
         x=daily_peak.index, y=daily_peak.values, name='Balloon Race daily peak players', yaxis='y2',
-        mode='lines+markers', line=dict(color=SERIES[1], width=2), marker=dict(size=8),
+        mode='lines+markers', line=dict(color=SERIES[1], width=2, shape='spline'), marker=dict(size=8),
     ))
     # Direct labels at the end of each line, in text ink
     for series, axis, label in [(rate, 'y', f"Unemployment {rate.iloc[-1]:.1f}%" if len(rate) else None),
@@ -718,8 +723,9 @@ def update_readme(stats):
 
 
 # Top servers for each timezone and filter on the website
-def write_site_data(stats_by_zone):
-    data = {'updated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'top_servers': {}}
+def write_site_data(stats_by_zone, forecast):
+    data = {'updated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'top_servers': {},
+            'forecast': forecast}
     for (zone_key, key), (stats, label) in stats_by_zone.items():
         data['top_servers'].setdefault(zone_key, {})[key] = [{
             'name': s['name'],
@@ -733,6 +739,66 @@ def write_site_data(stats_by_zone):
         } for s in stats]
     with open(os.path.join(OUTPUT_FOLDER, 'site_data.json'), 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
+
+
+# "Will a lobby form?" model: chance some server hits BUSY_THRESHOLD+ players within the next hour,
+# from the busiest server's count right now and the time of week (in the default zone).
+# The site gets the model's answer for every hour of the week x player count, so any model can go here.
+FORECAST_MINUTES = 60
+FORECAST_MAX_PLAYERS = 20  # counts above this are looked up as this
+
+
+def forecast_features(players, hour, weekend):
+    angle = 2 * np.pi * np.asarray(hour, dtype=float) / 24
+    players = np.asarray(players, dtype=float)
+    return np.column_stack([np.log1p(players), (players >= BUSY_THRESHOLD).astype(float),
+                            np.sin(angle), np.cos(angle), np.sin(2 * angle), np.cos(2 * angle),
+                            np.asarray(weekend, dtype=float)])
+
+
+def forecast_examples(df):
+    d = df.sort_values('ts').reset_index(drop=True)
+    ts, busy = d['ts'].values, (d['online_players'] >= BUSY_THRESHOLD).values
+    horizon = np.timedelta64(FORECAST_MINUTES, 'm')
+    labels, keep = [], []
+    for i in range(len(d)):
+        end = np.searchsorted(ts, ts[i] + horizon, side='right')
+        # Skip checks whose next hour is mostly missing (end of the log, or the tracker was down)
+        if end - i - 1 < FORECAST_MINUTES // CHECK_MINUTES * 0.75:
+            continue
+        labels.append(busy[i + 1:end].any())
+        keep.append(i)
+    d = d.loc[keep]
+    hour = d['ts'].dt.hour + d['ts'].dt.minute / 60
+    return forecast_features(d['online_players'], hour, d['ts'].dt.dayofweek >= 5), np.array(labels, dtype=int)
+
+
+def new_forecast_model():
+    return make_pipeline(StandardScaler(), LogisticRegression(C=0.5))
+
+
+def train_lobby_forecast(df):
+    X, y = forecast_examples(df)
+    info = {'horizon_minutes': FORECAST_MINUTES, 'threshold': BUSY_THRESHOLD, 'timezone': ZONES[0][0],
+            'days': days_of_data(df), 'examples': int(len(y)), 'positives': int(y.sum())}
+    if len(y) < 100 or y.sum() < 3 or y.sum() == len(y):
+        print('Lobby forecast: not enough data to train')
+        return dict(info, ready=False)
+    # Score on the most recent quarter, trained on the rest, against just guessing the base rate
+    cut = int(len(y) * 0.75)
+    if len(set(y[:cut])) == 2:
+        model = new_forecast_model().fit(X[:cut], y[:cut])
+        score = log_loss(y[cut:], model.predict_proba(X[cut:])[:, 1], labels=[0, 1])
+        baseline = log_loss(y[cut:], np.full(len(y) - cut, y[:cut].mean()), labels=[0, 1])
+        info.update(test_log_loss=round(score, 4), baseline_log_loss=round(baseline, 4))
+        print(f'Lobby forecast holdout log loss: {score:.3f} (base rate guess: {baseline:.3f})')
+    model = new_forecast_model().fit(X, y)
+    # grid[hour_of_week][players], hour_of_week 0 = Monday 12 AM, scored at the middle of each hour
+    hours = np.repeat(np.arange(168), FORECAST_MAX_PLAYERS + 1)
+    players = np.tile(np.arange(FORECAST_MAX_PLAYERS + 1), 168)
+    probs = model.predict_proba(forecast_features(players, hours % 24 + 0.5, hours // 24 >= 5))[:, 1]
+    grid = probs.reshape(168, FORECAST_MAX_PLAYERS + 1).round(3).tolist()
+    return dict(info, ready=True, max_players=FORECAST_MAX_PLAYERS, grid=grid)
 
 
 # Push the log and README to main, and the website (page + charts) to its own branch
@@ -813,7 +879,7 @@ if __name__ == "__main__":
                 generate_unemployment_plot(df, unemployment, variant)
     DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
     stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
-    write_site_data(stats_by_zone)
+    write_site_data(stats_by_zone, train_lobby_forecast(graph_df))
     if '--no-readme' not in sys.argv:
         update_readme(stats)
     if '--no-push' not in sys.argv:
