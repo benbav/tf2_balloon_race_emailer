@@ -138,11 +138,15 @@
   .btn:focus-visible { outline: 2px solid var(--dedicated); outline-offset: 2px; }
 
   /* Charts */
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-bottom: 20px; }
+  /* Pairs of charts share a row height; wide charts take the full row, centered */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
   .grid > .table-wrap { grid-column: 1 / -1; margin-bottom: 0; }
-  .chart { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  /* Same background as the chart images, so leftover space in a stretched card blends in */
+  .chart { margin: 0; display: flex; background: #fcfcfb; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .chart a { display: flex; align-items: center; justify-content: center; width: 100%; }
   .chart img { display: block; width: 100%; height: auto; }
-  .chart a { display: block; }
+  .chart.wide { grid-column: 1 / -1; }
+  .chart.wide img { width: auto; max-width: 100%; max-height: 900px; }
 
   /* Top servers table */
   .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 20px; }
@@ -248,11 +252,11 @@
     { title: 'When to play', charts: [
       ['best_time', 'Best time to find people', true],
       ['top_windows', 'Top 5 times to play', true],
-      ['busy_heatmap', 'How often there is a busy lobby', true],
+      ['busy_heatmap', 'How often there is a busy lobby', true, true],
     ]},
     { title: 'Servers', table: true, charts: [
-      ['top_servers', 'Busiest servers'],
-      ['server_heatmaps', 'When the top servers are busy', true],
+      ['top_servers', 'Busiest servers', false, true],
+      ['server_heatmaps', 'When the top servers are busy', true, true],
     ]},
     { title: 'Trends', charts: [
       ['weekly_trend', 'Weekly trend'],
@@ -417,10 +421,10 @@
       <h2>${section.title}</h2>
       <div class="grid">
       ${section.table ? renderTable() : ''}
-      ${section.charts.map(([file, alt, timed]) => {
+      ${section.charts.map(([file, alt, timed, wide]) => {
         const src = `charts/${file}${suffix}${timed ? ZONES[zone].suffix : ''}.png${v}`;
         const zoneNote = timed ? `, ${ZONES[zone].label}` : '';
-        return `<figure class="chart"><a href="${src}" target="_blank" rel="noopener">
+        return `<figure class="chart${wide ? ' wide' : ''}"><a href="${src}" target="_blank" rel="noopener">
           <img src="${src}" alt="${esc(alt)} (${label}${zoneNote})" loading="lazy"></a></figure>`;
       }).join('')}
       </div>`).join('');
