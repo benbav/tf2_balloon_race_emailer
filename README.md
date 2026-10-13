@@ -30,10 +30,10 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 <!-- TOP_SERVERS_START -->
 | # | Server | Connect (paste in TF2 console) | Best time | Best day | Has players | Avg players when on | Peak |
 |---|---|---|---|---|---|---|---|
-| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Mon · 11 AM – 1 PM MT (100%) | Sunday | 55% of checks | 1.2 | 6 |
-| 2 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 3% of checks | 14.7 | 17 |
+| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Mon · 8 PM – 10 PM MT (100%) | Sunday | 51% of checks | 1.2 | 6 |
+| 2 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 2% of checks | 14.7 | 17 |
 | 3 | Aar's Server \| Map Testing \| Virginia | `connect 169.254.112.56:12184` | Sat · 1 PM – 3 PM MT (100%) | Saturday | 1% of checks | 24.7 | 26 |
-| 4 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 26.9 | 48 |
+| 4 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 26.2 | 48 |
 | 5 | [24/7 Funbox] Dυɱρʂƚҽɾ ɾαTʂ + ϝɾҽҽ Bυɱρz | `connect 91.230.199.49:27015` | Sat · 10 AM – 12 PM MT (44%) | Saturday | 1% of checks | 1.5 | 2 |
 
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
