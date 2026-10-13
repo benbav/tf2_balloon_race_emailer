@@ -112,6 +112,7 @@
   .forecast .what { min-width: 0; }
   .forecast .what strong { display: block; font-size: 18px; }
   .forecast .what span { color: var(--muted); font-size: 13px; }
+  .forecast .metrics { color: var(--muted); font-size: 11px; line-height: 1.45; border-top: 1px solid var(--line); padding-top: 10px; }
 
   .server { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
   .server:first-child { border-top: 0; }
@@ -194,6 +195,7 @@
       <strong id="forecast-title">Will a lobby form in the next hour?</strong>
       <span id="forecast-note">Loading…</span>
     </div>
+    <div class="metrics" id="forecast-metrics"></div>
   </section>
 
   <section class="live" id="live" aria-live="polite">
@@ -335,12 +337,29 @@
       </div>`).join('');
   }
 
+  // How the model did on the most recent checks it wasn't trained on, vs always guessing the average
+  function forecastMetrics(f) {
+    const n = (v) => v.toLocaleString();
+    let text = `${f.model} · trained on ${f.days} day${f.days === 1 ? '' : 's'} of data `
+      + `(${n(f.examples)} checks, ${n(f.positives)} followed by a lobby).`;
+    if (f.test_log_loss != null) {
+      const better = f.test_log_loss < f.baseline_log_loss;
+      text += ` Tested on the latest ${Math.round(f.test_share * 100)}% (${n(f.test_examples)} checks):`
+        + (f.test_auc != null ? ` AUC ${f.test_auc.toFixed(2)},` : '')
+        + ` log loss ${f.test_log_loss.toFixed(3)} vs ${f.baseline_log_loss.toFixed(3)},`
+        + ` Brier ${f.test_brier.toFixed(3)} vs ${f.baseline_brier.toFixed(3)} for always guessing the average`
+        + ` (lower is better) - ${better ? 'beating a guess' : 'not beating a guess yet, so take it with a grain of salt'}.`;
+    }
+    return text;
+  }
+
   // Look up the model's chance of a lobby for the current hour of the week and busiest server's count
   function renderForecast() {
     const f = siteData?.forecast;
     const pct = $('#forecast-pct');
     const note = $('#forecast-note');
     $('#forecast-title').textContent = `Chance of a ${f?.threshold ?? ALARM_PLAYERS}+ player lobby in the next hour`;
+    $('#forecast-metrics').textContent = f?.ready ? forecastMetrics(f) : '';
     if (!f?.ready) {
       pct.textContent = '–';
       note.textContent = f ? `Not enough data yet (${f.days} days, ${f.positives} checks before a lobby)` : 'Forecast unavailable';
@@ -355,7 +374,7 @@
     const chance = f.grid[day * 24 + Number(parts.hour) % 24][Math.min(players, f.max_players)];
     pct.textContent = `${Math.round(chance * 100)}%`;
     const now = stale ? 'live count unavailable, assuming 0 on' : `${players} on the busiest server now`;
-    note.textContent = `${now} · all servers · early model trained on ${f.days} days, so take it with a grain of salt`;
+    note.textContent = `${now} · all servers`;
   }
 
   async function loadLive() {

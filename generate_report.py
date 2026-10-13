@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import log_loss
+from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from server_types import clean_name, is_dedicated
@@ -779,7 +779,7 @@ def new_forecast_model():
 
 def train_lobby_forecast(df):
     X, y = forecast_examples(df)
-    info = {'horizon_minutes': FORECAST_MINUTES, 'threshold': BUSY_THRESHOLD, 'timezone': ZONES[0][0],
+    info = {'model': 'Logistic regression', 'horizon_minutes': FORECAST_MINUTES, 'threshold': BUSY_THRESHOLD, 'timezone': ZONES[0][0],
             'days': days_of_data(df), 'examples': int(len(y)), 'positives': int(y.sum())}
     if len(y) < 100 or y.sum() < 3 or y.sum() == len(y):
         print('Lobby forecast: not enough data to train')
@@ -788,9 +788,16 @@ def train_lobby_forecast(df):
     cut = int(len(y) * 0.75)
     if len(set(y[:cut])) == 2:
         model = new_forecast_model().fit(X[:cut], y[:cut])
-        score = log_loss(y[cut:], model.predict_proba(X[cut:])[:, 1], labels=[0, 1])
-        baseline = log_loss(y[cut:], np.full(len(y) - cut, y[:cut].mean()), labels=[0, 1])
-        info.update(test_log_loss=round(score, 4), baseline_log_loss=round(baseline, 4))
+        test, probs, guess = y[cut:], model.predict_proba(X[cut:])[:, 1], np.full(len(y) - cut, y[:cut].mean())
+        score = log_loss(test, probs, labels=[0, 1])
+        baseline = log_loss(test, guess, labels=[0, 1])
+        info.update(test_share=0.25, test_examples=int(len(test)),
+                    test_log_loss=round(score, 4), baseline_log_loss=round(baseline, 4),
+                    test_brier=round(float(brier_score_loss(test, probs)), 4),
+                    baseline_brier=round(float(brier_score_loss(test, guess)), 4))
+        # AUC needs both outcomes in the test set
+        if len(set(test)) == 2:
+            info['test_auc'] = round(float(roc_auc_score(test, probs)), 3)
         print(f'Lobby forecast holdout log loss: {score:.3f} (base rate guess: {baseline:.3f})')
     model = new_forecast_model().fit(X, y)
     # grid[hour_of_week][players], hour_of_week 0 = Monday 12 AM, scored at the middle of each hour
