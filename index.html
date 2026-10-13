@@ -102,6 +102,81 @@
   }
   .empty { color: var(--muted); margin: 4px 0; }
 
+  /* Chaos: the whole page goes off when a lobby is busy. Flashes stay under 3 a second */
+  .chaos-balloons, .chaos-ticker, .chaos-omg { display: none; }
+  body.chaos { animation: strobe 1.6s steps(1) infinite; }
+  body.chaos::before { opacity: .55; animation: drift 5s linear infinite; }
+  /* Police lights over everything; clicks pass through */
+  body.chaos::after {
+    content: ''; position: fixed; inset: 0; z-index: 40; pointer-events: none;
+    background: radial-gradient(circle at 0 0, rgba(255,0,0,.4), transparent 55%),
+                radial-gradient(circle at 100% 0, rgba(0,80,255,.4), transparent 55%);
+    animation: police .8s steps(1) infinite;
+  }
+  body.chaos main { padding-bottom: 110px; }
+  body.chaos h1 {
+    color: #ff0040; text-shadow: 3px 3px 0 #000, -3px -3px 0 #ffe600;
+    animation: wobble .6s ease-in-out infinite, hue 1.2s linear infinite;
+  }
+  body.chaos h2 { display: inline-block; background: #ffe600; padding: 2px 10px; animation: tilt .9s ease-in-out infinite alternate; }
+  body.chaos .lede { font-weight: 700; color: #000; animation: jitter .3s infinite; }
+  body.chaos .live, body.chaos .forecast, body.chaos .table-wrap { animation: jitter .4s infinite; }
+  body.chaos .forecast .pct { animation: throb .5s ease-in-out infinite alternate, hue 2s linear infinite; }
+  body.chaos .chart { animation: jitter .35s infinite; }
+  body.chaos .chart:nth-child(odd) { animation: jitter .5s infinite reverse; }
+  body.chaos .chart img { animation: hue 3s linear infinite; }
+  body.chaos .btn.primary { animation: throb .4s ease-in-out infinite alternate; background: #ff0040; border-color: #ff0040; }
+  body.chaos footer { animation: tilt 1.4s ease-in-out infinite alternate; }
+  body.chaos .chaos-balloons { display: block; position: fixed; inset: 0; z-index: 45; pointer-events: none; overflow: hidden; }
+  .chaos-balloons span {
+    position: absolute; bottom: -80px; font-size: var(--size); line-height: 1;
+    animation: rise var(--dur) linear forwards;
+  }
+  body.chaos .chaos-ticker {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 46; overflow: hidden; pointer-events: none;
+    background: #000; color: #ffe600; border-top: 4px solid #ff0040;
+    font-size: 22px; font-weight: 800; padding: 10px 0; white-space: nowrap;
+  }
+  .chaos-ticker span { display: inline-block; animation: ticker 10s linear infinite; }
+  /* Big sloppy sign slapped over the middle of the page; clicks pass through */
+  body.chaos .chaos-omg { display: block; position: fixed; inset: 0; z-index: 44; pointer-events: none; overflow: hidden; }
+  .chaos-omg div {
+    position: absolute; width: max-content; max-width: 92vw; text-align: center;
+    background: #fff; color: #e00000; border: 6px solid #e00000; box-shadow: 8px 10px 0 rgba(0,0,0,.6);
+    font-family: Impact, "Arial Black", sans-serif; font-weight: 900; line-height: .95; text-transform: uppercase;
+    padding: 14px 20px; left: 50%; top: 44%; --r: -7deg; font-size: clamp(40px, 9vw, 120px);
+    transform: translate(-50%, -50%) rotate(var(--r));
+    animation: slap 1.1s ease-in-out infinite;
+  }
+  .chaos-omg small { display: block; font-size: .3em; line-height: 1.2; margin-top: 10px; overflow-wrap: anywhere; }
+  .chaos-omg small:empty { display: none; }
+  @keyframes slap {
+    0%, 100% { transform: translate(-50%, -50%) rotate(var(--r)) scale(1); }
+    50% { transform: translate(-49%, -51%) rotate(calc(var(--r) + 3deg)) scale(1.06); }
+  }
+  @keyframes strobe { 0% { background: #ff0040; } 25% { background: #ffe600; } 50% { background: #00c3ff; } 75% { background: #c000ff; } }
+  @keyframes drift { to { background-position: 420px 0; } }
+  @keyframes police {
+    50% { background: radial-gradient(circle at 0 0, rgba(0,80,255,.4), transparent 55%),
+                      radial-gradient(circle at 100% 0, rgba(255,0,0,.4), transparent 55%); }
+  }
+  @keyframes jitter {
+    0%, 100% { transform: none; }
+    20% { transform: translate(-3px, 2px) rotate(-.5deg); }
+    40% { transform: translate(3px, -2px) rotate(.5deg); }
+    60% { transform: translate(-2px, -3px) rotate(-.3deg); }
+    80% { transform: translate(2px, 3px) rotate(.3deg); }
+  }
+  @keyframes wobble { 0%, 100% { transform: rotate(-2deg) scale(1); } 50% { transform: rotate(2deg) scale(1.06); } }
+  @keyframes tilt { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+  @keyframes throb { to { transform: scale(1.15); } }
+  @keyframes hue { to { filter: hue-rotate(360deg); } }
+  @keyframes rise { to { transform: translate(var(--sway), calc(-100vh - 160px)) rotate(var(--spin)); } }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    body.chaos, body.chaos *, body.chaos::before, body.chaos::after { animation: none !important; }
+  }
+
   /* Lobby forecast scorecard */
   /* Forecast and live panel side by side on wide screens */
   .top { display: grid; grid-template-columns: minmax(240px, 1fr) 2.5fr; gap: 20px; margin-top: 24px; }
@@ -222,6 +297,11 @@
     · <a href="https://github.com/benbav/tf2_balloon_race_emailer">Source on GitHub</a>
   </footer>
 </main>
+<div class="chaos-omg" aria-hidden="true">
+  <div>🚨🚨 OH MY GOD 🚨🚨<br>PEOPLE ARE ON BALLOON RACE RIGHT NOW<br>🚨🚨🚨🚨🚨<small id="chaos-server"></small></div>
+</div>
+<div class="chaos-balloons" id="chaos-balloons" aria-hidden="true"></div>
+<div class="chaos-ticker" aria-hidden="true"><span id="chaos-ticker"></span></div>
 
 <script>
   // status.json lives on its own branch so the 5-minute updates stay out of main's history
@@ -231,6 +311,10 @@
   const STALE_MINUTES = 15;
   // One server with at least this many players sets off the alarm
   const ALARM_PLAYERS = 10;
+  // Set to true to keep chaos mode on all the time, for testing
+  const FORCE_CHAOS = false;
+  const CHAOS_EMOJI = ['🎈', '🎈', '🎈', '🚨', '🔥', '💥', '🎉'];
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const PAGE_TITLE = document.title;
 
   const FILTERS = {
@@ -301,6 +385,43 @@
       ? `People are active on Balloon Race right now<small>${server.players} players on ${esc(server.name)}</small>`
       : '';
     document.title = server ? `🚨 ${server.players} ON NOW · ${PAGE_TITLE}` : PAGE_TITLE;
+    setChaos(server);
+  }
+
+  let balloonTimer = null;
+
+  function spawnBalloon() {
+    const box = $('#chaos-balloons');
+    if (box.childElementCount > 40) return;
+    const b = document.createElement('span');
+    b.textContent = CHAOS_EMOJI[Math.floor(Math.random() * CHAOS_EMOJI.length)];
+    b.style.left = `${Math.random() * 100}%`;
+    b.style.setProperty('--size', `${24 + Math.random() * 40}px`);
+    b.style.setProperty('--dur', `${3 + Math.random() * 4}s`);
+    b.style.setProperty('--sway', `${(Math.random() - 0.5) * 300}px`);
+    b.style.setProperty('--spin', `${(Math.random() - 0.5) * 720}deg`);
+    b.addEventListener('animationend', () => b.remove());
+    box.append(b);
+  }
+
+  // Whole page goes off: strobing, shaking, balloons floating up and a ticker along the bottom
+  function setChaos(server) {
+    const on = FORCE_CHAOS || !!server;
+    document.body.classList.toggle('chaos', on);
+    const msg = server
+      ? `🚨 ${server.players} PLAYERS ON ${server.name.toUpperCase()} 🎈 GET IN HERE 🎈 `
+      : '🚨 BALLOON RACE IS POPPING OFF 🎈 GET IN HERE 🎈 ';
+    // Repeated so the ticker can loop by sliding exactly half its width
+    $('#chaos-ticker').textContent = on ? msg.repeat(8) : '';
+    // While testing there may be no busy lobby, so name whichever server is busiest
+    const top = server ?? liveData?.servers.reduce((a, b) => (b.players > a.players ? b : a), liveData.servers[0]);
+    $('#chaos-server').textContent = on && top ? `${top.players} players on ${top.name}` : '';
+    const animate = on && !reducedMotion.matches;
+    if (animate && !balloonTimer) balloonTimer = setInterval(spawnBalloon, 200);
+    if (!animate && balloonTimer) {
+      clearInterval(balloonTimer);
+      balloonTimer = null;
+    }
   }
 
   function renderLive() {
