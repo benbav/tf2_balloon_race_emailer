@@ -32,7 +32,7 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 <!-- TOP_SERVERS_START -->
 | # | Server | Connect (paste in TF2 console) | Best time | Best day | Has players | Avg players when on | Peak |
 |---|---|---|---|---|---|---|---|
-| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Tue · 11 AM – 1 PM MT (96%) | Sunday | 55% of checks | 1.2 | 6 |
+| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Tue · 11 AM – 1 PM MT (96%) | Sunday | 54% of checks | 1.2 | 6 |
 | 2 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 1% of checks | 14.7 | 17 |
 | 3 | [xG] Community Gamemodes - XenoGamers.com | `connect 74.91.119.153:27015` | Tue · 5 AM – 7 AM MT (33%) | Tuesday | 1% of checks | 1.0 | 1 |
 | 4 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 22.6 | 48 |
