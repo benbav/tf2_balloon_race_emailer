@@ -5,10 +5,7 @@ import requests
 import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+from lobby_forecast import train_lobby_forecast
 from server_types import clean_name, is_dedicated
 import subprocess
 import json
@@ -741,73 +738,6 @@ def write_site_data(stats_by_zone, forecast):
         json.dump(data, f, ensure_ascii=False, indent=1)
 
 
-# "Will a lobby form?" model: chance some server hits BUSY_THRESHOLD+ players within the next hour,
-# from the busiest server's count right now and the time of week (in the default zone).
-# The site gets the model's answer for every hour of the week x player count, so any model can go here.
-FORECAST_MINUTES = 60
-FORECAST_MAX_PLAYERS = 20  # counts above this are looked up as this
-
-
-def forecast_features(players, hour, weekend):
-    angle = 2 * np.pi * np.asarray(hour, dtype=float) / 24
-    players = np.asarray(players, dtype=float)
-    return np.column_stack([np.log1p(players), (players >= BUSY_THRESHOLD).astype(float),
-                            np.sin(angle), np.cos(angle), np.sin(2 * angle), np.cos(2 * angle),
-                            np.asarray(weekend, dtype=float)])
-
-
-def forecast_examples(df):
-    d = df.sort_values('ts').reset_index(drop=True)
-    ts, busy = d['ts'].values, (d['online_players'] >= BUSY_THRESHOLD).values
-    horizon = np.timedelta64(FORECAST_MINUTES, 'm')
-    labels, keep = [], []
-    for i in range(len(d)):
-        end = np.searchsorted(ts, ts[i] + horizon, side='right')
-        # Skip checks whose next hour is mostly missing (end of the log, or the tracker was down)
-        if end - i - 1 < FORECAST_MINUTES // CHECK_MINUTES * 0.75:
-            continue
-        labels.append(busy[i + 1:end].any())
-        keep.append(i)
-    d = d.loc[keep]
-    hour = d['ts'].dt.hour + d['ts'].dt.minute / 60
-    return forecast_features(d['online_players'], hour, d['ts'].dt.dayofweek >= 5), np.array(labels, dtype=int)
-
-
-def new_forecast_model():
-    return make_pipeline(StandardScaler(), LogisticRegression(C=0.5))
-
-
-def train_lobby_forecast(df):
-    X, y = forecast_examples(df)
-    info = {'model': 'Logistic regression', 'horizon_minutes': FORECAST_MINUTES, 'threshold': BUSY_THRESHOLD, 'timezone': ZONES[0][0],
-            'days': days_of_data(df), 'examples': int(len(y)), 'positives': int(y.sum())}
-    if len(y) < 100 or y.sum() < 3 or y.sum() == len(y):
-        print('Lobby forecast: not enough data to train')
-        return dict(info, ready=False)
-    # Score on the most recent quarter, trained on the rest, against just guessing the base rate
-    cut = int(len(y) * 0.75)
-    if len(set(y[:cut])) == 2:
-        model = new_forecast_model().fit(X[:cut], y[:cut])
-        test, probs, guess = y[cut:], model.predict_proba(X[cut:])[:, 1], np.full(len(y) - cut, y[:cut].mean())
-        score = log_loss(test, probs, labels=[0, 1])
-        baseline = log_loss(test, guess, labels=[0, 1])
-        info.update(test_share=0.25, test_examples=int(len(test)),
-                    test_log_loss=round(score, 4), baseline_log_loss=round(baseline, 4),
-                    test_brier=round(float(brier_score_loss(test, probs)), 4),
-                    baseline_brier=round(float(brier_score_loss(test, guess)), 4))
-        # AUC needs both outcomes in the test set
-        if len(set(test)) == 2:
-            info['test_auc'] = round(float(roc_auc_score(test, probs)), 3)
-        print(f'Lobby forecast holdout log loss: {score:.3f} (base rate guess: {baseline:.3f})')
-    model = new_forecast_model().fit(X, y)
-    # grid[hour_of_week][players], hour_of_week 0 = Monday 12 AM, scored at the middle of each hour
-    hours = np.repeat(np.arange(168), FORECAST_MAX_PLAYERS + 1)
-    players = np.tile(np.arange(FORECAST_MAX_PLAYERS + 1), 168)
-    probs = model.predict_proba(forecast_features(players, hours % 24 + 0.5, hours // 24 >= 5))[:, 1]
-    grid = probs.reshape(168, FORECAST_MAX_PLAYERS + 1).round(3).tolist()
-    return dict(info, ready=True, max_players=FORECAST_MAX_PLAYERS, grid=grid)
-
-
 # Push the log and README to main, and the website (page + charts) to its own branch
 def push_to_github():
     os.chdir(SCRIPT_DIR)
@@ -886,7 +816,10 @@ if __name__ == "__main__":
                 generate_unemployment_plot(df, unemployment, variant)
     DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
     stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
-    write_site_data(stats_by_zone, train_lobby_forecast(graph_df))
+    years = range(graph_df['ts'].min().year, graph_df['ts'].max().year + 2)
+    holiday_dates = {d for dates in holiday_calendar(years).values() for d in dates}
+    forecast = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES, ZONES[0][0])
+    write_site_data(stats_by_zone, forecast)
     if '--no-readme' not in sys.argv:
         update_readme(stats)
     if '--no-push' not in sys.argv:
