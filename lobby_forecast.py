@@ -1,17 +1,18 @@
+import datetime as dt
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from balloon_log import LOG_TIMEZONE, parse_log, tail_lines
 
-# "Will a lobby form?" model: chance some server hits `threshold`+ players within the next hour,
-# from the busiest server right now (who and how many), the time of week and whether it's a holiday
-# (in the zone df's timestamps are in).
-# The site gets the model's answer for every holiday flag x server x hour of the week x player count,
-# so any model can go here.
+# "Will a lobby form?" model: chance some server hits `threshold`+ players within the next hour.
+# The daily report trains it on the whole log and saves it; the 5-minute poller (main.py) loads it and
+# scores the latest check, so features can look back at recent checks. Both build features with
+# check_frame + feature_matrix, so training and live scoring always see the same inputs.
 FORECAST_MINUTES = 60
-FORECAST_MAX_PLAYERS = 20  # counts above this are looked up as this
 # Servers that were the busiest most often get their own feature; the rest share one "other server" bucket
 FORECAST_SERVERS = 6
 FORECAST_MIN_SERVER_CHECKS = 20
@@ -19,19 +20,17 @@ FORECAST_MIN_SERVER_CHECKS = 20
 # holidays are left out until there's enough of each: until then it's weekend vs weekday, and no holiday flag
 FORECAST_MIN_DATES_PER_WEEKDAY = 2
 FORECAST_MIN_HOLIDAY_DATES = 3
-
-
-def forecast_features(players, hour, day, server, holiday, threshold, servers, use_days, use_holidays):
-    angle = 2 * np.pi * np.asarray(hour, dtype=float) / 24
-    players = np.asarray(players, dtype=float)
-    day, server = np.asarray(day), np.asarray(server, dtype=object)
-    # Nobody on means no busiest server, so it falls in the "other" bucket (all zeros)
-    on = players > 0
-    days = [(day == d).astype(float) for d in range(7)] if use_days else [(day >= 5).astype(float)]
-    holidays = [np.asarray(holiday, dtype=float)] if use_holidays else []
-    return np.column_stack([np.log1p(players), (players >= threshold).astype(float),
-                            np.sin(angle), np.cos(angle), np.sin(2 * angle), np.cos(2 * angle),
-                            *days, *[((server == s) & on).astype(float) for s in servers], *holidays])
+# Momentum: how much the busiest server's count changed over these lookbacks
+MOMENTUM_MINUTES = (15, 30)
+# "Minutes since the last lobby" stops counting here
+SINCE_BUSY_CAP_MINUTES = 24 * 60
+# Live scoring reads this much of the end of the log, enough to cover the longest lookback
+TAIL_BYTES = 2_000_000
+# Rolling evaluation: each of the latest days (up to this many) is predicted by a model trained only
+# on the days before it, and at least this many earlier days are needed before a day is tested
+EVAL_MAX_DAYS = 14
+EVAL_MIN_TRAIN_DAYS = 2
+CALIBRATION_BINS = np.linspace(0, 1, 11)
 
 
 # Address of the busiest server at each check. Older checks were logged before per-server lines
@@ -42,75 +41,171 @@ def busiest_addrs(df, server_df):
     return df['ts'].map(top).fillna(df['server_name'].map(by_name))
 
 
+# One row per check with everything the features need, each computed only from that check and earlier ones
+def check_frame(df, server_df, threshold, check_minutes):
+    f = df.sort_values('ts').reset_index(drop=True)
+    f['addr'] = busiest_addrs(f, server_df)
+    per_check = server_df.groupby('ts')['players'].agg(['sum', 'size'])
+    # Older checks only know the busiest server
+    f['total_players'] = f['ts'].map(per_check['sum']).fillna(f['online_players'])
+    f['servers_on'] = f['ts'].map(per_check['size']).fillna((f['online_players'] > 0).astype(int))
+    history = f[['ts', 'online_players']].rename(columns={'ts': 'then', 'online_players': 'players_then'})
+    tolerance = pd.Timedelta(minutes=check_minutes)
+    for minutes in MOMENTUM_MINUTES:
+        then = pd.merge_asof(pd.DataFrame({'then': f['ts'] - pd.Timedelta(minutes=minutes)}), history,
+                             on='then', direction='backward', tolerance=tolerance)
+        # No check back then (start of the log, or the tracker was down): count it as no change
+        f[f'change_{minutes}'] = f['online_players'] - then['players_then'].fillna(f['online_players']).values
+    busy = f.loc[f['online_players'] >= threshold, ['ts']].rename(columns={'ts': 'last_busy'})
+    last = pd.merge_asof(f[['ts']], busy, left_on='ts', right_on='last_busy', direction='backward')
+    since = (f['ts'] - last['last_busy']).dt.total_seconds() / 60
+    f['minutes_since_busy'] = since.fillna(SINCE_BUSY_CAP_MINUTES).clip(upper=SINCE_BUSY_CAP_MINUTES)
+    return f
+
+
+def feature_matrix(f, cfg):
+    players = f['online_players'].to_numpy(dtype=float)
+    hour = (f['ts'].dt.hour + f['ts'].dt.minute / 60).to_numpy(dtype=float)
+    angle = 2 * np.pi * hour / 24
+    day = f['ts'].dt.dayofweek.to_numpy()
+    days = [(day == d).astype(float) for d in range(7)] if cfg['use_days'] else [(day >= 5).astype(float)]
+    # Nobody on means no busiest server, so it falls in the "other" bucket (all zeros)
+    addr, on = f['addr'].to_numpy(dtype=object), players > 0
+    servers = [((addr == s) & on).astype(float) for s in cfg['servers']]
+    holidays = [f['ts'].dt.date.isin(cfg['holiday_dates']).to_numpy(dtype=float)] if cfg['use_holidays'] else []
+    return np.column_stack([
+        np.log1p(players), (players >= cfg['threshold']).astype(float),
+        np.log1p(f['total_players'].to_numpy(dtype=float)), f['servers_on'].to_numpy(dtype=float),
+        *[f[f'change_{m}'].to_numpy(dtype=float) for m in MOMENTUM_MINUTES],
+        np.log1p(f['minutes_since_busy'].to_numpy(dtype=float)),
+        np.sin(angle), np.cos(angle), np.sin(2 * angle), np.cos(2 * angle),
+        *days, *servers, *holidays,
+    ])
+
+
+# 1 if a later check within the next hour is busy; checks whose next hour is mostly missing (end of the
+# log, or the tracker was down) are dropped
+def lobby_labels(f, threshold, check_minutes):
+    ts, busy = f['ts'].values, (f['online_players'] >= threshold).values
+    horizon = np.timedelta64(FORECAST_MINUTES, 'm')
+    labels, keep = [], []
+    for i in range(len(f)):
+        end = np.searchsorted(ts, ts[i] + horizon, side='right')
+        if end - i - 1 < FORECAST_MINUTES // check_minutes * 0.75:
+            continue
+        labels.append(busy[i + 1:end].any())
+        keep.append(i)
+    return np.array(keep, dtype=int), np.array(labels, dtype=int)
+
+
 def pick_servers(addrs, players):
     counts = addrs[players > 0].value_counts()
     return counts[counts >= FORECAST_MIN_SERVER_CHECKS].index[:FORECAST_SERVERS].tolist()
 
 
-def forecast_examples(df, servers, holiday_dates, threshold, check_minutes, use_days, use_holidays):
-    d = df.sort_values('ts').reset_index(drop=True)
-    ts, busy = d['ts'].values, (d['online_players'] >= threshold).values
-    horizon = np.timedelta64(FORECAST_MINUTES, 'm')
-    labels, keep = [], []
-    for i in range(len(d)):
-        end = np.searchsorted(ts, ts[i] + horizon, side='right')
-        # Skip checks whose next hour is mostly missing (end of the log, or the tracker was down)
-        if end - i - 1 < FORECAST_MINUTES // check_minutes * 0.75:
-            continue
-        labels.append(busy[i + 1:end].any())
-        keep.append(i)
-    d = d.loc[keep]
-    hour = d['ts'].dt.hour + d['ts'].dt.minute / 60
-    holiday = d['ts'].dt.date.isin(holiday_dates)
-    X = forecast_features(d['online_players'], hour, d['ts'].dt.dayofweek, d['addr'], holiday, threshold, servers,
-                          use_days, use_holidays)
-    return X, np.array(labels, dtype=int)
-
-
+# Strong regularization: with only a handful of lobbies to learn from, weaker settings (C=0.5) were
+# overconfident and scored worse than guessing the base rate on the rolling test
 def new_forecast_model():
-    return make_pipeline(StandardScaler(), LogisticRegression(C=0.5))
+    return make_pipeline(StandardScaler(), LogisticRegression(C=0.05, max_iter=1000))
 
 
-def train_lobby_forecast(df, server_df, holiday_dates, threshold, check_minutes, timezone):
-    df = df.assign(addr=busiest_addrs(df, server_df))
-    servers = pick_servers(df['addr'], df['online_players'])
-    dates = df['ts'].dt.date.drop_duplicates()
-    use_days = len(dates) and pd.to_datetime(dates).dt.dayofweek.value_counts().reindex(range(7), fill_value=0).min() \
-        >= FORECAST_MIN_DATES_PER_WEEKDAY
-    use_holidays = dates.isin(holiday_dates).sum() >= FORECAST_MIN_HOLIDAY_DATES
-    X, y = forecast_examples(df, servers, holiday_dates, threshold, check_minutes, use_days, use_holidays)
-    days = (df['ts'].max() - df['ts'].min()).days if len(df) else 0
+def scores(y, probs, guess):
+    out = {'examples': int(len(y)), 'positives': int(y.sum()),
+           # Neighboring checks share most of their next hour, so separate lobbies are the real sample size
+           'lobbies': int(((y == 1) & (np.r_[0, y[:-1]] == 0)).sum())}
+    if not len(y):
+        return out
+    out.update(log_loss=round(log_loss(y, probs, labels=[0, 1]), 4),
+               baseline_log_loss=round(log_loss(y, guess, labels=[0, 1]), 4),
+               brier=round(float(brier_score_loss(y, probs)), 4),
+               baseline_brier=round(float(brier_score_loss(y, guess)), 4))
+    # AUC needs both outcomes
+    if len(set(y)) == 2:
+        auc = float(roc_auc_score(y, probs))
+        out.update(auc=round(auc, 3), gini=round(2 * auc - 1, 3))
+    return out
+
+
+def calibration(y, probs):
+    bins = np.clip(np.digitize(probs, CALIBRATION_BINS[1:-1]), 0, len(CALIBRATION_BINS) - 2)
+    return [{'from': round(CALIBRATION_BINS[b], 1), 'to': round(CALIBRATION_BINS[b + 1], 1), 'checks': int((bins == b).sum()),
+             'predicted': round(float(probs[bins == b].mean()), 3), 'actual': round(float(y[bins == b].mean()), 3)}
+            for b in range(len(CALIBRATION_BINS) - 1) if (bins == b).any()]
+
+
+# Rolling-origin test: each test day is predicted by a model fit only on examples whose next hour ended
+# before that day started, so no test lobby leaks into training. Scored on every check, and on just the
+# checks without a lobby yet (the question that matters; checks already busy are easy).
+def rolling_evaluation(ts, X, y, players, threshold):
+    dates = ts.dt.date.to_numpy()
+    test_days = sorted(set(dates))[EVAL_MIN_TRAIN_DAYS:][-EVAL_MAX_DAYS:]
+    probs, guess, idx, used = [], [], [], []
+    for day in test_days:
+        start = pd.Timestamp(day).tz_localize(ts.dt.tz)
+        train = (ts < start - pd.Timedelta(minutes=FORECAST_MINUTES)).to_numpy()
+        test = dates == day
+        if train.sum() < 100 or len(set(y[train])) < 2 or not test.any():
+            continue
+        model = new_forecast_model().fit(X[train], y[train])
+        probs.append(model.predict_proba(X[test])[:, 1])
+        guess.append(np.full(test.sum(), y[train].mean()))
+        idx.append(np.flatnonzero(test))
+        used.append(day.isoformat())
+    if not used:
+        return None
+    probs, guess, idx = np.concatenate(probs), np.concatenate(guess), np.concatenate(idx)
+    test_y, is_open = y[idx], players[idx] < threshold
+    return {'method': 'rolling by day', 'test_days': used, 'all': scores(test_y, probs, guess),
+            'no_lobby_yet': scores(test_y[is_open], probs[is_open], guess[is_open]),
+            'calibration': calibration(test_y, probs)}
+
+
+def train_lobby_forecast(df, server_df, holiday_dates, threshold, check_minutes, timezone, model_path):
+    f = check_frame(df, server_df, threshold, check_minutes)
+    dates = f['ts'].dt.date.drop_duplicates()
+    weekday_dates = pd.to_datetime(dates).dt.dayofweek.value_counts().reindex(range(7), fill_value=0)
+    cfg = {'threshold': threshold, 'check_minutes': check_minutes, 'timezone': timezone,
+           'servers': pick_servers(f['addr'], f['online_players']),
+           'use_days': bool(len(dates)) and bool(weekday_dates.min() >= FORECAST_MIN_DATES_PER_WEEKDAY),
+           'use_holidays': bool(dates.isin(holiday_dates).sum() >= FORECAST_MIN_HOLIDAY_DATES),
+           'holiday_dates': set(holiday_dates)}
+    keep, y = lobby_labels(f, threshold, check_minutes)
+    examples = f.iloc[keep].reset_index(drop=True)
+    X = feature_matrix(examples, cfg)
+    days = (f['ts'].max() - f['ts'].min()).days if len(f) else 0
     info = {'model': 'Logistic regression', 'horizon_minutes': FORECAST_MINUTES, 'threshold': threshold, 'timezone': timezone,
-            'days': days, 'examples': int(len(y)), 'positives': int(y.sum()),
-            'uses_day_of_week': bool(use_days), 'uses_holidays': bool(use_holidays)}
+            'days': days, 'examples': int(len(y)), 'positives': int(y.sum()), 'servers': cfg['servers'],
+            'uses_day_of_week': cfg['use_days'], 'uses_holidays': cfg['use_holidays']}
     if len(y) < 100 or y.sum() < 3 or y.sum() == len(y):
         print('Lobby forecast: not enough data to train')
         return dict(info, ready=False)
-    # Score on the most recent quarter, trained on the rest, against just guessing the base rate
-    cut = int(len(y) * 0.75)
-    if len(set(y[:cut])) == 2:
-        model = new_forecast_model().fit(X[:cut], y[:cut])
-        test, probs, guess = y[cut:], model.predict_proba(X[cut:])[:, 1], np.full(len(y) - cut, y[:cut].mean())
-        score = log_loss(test, probs, labels=[0, 1])
-        baseline = log_loss(test, guess, labels=[0, 1])
-        info.update(test_share=0.25, test_examples=int(len(test)),
-                    test_log_loss=round(score, 4), baseline_log_loss=round(baseline, 4),
-                    test_brier=round(float(brier_score_loss(test, probs)), 4),
-                    baseline_brier=round(float(brier_score_loss(test, guess)), 4))
-        # AUC needs both outcomes in the test set
-        if len(set(test)) == 2:
-            auc = float(roc_auc_score(test, probs))
-            info.update(test_auc=round(auc, 3), test_gini=round(2 * auc - 1, 3))
-        print(f'Lobby forecast holdout log loss: {score:.3f} (base rate guess: {baseline:.3f})')
+    evaluation = rolling_evaluation(examples['ts'], X, y, examples['online_players'].to_numpy(), threshold)
+    if evaluation:
+        info['evaluation'] = evaluation
+        a, o = evaluation['all'], evaluation['no_lobby_yet']
+        print(f"Lobby forecast, {len(evaluation['test_days'])} test days: log loss {a['log_loss']:.3f} "
+              f"(base rate guess {a['baseline_log_loss']:.3f}), AUC {a.get('auc')}, Gini {a.get('gini')}; "
+              f"no lobby yet: AUC {o.get('auc')}, Gini {o.get('gini')}, {o['lobbies']} lobbies")
     model = new_forecast_model().fit(X, y)
-    # grid[holiday][server][hour_of_week][players]: holiday 0/1, server is an index into `servers`
-    # (len(servers) = any other server, or nobody on), hour_of_week 0 = Monday 12 AM scored at the
-    # middle of each hour
-    shape = (2, len(servers) + 1, 168, FORECAST_MAX_PLAYERS + 1)
-    holiday, server, hours, players = (a.ravel() for a in np.indices(shape))
-    server = np.array(servers + [None], dtype=object)[server]
-    X = forecast_features(players, hours % 24 + 0.5, hours // 24, server, holiday, threshold, servers,
-                          use_days, use_holidays)
-    grid = model.predict_proba(X)[:, 1].reshape(shape).round(3).tolist()
-    return dict(info, ready=True, max_players=FORECAST_MAX_PLAYERS, servers=servers,
-                holidays=sorted(d.isoformat() for d in holiday_dates), grid=grid)
+    trained = dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
+    joblib.dump({'model': model, 'cfg': cfg, 'trained': trained}, model_path)
+    return dict(info, ready=True, trained=trained)
+
+
+# Chance of a lobby in the next hour as of the latest check in the log, or None if there's no model yet
+def predict_now(log_path, model_path):
+    try:
+        saved = joblib.load(model_path)
+    except FileNotFoundError:
+        return None
+    cfg = saved['cfg']
+    checks, servers = parse_log(tail_lines(log_path, TAIL_BYTES))
+    if checks.empty:
+        return None
+    for frame in (checks, servers):
+        frame['ts'] = pd.to_datetime(frame['ts']).dt.tz_localize(LOG_TIMEZONE).dt.tz_convert(cfg['timezone'])
+    f = check_frame(checks, servers, cfg['threshold'], cfg['check_minutes']).tail(1)
+    chance = float(saved['model'].predict_proba(feature_matrix(f, cfg))[0, 1])
+    row = f.iloc[0]
+    return {'chance': round(chance, 3), 'as_of': row['ts'].isoformat(), 'players': int(row['online_players']),
+            'change_15': int(row['change_15']), 'trained': saved['trained']}

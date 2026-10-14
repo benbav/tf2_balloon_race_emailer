@@ -6,7 +6,8 @@ import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
 from lobby_forecast import train_lobby_forecast
-from server_types import clean_name, is_dedicated
+from balloon_log import LOG_TIMEZONE, parse_log
+from server_types import is_dedicated
 import subprocess
 import json
 import re
@@ -18,13 +19,14 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "charts")
 LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
 README_PATH = os.path.join(SCRIPT_DIR, 'README.md')
+# Lobby forecast model, trained here daily and used by main.py on every check
+FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
 # BLS v1 has a tight daily request limit, so the series is cached and refetched at most once a day
 BLS_URL = 'https://api.bls.gov/publicAPI/v1/timeseries/data/LNS14000000'
 BLS_CACHE_PATH = os.path.join(SCRIPT_DIR, 'bls_unemployment.json')
 
-# Log timestamps are written in the server's clock (UTC); charts are shown in these zones.
+# Charts are shown in these zones (the log itself is in LOG_TIMEZONE).
 # The first zone is the default (README, all charts); the rest only redraw the charts that depend on the hour.
-LOG_TIMEZONE = 'UTC'
 ZONES = [
     # (timezone, label, file suffix)
     ('America/Denver', 'MT', ''),
@@ -63,10 +65,6 @@ ALL_SERVERS = ('', None, None)
 DEDICATED = ('_dedicated', 'Dedicated 24/7 servers', SERIES[0])
 ROTATING = ('_rotating', 'Rotating servers', SERIES[1])
 
-LINE_RE = re.compile(r'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) - INFO - (.*)$')
-SERVER_RE = re.compile(r'^SERVER (\S+) \| (.*) : (\d+)$')
-PLAYERS_RE = re.compile(r'^(.*) : (\d+)$')
-
 README_START = '<!-- TOP_SERVERS_START -->'
 README_END = '<!-- TOP_SERVERS_END -->'
 
@@ -99,26 +97,10 @@ def in_zone(df):
 
 # Load and preprocess data: one row per 5-minute check, plus one row per active server per check
 def load_and_preprocess_data(file_path):
-    checks, servers = [], []
     with open(file_path, encoding='utf-8', errors='replace') as f:
-        for line in f:
-            m = LINE_RE.match(line.rstrip('\n'))
-            if not m:
-                continue
-            ts, msg = m.groups()
-            if msg.startswith('No one playing') or msg.startswith('Found people playing'):
-                checks.append({'ts': ts, 'server_name': None, 'online_players': 0})
-            elif not checks or checks[-1]['ts'] != ts:
-                continue
-            elif s := SERVER_RE.match(msg):
-                servers.append({'ts': ts, 'addr': s.group(1), 'name': clean_name(s.group(2)),
-                                'players': int(s.group(3))})
-            elif p := PLAYERS_RE.match(msg):
-                checks[-1]['server_name'] = clean_name(p.group(1))
-                checks[-1]['online_players'] = int(p.group(2))
-
-    df = add_time_columns(pd.DataFrame(checks, columns=['ts', 'server_name', 'online_players']))
-    server_df = add_time_columns(pd.DataFrame(servers, columns=['ts', 'addr', 'name', 'players']))
+        checks, servers = parse_log(f)
+    df = add_time_columns(checks)
+    server_df = add_time_columns(servers)
     server_df['dedicated'] = [is_dedicated(n, a) for n, a in zip(server_df['name'], server_df['addr'])]
     return df, server_df
 
@@ -818,7 +800,8 @@ if __name__ == "__main__":
     stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
     years = range(graph_df['ts'].min().year, graph_df['ts'].max().year + 2)
     holiday_dates = {d for dates in holiday_calendar(years).values() for d in dates}
-    forecast = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES, ZONES[0][0])
+    forecast = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES, ZONES[0][0],
+                                    FORECAST_MODEL_PATH)
     write_site_data(stats_by_zone, forecast)
     if '--no-readme' not in sys.argv:
         update_readme(stats)

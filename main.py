@@ -1,5 +1,6 @@
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timezone
+from lobby_forecast import predict_now
 from server_types import clean_name, is_dedicated
 import subprocess
 import requests
@@ -13,6 +14,9 @@ import os
 EMAIL_SEND_LIMIT = 4
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 EMAIL_COUNT_FILE = os.path.join(SCRIPT_DIR, 'email_count.txt')
+LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
+# Trained daily by generate_report.py
+FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
 # Branch the website reads "who's on now" from; force-pushed every check so it stays one commit
 LIVE_BRANCH = 'live'
 MIN_PLAYER_THRESHOLD = 10
@@ -53,11 +57,20 @@ def send_email(message):
     except Exception as e:
         logging.error(f'Error sending email: {e}')
 
-def publish_status(servers):
+def lobby_forecast():
+    """Chance of a lobby in the next hour from the checks logged so far, or None if it can't be worked out."""
+    try:
+        return predict_now(LOG_PATH, FORECAST_MODEL_PATH)
+    except Exception as e:
+        print(f'Error computing lobby forecast: {e!r}')
+        return None
+
+def publish_status(servers, forecast):
     """Push the current server list to the live branch without touching the working tree."""
     status = {
         'checked': datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'servers': [dict(s, name=clean_name(s['name']), dedicated=is_dedicated(s['name'], s['addr'])) for s in servers],
+        'forecast': forecast,
     }
 
     def git(*args, stdin=None):
@@ -100,10 +113,8 @@ def main():
     dotenv.load_dotenv()
 
     # Set up logging
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    log_file_path = os.path.join(script_dir, 'tf2_balloon_log.txt')
     logging.basicConfig(
-        filename=log_file_path,
+        filename=LOG_PATH,
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
@@ -117,7 +128,6 @@ def main():
 
     # Get the server list and check for players
     servers = get_server_list()
-    publish_status(servers)
     output_dict = {s['name']: s['players'] for s in servers}
     if any(value > 0 for value in output_dict.values()):
         # Log server activity
@@ -139,6 +149,9 @@ def main():
             logging.info(f"Email limit of {EMAIL_SEND_LIMIT} reached for today. No email will be sent.")
     else:
         logging.info('No one playing balloon race :(')
+
+    # After logging, so the forecast includes this check
+    publish_status(servers, lobby_forecast())
 
 if __name__ == "__main__":
     main()

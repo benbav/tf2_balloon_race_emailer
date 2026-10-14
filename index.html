@@ -467,17 +467,22 @@
     const n = (v) => v.toLocaleString();
     let text = `${f.model} · trained on ${f.days} day${f.days === 1 ? '' : 's'} of data `
       + `(${n(f.examples)} checks, ${n(f.positives)} followed by a lobby).`;
-    if (f.test_log_loss != null) {
-      text += ` Tested on the latest ${Math.round(f.test_share * 100)}% (${n(f.test_examples)} checks):`
-        + (f.test_auc != null ? ` AUC ${f.test_auc.toFixed(2)} (Gini ${f.test_gini.toFixed(2)}),` : '')
-        + ` log loss ${f.test_log_loss.toFixed(3)} vs ${f.baseline_log_loss.toFixed(3)},`
-        + ` Brier ${f.test_brier.toFixed(3)} vs ${f.baseline_brier.toFixed(3)} for always guessing the average`
-        + ' (lower is better).';
+    const e = f.evaluation;
+    if (e) {
+      const score = (s) => (s.auc != null ? `AUC ${s.auc.toFixed(2)} (Gini ${s.gini.toFixed(2)}), ` : '')
+        + `log loss ${s.log_loss.toFixed(3)} vs ${s.baseline_log_loss.toFixed(3)}, Brier ${s.brier.toFixed(3)} vs ${s.baseline_brier.toFixed(3)}`;
+      const days = e.test_days.length;
+      text += ` Each of the last ${days} day${days === 1 ? '' : 's'} predicted by a model trained only on the days before it:`
+        + ` ${score(e.all)}`;
+      if (e.no_lobby_yet.log_loss != null) {
+        text += `; when no lobby is up yet (${n(e.no_lobby_yet.lobbies)} lobbies formed): ${score(e.no_lobby_yet)}`;
+      }
+      text += '. Second numbers are always guessing the average; lower is better.';
     }
     return text;
   }
 
-  // Look up the model's chance of a lobby for today (holiday or not), the busiest server, its count and the hour of the week
+  // The poller scores the latest check against the model on every run and publishes it with the live status
   function renderForecast() {
     const f = siteData?.forecast;
     const pct = $('#forecast-pct');
@@ -489,22 +494,16 @@
       note.textContent = f ? `Not enough data yet (${f.days} days, ${f.positives} checks before a lobby)` : 'Forecast unavailable';
       return;
     }
+    const live = liveData?.forecast;
     const stale = !liveData || Date.now() - new Date(liveData.checked) > STALE_MINUTES * 60000;
-    const top = stale ? null : liveData.servers.reduce((a, b) => (b.players > a.players ? b : a), liveData.servers[0]);
-    const players = top?.players ?? 0;
-    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-      timeZone: f.timezone, weekday: 'short', hour: 'numeric', hourCycle: 'h23',
-      year: 'numeric', month: '2-digit', day: '2-digit',
-    }).formatToParts(new Date()).map((p) => [p.type, p.value]));
-    const day = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(parts.weekday);
-    const holiday = f.holidays.includes(`${parts.year}-${parts.month}-${parts.day}`) ? 1 : 0;
-    // Servers the model doesn't know (or nobody on) use the last "other" slot
-    const known = players > 0 ? f.servers.indexOf(top.addr) : -1;
-    const server = known >= 0 ? known : f.servers.length;
-    const chance = f.grid[holiday][server][day * 24 + Number(parts.hour) % 24][Math.min(players, f.max_players)];
-    pct.textContent = `${Math.round(chance * 100)}%`;
-    const now = stale ? 'live count unavailable, assuming 0 on' : `${players} on the busiest server now`;
-    note.textContent = `${now} · all servers`;
+    if (!live || stale) {
+      pct.textContent = '–';
+      note.textContent = stale ? 'Live data unavailable, tracker may be down' : 'Forecast unavailable';
+      return;
+    }
+    pct.textContent = `${Math.round(live.chance * 100)}%`;
+    const trend = live.change_15 > 0 ? `, up ${live.change_15} in 15 min` : live.change_15 < 0 ? `, down ${-live.change_15} in 15 min` : '';
+    note.textContent = `${live.players} on the busiest server now${trend} · all servers`;
   }
 
   async function loadLive() {
