@@ -43,6 +43,8 @@ SCORECARD_RECENT_DAYS = 28
 # A lobby with at least this many human players counts as "busy"
 BUSY_THRESHOLD = 10
 TOP_SERVER_COUNT = 5
+# The website's server table has room for more, and stands in for the busiest servers bar chart there
+SITE_SERVER_COUNT = 10
 CHECK_MINUTES = 5
 # A day needs at least this many checks to count in the holiday comparison
 MIN_CHECKS_PER_DAY = 144
@@ -435,29 +437,6 @@ def generate_monthly_avg_plot(df, variant=ALL_SERVERS):
     save(fig, 'monthly_avg.png', variant)
 
 
-# Generate bar plot for average daily peak by month
-def generate_monthly_daily_avg_plot(df, variant=ALL_SERVERS):
-    daily_peak = df.groupby(df['ts'].dt.date)['online_players'].max()
-    months = pd.to_datetime(daily_peak.index).strftime('%Y-%m')
-    monthly = daily_peak.groupby(months).mean().sort_index()
-    labels = [pd.Timestamp(m + '-01').strftime('%b %Y') for m in monthly.index]
-
-    fig = go.Figure(go.Bar(
-        x=labels, y=monthly.values, marker_color=BAR,
-        text=[f"{v:.1f}" for v in monthly.values], textposition='outside', cliponaxis=False,
-        textfont=dict(color=TEXT_PRIMARY),
-    ))
-    fig.update_layout(base_layout(
-        'Average daily peak players by month',
-        "Each day's most players seen at once, averaged over the month (days nobody played count as 0)",
-        barcornerradius=4, bargap=0.45,
-        variant=variant,
-    ))
-    fig.update_yaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players', rangemode='tozero')
-    fig.update_xaxes(showgrid=False, ticks='')
-    save(fig, 'monthly_daily_avg.png', variant)
-
-
 # Monthly US unemployment rate (seasonally adjusted) from BLS, as a Series indexed by month start
 def load_unemployment():
     cached = None
@@ -824,20 +803,19 @@ if __name__ == "__main__":
                 'busy_heatmap.png', variant,
             )
             all_server_stats = top_server_stats(zone_df, servers)
-            server_stats = all_server_stats[:TOP_SERVER_COUNT]
             generate_server_heatmaps(all_server_stats, variant)
-            stats_by_zone[(TZ_LABEL.lower(), variant[0].lstrip('_') or 'all')] = (server_stats, TZ_LABEL)
+            stats_by_zone[(TZ_LABEL.lower(), variant[0].lstrip('_') or 'all')] = (all_server_stats[:SITE_SERVER_COUNT],
+                                                                                    TZ_LABEL)
             # These don't depend on the time of day, so they're only drawn once
             if default_zone:
                 generate_session_length_plot(df, variant)
                 generate_weekly_trend_plot(df, variant)
                 generate_top_servers_plot(df, variant)
                 generate_monthly_avg_plot(df, variant)
-                generate_monthly_daily_avg_plot(df, variant)
                 generate_holiday_table(df, variant)
                 generate_unemployment_plot(df, unemployment, variant)
     DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX = ZONES[0]
-    stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
+    stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0][:TOP_SERVER_COUNT]
     years = range(graph_df['ts'].min().year, graph_df['ts'].max().year + 2)
     holiday_dates = {d for dates in holiday_calendar(years).values() for d in dates}
     forecast, fit = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES,

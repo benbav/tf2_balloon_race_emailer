@@ -235,6 +235,17 @@
   tr:last-child td { border-bottom: 0; }
   td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   td .addr { color: var(--muted); font-size: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  /* Players column: light track to the peak, solid bar to the average, one scale for every row */
+  th.players, td.players { min-width: 220px; width: 30%; }
+  th .key { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; font-size: 12px; }
+  th .key i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+  .key .avg, .bar .avg { background: var(--dedicated); }
+  .key .peak, .bar .peak { background: #cde2fb; }
+  .bar { position: relative; height: 12px; margin: 5px 0 4px; }
+  .bar .peak, .bar .avg { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; }
+  .bar .avg { border-right: 2px solid var(--card); }
+  .bar-label { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bar-label b { color: var(--text); font-weight: 600; }
 
   footer { color: var(--muted); font-size: 13px; margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; }
 
@@ -352,7 +363,6 @@
       ['busy_heatmap', 'How often there is a busy lobby', true, true],
     ]},
     { title: 'Servers', table: true, charts: [
-      ['top_servers', 'Busiest servers', false, true],
       ['server_heatmaps', 'When the top servers are busy', true, true],
     ]},
     { title: 'Trends', charts: [
@@ -360,7 +370,6 @@
       ['session_length', 'How long sessions last'],
       ['holidays', 'Holidays vs normal days'],
       ['monthly_avg', 'Max players by month'],
-      ['monthly_daily_avg', 'Average daily peak players by month'],
       ['unemployment', 'Unemployment vs Balloon Race players'],
     ]},
   ];
@@ -544,17 +553,21 @@
     const rows = siteData?.top_servers?.[zone]?.[filter];
     if (!rows) return '';
     if (!rows.length) return '<p class="empty">No server data yet.</p>';
+    const maxPeak = Math.max(1, ...rows.map((s) => s.peak));
     return `<div class="table-wrap"><table>
-      <thead><tr><th>#</th><th>Server</th><th>Best time</th><th>Best day</th>
-        <th class="num">Has players</th><th class="num">Avg when on</th><th class="num">Peak</th><th></th></tr></thead>
+      <thead><tr><th>#</th><th>Server</th><th>Best time</th><th>Best day</th><th class="num">Has players</th>
+        <th class="players">Players when on<span class="key"><i class="avg"></i>avg</span><span class="key"><i class="peak"></i>peak</span></th>
+        <th></th></tr></thead>
       <tbody>${rows.map((s, i) => `<tr>
         <td>${i + 1}</td>
         <td><strong>${esc(s.name)}</strong><div class="addr">${esc(s.addr)}</div></td>
         <td>${esc(s.best_time)} (${Math.round(s.best_time_pct * 100)}%)</td>
         <td>${esc(s.best_day)}</td>
         <td class="num">${Math.round(s.pct_active * 100)}%</td>
-        <td class="num">${s.avg_players}</td>
-        <td class="num">${s.peak}</td>
+        <td class="players">
+          <div class="bar"><span class="peak" style="width:${(s.peak / maxPeak) * 100}%"></span><span class="avg" style="width:${(s.avg_players / maxPeak) * 100}%"></span></div>
+          <div class="bar-label"><b>${s.avg_players}</b> avg · <b>${s.peak}</b> peak</div>
+        </td>
         <td>${connectButtons(s.addr)}</td>
       </tr>`).join('')}</tbody></table></div>`;
   }
