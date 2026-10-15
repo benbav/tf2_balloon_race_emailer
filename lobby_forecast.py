@@ -160,6 +160,7 @@ def rolling_evaluation(ts, X, y, players, threshold):
             'calibration': calibration(test_y, probs)}
 
 
+# Returns (info for the website, fit for the regression chart or None)
 def train_lobby_forecast(df, server_df, holiday_dates, threshold, check_minutes, timezone, model_path):
     f = check_frame(df, server_df, threshold, check_minutes)
     dates = f['ts'].dt.date.drop_duplicates()
@@ -178,7 +179,7 @@ def train_lobby_forecast(df, server_df, holiday_dates, threshold, check_minutes,
             'uses_day_of_week': cfg['use_days'], 'uses_holidays': cfg['use_holidays']}
     if len(y) < 100 or y.sum() < 3 or y.sum() == len(y):
         print('Lobby forecast: not enough data to train')
-        return dict(info, ready=False)
+        return dict(info, ready=False), None
     evaluation = rolling_evaluation(examples['ts'], X, y, examples['online_players'].to_numpy(), threshold)
     if evaluation:
         info['evaluation'] = evaluation
@@ -189,7 +190,9 @@ def train_lobby_forecast(df, server_df, holiday_dates, threshold, check_minutes,
     model = new_forecast_model().fit(X, y)
     trained = dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
     joblib.dump({'model': model, 'cfg': cfg, 'trained': trained}, model_path)
-    return dict(info, ready=True, trained=trained)
+    # Each training check's score (log-odds of a lobby) and what happened, for the regression chart
+    fit = {'score': model.decision_function(X), 'y': y}
+    return dict(info, ready=True, trained=trained), fit
 
 
 # Chance of a lobby in the next hour as of the latest check in the log, or None if there's no model yet

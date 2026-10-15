@@ -213,6 +213,46 @@ def generate_scorecard(df, variant=ALL_SERVERS):
     save(fig, 'best_time.png', variant)
 
 
+# The forecast's logistic regression, drawn like the classic best-fit-line chart: every training check is a
+# dot at 0% or 100% (did a lobby form in the next hour?) placed by the model's score, with the fitted S-curve
+# through them and the actual share of lobbies in score bins to show how well the curve fits
+def generate_forecast_regression(fit, threshold):
+    fig = go.Figure()
+    fig.update_layout(base_layout('How the forecast is fit', 'Logistic regression on every 5-minute check',
+                                  width=640, height=480, margin=dict(l=24, r=24, t=88, b=48)))
+    if fit is None:
+        empty_state(fig)
+        save(fig, 'forecast_regression.png')
+        return
+    score, y = fit['score'], fit['y']
+    rng = np.random.default_rng(0)
+    fig.add_trace(go.Scatter(
+        x=score, y=y * 100 + rng.uniform(-3, 3, len(y)), mode='markers',
+        marker=dict(size=5, color=TEXT_SECONDARY, opacity=0.25), hoverinfo='skip',
+    ))
+    bins = pd.qcut(score, 12, duplicates='drop')
+    binned = pd.DataFrame({'score': score, 'y': y}).groupby(bins, observed=True).mean()
+    fig.add_trace(go.Scatter(
+        x=binned['score'], y=binned['y'] * 100, mode='markers',
+        marker=dict(size=10, color=BAR, line=dict(color=SURFACE, width=2)),
+    ))
+    xs = np.linspace(score.min(), score.max(), 200)
+    fig.add_trace(go.Scatter(x=xs, y=100 / (1 + np.exp(-xs)), mode='lines', line=dict(color=BAR, width=3)))
+    # Label the line where it crosses 50%, or at its top end if it never gets there
+    label_x = min(0.0, xs[-1])
+    fig.add_annotation(x=label_x, y=100 / (1 + np.exp(-label_x)), text='Best fit line', ax=-70, ay=-40,
+                       arrowcolor=TEXT_SECONDARY, font=dict(size=15, color=TEXT_PRIMARY))
+    fig.add_annotation(x=0.01, y=0.86, xref='paper', yref='paper', xanchor='left', showarrow=False, align='left',
+                       text=f"<span style='color:{BAR}'>●</span> actual share of lobbies<br>"
+                            f"<span style='color:{TEXT_SECONDARY}'>●</span> one check",
+                       font=dict(size=14, color=TEXT_SECONDARY))
+    fig.update_xaxes(title=f'Model score (log-odds of a {threshold}+ lobby)', gridcolor=GRID, zeroline=False)
+    fig.update_yaxes(title='Lobby in the next hour', range=[-8, 108], tickvals=[0, 25, 50, 75, 100],
+                     ticktext=['0%', '25%', '50%', '75%', '100%'], gridcolor=GRID, zeroline=False)
+    fig.update_layout(font_size=15)
+    save(fig, 'forecast_regression.png')
+
+
 # Ranked bars: the 5 best non-overlapping 2-hour windows
 def generate_top_windows_plot(df, variant=ALL_SERVERS):
     window = window_rates(df, df['online_players'] > 0)
@@ -270,7 +310,7 @@ def generate_heatmap(df, active, title, subtitle, filename, variant=ALL_SERVERS)
                                    font=dict(size=11, color='#ffffff' if v / zmax > 0.45 else TEXT_PRIMARY))
 
     fig.update_layout(base_layout(title, subtitle, variant=variant, height=820))
-    fig.update_yaxes(autorange='reversed', showgrid=False, ticks='')
+    fig.update_yaxes(showgrid=False, ticks='')
     fig.update_xaxes(side='top', showgrid=False, ticks='')
     fig.update_layout(margin=dict(l=24, r=32, t=130, b=24))
     save(fig, filename, variant)
@@ -800,8 +840,9 @@ if __name__ == "__main__":
     stats = stats_by_zone[(TZ_LABEL.lower(), 'all')][0]
     years = range(graph_df['ts'].min().year, graph_df['ts'].max().year + 2)
     holiday_dates = {d for dates in holiday_calendar(years).values() for d in dates}
-    forecast = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES, ZONES[0][0],
-                                    FORECAST_MODEL_PATH)
+    forecast, fit = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES,
+                                         ZONES[0][0], FORECAST_MODEL_PATH)
+    generate_forecast_regression(fit, BUSY_THRESHOLD)
     write_site_data(stats_by_zone, forecast)
     if '--no-readme' not in sys.argv:
         update_readme(stats)

@@ -179,10 +179,14 @@
 
   /* Lobby forecast scorecard */
   /* Forecast and live panel side by side on wide screens */
-  .top { display: grid; grid-template-columns: minmax(240px, 1fr) 2.5fr; gap: 20px; margin-top: 24px; }
+  .top { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; margin-top: 24px; }
   .top > .live { margin-top: 0; }
   .forecast { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px;
-              display: flex; flex-direction: column; gap: 12px; }
+              display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.5fr); gap: 20px; align-items: center; }
+  .forecast-text { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  /* Regression chart to the right of the forecast */
+  .forecast-chart { margin: 0; }
+  .forecast-chart img { display: block; width: 100%; height: auto; border-radius: 6px; }
   .forecast .pct { font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
   .forecast .what { min-width: 0; }
   .forecast .what strong { display: block; font-size: 18px; }
@@ -234,8 +238,14 @@
 
   footer { color: var(--muted); font-size: 13px; margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; }
 
+  @media (max-width: 1200px) {
+    .top { grid-template-columns: 1fr; }
+  }
   @media (max-width: 900px) {
-    .top, .grid { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .forecast { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
     h1 { font-size: 24px; }
@@ -269,12 +279,15 @@
 
   <div class="top">
   <section class="forecast" id="forecast" aria-live="polite">
-    <div class="pct" id="forecast-pct">–</div>
-    <div class="what">
-      <strong id="forecast-title">Will a lobby form in the next hour?</strong>
-      <span id="forecast-note">Loading…</span>
+    <div class="forecast-text">
+      <div class="pct" id="forecast-pct">–</div>
+      <div class="what">
+        <strong id="forecast-title">Will a lobby form in the next hour?</strong>
+        <span id="forecast-note">Loading…</span>
+      </div>
+      <div class="metrics" id="forecast-metrics"></div>
     </div>
-    <div class="metrics" id="forecast-metrics"></div>
+    <figure class="forecast-chart" id="forecast-chart" hidden></figure>
   </section>
 
   <section class="live" id="live" aria-live="polite">
@@ -489,6 +502,14 @@
     const note = $('#forecast-note');
     $('#forecast-title').textContent = `Chance of a ${f?.threshold ?? ALARM_PLAYERS}+ player lobby in the next hour`;
     $('#forecast-metrics').textContent = f?.ready ? forecastMetrics(f) : '';
+    // Redrawn with each daily update; versioned like the other charts
+    const chart = $('#forecast-chart');
+    chart.hidden = !f?.ready;
+    const src = `charts/forecast_regression.png?v=${encodeURIComponent(siteData?.updated ?? '')}`;
+    if (f?.ready && !chart.innerHTML.includes(src)) {
+      chart.innerHTML = `<a href="${src}" target="_blank" rel="noopener"><img src="${src}"
+        alt="Logistic regression fit: chance of a lobby in the next hour against the model score, with every check plotted"></a>`;
+    }
     if (!f?.ready) {
       pct.textContent = '–';
       note.textContent = f ? `Not enough data yet (${f.days} days, ${f.positives} checks before a lobby)` : 'Forecast unavailable';

@@ -3,27 +3,27 @@
 
 ##### Checks every 5 minutes, charts update every day (times in Mountain Time)
 
-**Website with a live "who's on now" list and server filters: https://benbav.github.io/tf2_balloon_race_emailer/**
+**Website with a live "who's on now" list and server filters: https://benbav.github.io/tf2_balloon_race_forecast/**
 
-![Best Time](https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time.png)
+![Best Time](https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time.png)
 
-![Top 5 Times](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows.png)
+![Top 5 Times](https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows.png)
 
-![Busy Lobby Heatmap](https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap.png)
+![Busy Lobby Heatmap](https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap.png)
 
-![Session Length](https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length.png)
+![Session Length](https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length.png)
 
-![Weekly Trend](https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend.png)
+![Weekly Trend](https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend.png)
 
-![Holidays](https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays.png)
+![Holidays](https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays.png)
 
-![Monthly Max](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg.png)
+![Monthly Max](https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg.png)
 
-![Monthly Avg Daily Peak](https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg.png)
+![Monthly Avg Daily Peak](https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_daily_avg.png)
 
-![Unemployment vs Players](https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment.png)
+![Unemployment vs Players](https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment.png)
 
-![Top Servers](https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers.png)
+![Top Servers](https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers.png)
 
 ### Top 5 Balloon Race servers
 
@@ -41,7 +41,7 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
 <!-- TOP_SERVERS_END -->
 
-![Server Heatmaps](https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps.png)
+![Server Heatmaps](https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps.png)
 
 ### Dedicated 24/7 servers vs rotating servers
 
@@ -49,17 +49,17 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 
 <table>
 <tr><th width="50%">Dedicated 24/7 servers</th><th width="50%">Rotating servers</th></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_dedicated.png" alt="Monthly Avg Daily Peak - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/monthly_daily_avg_rotating.png" alt="Monthly Avg Daily Peak - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment_dedicated.png" alt="Unemployment vs Players - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/unemployment_rotating.png" alt="Unemployment vs Players - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_emailer/charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_daily_avg_dedicated.png" alt="Monthly Avg Daily Peak - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_daily_avg_rotating.png" alt="Monthly Avg Daily Peak - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment_dedicated.png" alt="Unemployment vs Players - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment_rotating.png" alt="Unemployment vs Players - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
+<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
 </table>
 
 ---
@@ -76,8 +76,8 @@ Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating 
 **1. Install**
 
 ```bash
-git clone git@github.com:benbav/tf2_balloon_race_emailer.git
-cd tf2_balloon_race_emailer
+git clone git@github.com:benbav/tf2_balloon_race_forecast.git
+cd tf2_balloon_race_forecast
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/plotly_get_chrome   # headless Chrome that plotly uses to save the chart PNGs
@@ -118,13 +118,13 @@ Where to get each value:
 **4. Schedule it** with `crontab -e` (cron runs in the server's clock, UTC here):
 
 ```cron
-*/5 * * * * cd /path/to/tf2_balloon_race_emailer && .venv/bin/python main.py >> cron.log 2>&1
-0 6 * * * cd /path/to/tf2_balloon_race_emailer && .venv/bin/python generate_report.py >> cron.log 2>&1
+*/5 * * * * cd /path/to/tf2_balloon_race_forecast && .venv/bin/python main.py >> cron.log 2>&1
+0 6 * * * cd /path/to/tf2_balloon_race_forecast && .venv/bin/python generate_report.py >> cron.log 2>&1
 ```
 
-The daily report pushes to GitHub, so the repo remote needs to use SSH (`git remote set-url origin git@github.com:benbav/tf2_balloon_race_emailer.git`) with a key added to your GitHub account.
+The daily report pushes to GitHub, so the repo remote needs to use SSH (`git remote set-url origin git@github.com:benbav/tf2_balloon_race_forecast.git`) with a key added to your GitHub account.
 
-**5. Turn on the website**: on GitHub, go to **Settings → Pages → Build and deployment → Deploy from a branch**, pick the `site` branch and `/ (root)` (the branch appears after the first `generate_report.py` run), and save. Free Pages needs a public repo. The site is live at `https://<user>.github.io/tf2_balloon_race_emailer/` a minute later.
+**5. Turn on the website**: on GitHub, go to **Settings → Pages → Build and deployment → Deploy from a branch**, pick the `site` branch and `/ (root)` (the branch appears after the first `generate_report.py` run), and save. Free Pages needs a public repo. The site is live at `https://<user>.github.io/tf2_balloon_race_forecast/` a minute later.
 
 ### Settings
 
