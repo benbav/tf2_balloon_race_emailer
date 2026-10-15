@@ -182,10 +182,10 @@
   .top { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; margin-top: 24px; }
   .top > .live { margin-top: 0; }
   .forecast { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px;
-              display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.5fr); gap: 20px; align-items: center; }
+              display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); gap: 20px; align-items: center; }
   .forecast-text { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-  /* Regression chart to the right of the forecast */
-  .forecast-chart { margin: 0; }
+  /* Regression chart to the left of the forecast; below it once they stack */
+  .forecast-chart { margin: 0; order: -1; }
   .forecast-chart img { display: block; width: 100%; height: auto; border-radius: 6px; }
   .forecast .pct { font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
   .forecast .what { min-width: 0; }
@@ -257,6 +257,7 @@
   }
   @media (max-width: 700px) {
     .forecast { grid-template-columns: 1fr; }
+    .forecast-chart { order: 0; }
   }
   @media (max-width: 600px) {
     h1 { font-size: 24px; }
