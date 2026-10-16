@@ -5,6 +5,10 @@
 
 **Website with a live "who's on now" list and server filters: https://benbav.github.io/tf2_balloon_race_forecast/**
 
+Example of the live lobby forecast (a static screenshot - on the website it updates every 5 minutes):
+
+![Lobby forecast example](assets/forecast_example.png)
+
 ![Best Time](https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time.png)
 
 ![Top 5 Times](https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows.png)
