@@ -9,24 +9,6 @@ Example of the live lobby forecast (a static screenshot - on the website it upda
 
 ![Lobby forecast example](assets/forecast_example.png)
 
-![Best Time](https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time.png)
-
-![Top 5 Times](https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows.png)
-
-![Busy Lobby Heatmap](https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap.png)
-
-![Session Length](https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length.png)
-
-![Weekly Trend](https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend.png)
-
-![Holidays](https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays.png)
-
-![Monthly Max](https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg.png)
-
-![Unemployment vs Players](https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment.png)
-
-![Top Servers](https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers.png)
-
 ### Top 5 Balloon Race servers
 
 Ranked by how often they have people on. Favorite these so they're one click away.
@@ -43,33 +25,13 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
 <!-- TOP_SERVERS_END -->
 
-![Server Heatmaps](https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps.png)
-
-### Dedicated 24/7 servers vs rotating servers
-
-Dedicated servers run Balloon Race all day (e.g. "Balloon Race 24/7"). Rotating servers only land on it now and then as part of a map cycle, but that's often when the big lobbies happen.
-
-<table>
-<tr><th width="50%">Dedicated 24/7 servers</th><th width="50%">Rotating servers</th></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time_dedicated.png" alt="Best Time - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/best_time_rotating.png" alt="Best Time - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows_dedicated.png" alt="Top 5 Times - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_windows_rotating.png" alt="Top 5 Times - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap_dedicated.png" alt="Busy Lobby Heatmap - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/busy_heatmap_rotating.png" alt="Busy Lobby Heatmap - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length_dedicated.png" alt="Session Length - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/session_length_rotating.png" alt="Session Length - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend_dedicated.png" alt="Weekly Trend - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/weekly_trend_rotating.png" alt="Weekly Trend - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays_dedicated.png" alt="Holidays - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/holidays_rotating.png" alt="Holidays - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg_dedicated.png" alt="Monthly Max - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/monthly_avg_rotating.png" alt="Monthly Max - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment_dedicated.png" alt="Unemployment vs Players - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/unemployment_rotating.png" alt="Unemployment vs Players - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers_dedicated.png" alt="Top Servers - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/top_servers_rotating.png" alt="Top Servers - rotating"></td></tr>
-<tr><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps_dedicated.png" alt="Server Heatmaps - dedicated"></td><td><img src="https://benbav.github.io/tf2_balloon_race_forecast/charts/server_heatmaps_rotating.png" alt="Server Heatmaps - rotating"></td></tr>
-</table>
-
 ---
 
 ### How it works
 
 - `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day).
 - `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
-- `generate_report.py` runs once a day. It turns the log into the charts above, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
+- `generate_report.py` runs once a day. It turns the log into the website's charts, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
 - `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
 
 ### First-time setup
