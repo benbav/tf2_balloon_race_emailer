@@ -30,11 +30,11 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 <!-- TOP_SERVERS_START -->
 | # | Server | Connect (paste in TF2 console) | Best time | Best day | Has players | Avg players when on | Peak |
 |---|---|---|---|---|---|---|---|
-| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Thu · 5 PM – 7 PM MT (100%) | Sunday | 48% of checks | 1.2 | 6 |
-| 2 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 18.1 | 48 |
-| 3 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 1% of checks | 13.6 | 17 |
-| 4 | Server Testing | `connect 69.41.182.173:27015` | Wed · 10 PM – 12 AM MT (29%) | Friday | 1% of checks | 4.8 | 12 |
-| 5 | Aar's Server \| Map Testing \| Virginia | `connect 169.254.112.56:12184` | Sat · 1 PM – 3 PM MT (100%) | Saturday | 0% of checks | 24.7 | 26 |
+| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Thu · 11 PM – 1 AM MT (100%) | Sunday | 50% of checks | 1.2 | 6 |
+| 2 | Wacky Races | `connect 169.254.226.130:52208` | Thu · 9 PM – 11 PM MT (75%) | Thursday | 30% of checks | 4.0 | 4 |
+| 3 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 18.1 | 48 |
+| 4 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 1% of checks | 13.6 | 17 |
+| 5 | Server Testing | `connect 69.41.182.173:27015` | Wed · 10 PM – 12 AM MT (29%) | Friday | 1% of checks | 4.8 | 12 |
 
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
 <!-- TOP_SERVERS_END -->
