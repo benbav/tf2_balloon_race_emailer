@@ -281,7 +281,7 @@ def generate_forecast_regression(fit, threshold):
 
 # Ranked bars: the 5 best non-overlapping 2-hour windows
 def generate_top_windows_plot(df, variant=ALL_SERVERS):
-    window = window_rates(df, df['online_players'] > 0)
+    window = window_rates(df, df['online_players'] >= BUSY_THRESHOLD)
     picked = top_windows(window, 5) if days_of_data(df) >= MIN_DAYS_FOR_SCORECARD else []
     picked = picked[::-1]
     pcts = [window.loc[p, 'pct'] * 100 for p in picked]
@@ -293,7 +293,7 @@ def generate_top_windows_plot(df, variant=ALL_SERVERS):
     ))
     fig.update_layout(base_layout(
         'Top 5 times to play',
-        'Best 2-hour windows (no overlaps) · % of checks with at least one player',
+        f'Best 2-hour windows (no overlaps) · % of checks with a server at {BUSY_THRESHOLD}+ players',
         height=480, barcornerradius=4, bargap=0.35,
         variant=variant,
     ))
