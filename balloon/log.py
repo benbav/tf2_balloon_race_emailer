@@ -1,6 +1,6 @@
 import re
 import pandas as pd
-from server_types import clean_name
+from balloon.servers import clean_name
 
 # Log timestamps are written in the server's clock (UTC)
 LOG_TIMEZONE = 'UTC'

@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from balloon_log import LOG_TIMEZONE, parse_log, tail_lines
+from balloon.log import LOG_TIMEZONE, parse_log, tail_lines
 
 # "Will a lobby form?" model: chance some server hits `threshold`+ players within the next hour.
 # The daily report trains it on the whole log and saves it; the 5-minute poller (main.py) loads it and

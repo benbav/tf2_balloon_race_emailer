@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
-from lobby_forecast import predict_now
-from server_types import clean_name, is_dedicated
+from balloon.forecast import predict_now
+from balloon.servers import clean_name, is_dedicated
 import subprocess
 import requests
 import logging
@@ -9,19 +9,21 @@ import json
 import os
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
+# Runtime files: the log, forecast model and caches
+DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
+LOG_PATH = os.path.join(DATA_DIR, 'tf2_balloon_log.txt')
 # Trained daily by generate_report.py
-FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
+FORECAST_MODEL_PATH = os.path.join(DATA_DIR, 'forecast_model.joblib')
 # Branch the website reads "who's on now" from; force-pushed every check so it stays one commit
 LIVE_BRANCH = 'live'
 MIN_PLAYER_THRESHOLD = 10
 # Servers that had MIN_PLAYER_THRESHOLD+ players last check, so Discord is only pinged when a lobby fills up
-DISCORD_STATE_FILE = os.path.join(SCRIPT_DIR, 'discord_notified.json')
+DISCORD_STATE_FILE = os.path.join(DATA_DIR, 'discord_notified.json')
 
 def get_server_list():
     api_key = os.getenv('steam_api_key')
     url = f'https://api.steampowered.com/IGameServersService/GetServerList/v1/?key={api_key}&limit=50&filter=\\appid\\440\\map\\balloon_race_v2b'
-    r = requests.get(url)
+    r = requests.get(url, timeout=30)
     servers = r.json()['response'].get('servers', [])
     # Human players only - some idle servers fill up with bots
     return [
@@ -106,7 +108,7 @@ def main():
     if any(value > 0 for value in output_dict.values()):
         # Log server activity
         max_server = max(output_dict, key=output_dict.get)
-        logging.info(f'Found people playing Balloon Race')
+        logging.info('Found people playing Balloon Race')
         logging.info(f'{max_server} : {output_dict[max_server]}')
         # Log every active server so the report can rank them
         for s in servers:
@@ -122,7 +124,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# cron to run every 5 minutes - can also integrate with fishstick bot?
-# 

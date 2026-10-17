@@ -5,9 +5,9 @@ import requests
 import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
-from lobby_forecast import train_lobby_forecast
-from balloon_log import LOG_TIMEZONE, parse_log
-from server_types import is_dedicated
+from balloon.forecast import train_lobby_forecast
+from balloon.log import LOG_TIMEZONE, parse_log
+from balloon.servers import is_dedicated
 import subprocess
 import json
 import re
@@ -16,14 +16,18 @@ import sys
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "charts")
-LOG_PATH = os.path.join(SCRIPT_DIR, 'tf2_balloon_log.txt')
+# Runtime files: the log, forecast model and caches
+DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
+# Everything GitHub Pages serves; published as the root of the site branch
+SITE_DIR = os.path.join(SCRIPT_DIR, 'site')
+OUTPUT_FOLDER = os.path.join(SITE_DIR, 'charts')
+LOG_PATH = os.path.join(DATA_DIR, 'tf2_balloon_log.txt')
 README_PATH = os.path.join(SCRIPT_DIR, 'README.md')
 # Lobby forecast model, trained here daily and used by main.py on every check
-FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
+FORECAST_MODEL_PATH = os.path.join(DATA_DIR, 'forecast_model.joblib')
 # BLS v1 has a tight daily request limit, so the series is cached and refetched at most once a day
 BLS_URL = 'https://api.bls.gov/publicAPI/v1/timeseries/data/LNS14000000'
-BLS_CACHE_PATH = os.path.join(SCRIPT_DIR, 'bls_unemployment.json')
+BLS_CACHE_PATH = os.path.join(DATA_DIR, 'bls_unemployment.json')
 
 # Charts are shown in these zones (the log itself is in LOG_TIMEZONE).
 # The first zone is the default (README, all charts); the rest only redraw the charts that depend on the hour.
@@ -43,7 +47,7 @@ SCORECARD_RECENT_DAYS = 28
 # A lobby with at least this many human players counts as "busy"
 BUSY_THRESHOLD = 10
 TOP_SERVER_COUNT = 5
-# The website's server table has room for more, and stands in for the busiest servers bar chart there
+# The website's server table has room for more
 SITE_SERVER_COUNT = 10
 CHECK_MINUTES = 5
 # A day needs at least this many checks to count in the holiday comparison
@@ -390,35 +394,6 @@ def generate_weekly_trend_plot(df, variant=ALL_SERVERS):
     save(fig, 'weekly_trend.png', variant)
 
 
-# Generate bar plot for top servers
-def generate_top_servers_plot(df, variant=ALL_SERVERS):
-    top_servers = (
-        df.query('online_players > 0')
-        .groupby('server_name')['online_players']
-        .max()
-        .sort_values(ascending=True)
-        .tail(10)
-    )
-    names = [n if len(n) <= 45 else n[:44] + '…' for n in top_servers.index]
-
-    fig = go.Figure(go.Bar(
-        x=top_servers.values, y=names, orientation='h', marker_color=BAR,
-        text=top_servers.values, textposition='outside', cliponaxis=False,
-        textfont=dict(color=TEXT_PRIMARY),
-    ))
-    fig.update_layout(base_layout(
-        'Busiest Balloon Race servers',
-        'Most players seen at once, top 10 servers',
-        barcornerradius=4, bargap=0.35,
-        variant=variant,
-    ))
-    if top_servers.empty:
-        empty_state(fig, 'No players seen yet')
-    fig.update_xaxes(showgrid=True, gridcolor=GRID, zeroline=False, title='Players')
-    fig.update_yaxes(showgrid=False, ticks='')
-    save(fig, 'top_servers.png', variant)
-
-
 # Generate bar plot for monthly max
 def generate_monthly_avg_plot(df, variant=ALL_SERVERS):
     monthly = df.groupby('month')['online_players'].max().sort_index()
@@ -745,16 +720,15 @@ def write_site_data(stats_by_zone, forecast):
 # Push the log and README to main, and the website (page + charts) to its own branch
 def push_to_github():
     os.chdir(SCRIPT_DIR)
-    os.system("git add README.md tf2_balloon_log.txt")
+    os.system("git add README.md data/tf2_balloon_log.txt")
     os.system("git commit -m 'update log'")
     os.system("git push origin main")
     publish_site()
 
 
-# GitHub Pages serves SITE_BRANCH, which is replaced by a single fresh commit each day so the
-# ~16MB of charts never pile up in the repo history
+# GitHub Pages serves SITE_BRANCH (the contents of site/ at its root), which is replaced by a single
+# fresh commit each day so the ~16MB of charts never pile up in the repo history
 SITE_BRANCH = 'site'
-SITE_FILES = ['index.html', '.nojekyll', 'assets', 'charts']
 
 
 def publish_site():
@@ -767,8 +741,8 @@ def publish_site():
 
     try:
         git('read-tree', '--empty')
-        git('add', '-f', *SITE_FILES)
-        commit = git('commit-tree', git('write-tree'), '-m', 'update site')
+        git('add', '-f', 'site')
+        commit = git('commit-tree', git('write-tree', '--prefix=site/'), '-m', 'update site')
         git('push', '-fq', 'origin', f'{commit}:refs/heads/{SITE_BRANCH}')
     except subprocess.CalledProcessError as e:
         print(f'Error publishing site: {e.stderr}')
@@ -813,7 +787,6 @@ if __name__ == "__main__":
             if default_zone:
                 generate_session_length_plot(df, variant)
                 generate_weekly_trend_plot(df, variant)
-                generate_top_servers_plot(df, variant)
                 generate_monthly_avg_plot(df, variant)
                 generate_holiday_table(df, variant)
                 generate_unemployment_plot(df, unemployment, variant)

@@ -9,7 +9,7 @@
 
 Example of the live lobby forecast (a static screenshot - on the website it updates every 5 minutes):
 
-![Lobby forecast example](assets/forecast_example.png)
+![Lobby forecast example](site/assets/forecast_example.png)
 
 ### Top 5 Balloon Race servers
 
@@ -31,10 +31,12 @@ To favorite one: Steam → View → Game Servers → Favorites → **+** and pas
 
 ### How it works
 
-- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`. If `discord_webhook_url` is set, it posts to Discord when a server reaches `MIN_PLAYER_THRESHOLD` (10) or more players.
-- `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
-- `generate_report.py` runs once a day. It turns the log into the website's charts, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
+- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `data/tf2_balloon_log.txt`, and scores the lobby forecast. If `discord_webhook_url` is set, it posts to Discord when a server reaches `MIN_PLAYER_THRESHOLD` (10) or more players.
+- `site/index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `site/charts/site_data.json`, and the live server list.
+- `generate_report.py` runs once a day. It turns the log into the website's charts, retrains the lobby forecast, rewrites the top servers table, and pushes the README and log to `main`. Everything in `site/` goes to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
 - `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
+- `balloon/` is the code both scripts share: reading the log (`log.py`), which servers are dedicated (`servers.py`) and the lobby forecast model (`forecast.py`).
+- `data/` holds the log (tracked in git) plus runtime files that aren't: the trained model, the Discord ping state and the cached unemployment data.
 
 ### First-time setup
 
@@ -68,7 +70,7 @@ Where to get each value:
 **3. Test it**
 
 ```bash
-.venv/bin/python main.py && tail tf2_balloon_log.txt
+.venv/bin/python main.py && tail data/tf2_balloon_log.txt
 .venv/bin/python generate_report.py --no-push   # draws charts without pushing
 ```
 
@@ -86,5 +88,7 @@ The daily report pushes to GitHub, so the repo remote needs to use SSH (`git rem
 ### Settings
 
 - `main.py`: `MIN_PLAYER_THRESHOLD`
-- `server_types.py`: `DEDICATED_NAME_RE` / `DEDICATED_ADDRS` (which servers count as dedicated 24/7)
-- `generate_report.py`: `DISPLAY_TIMEZONE` / `TZ_LABEL` (chart timezone), `LOG_TIMEZONE` (clock the log was written in), `MIN_DAYS_FOR_SCORECARD`, `SCORECARD_RECENT_DAYS`, `BUSY_THRESHOLD`, `TOP_SERVER_COUNT`
+- `balloon/servers.py`: `DEDICATED_NAME_RE` / `DEDICATED_ADDRS` (which servers count as dedicated 24/7)
+- `balloon/log.py`: `LOG_TIMEZONE` (clock the log was written in)
+- `balloon/forecast.py`: `FORECAST_MINUTES` and the model's other settings
+- `generate_report.py`: `ZONES` (chart timezones; the first is the default), `MIN_DAYS_FOR_SCORECARD`, `SCORECARD_RECENT_DAYS`, `BUSY_THRESHOLD`, `TOP_SERVER_COUNT`

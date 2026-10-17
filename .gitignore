@@ -1,14 +1,9 @@
 .env
 .venv
-email_count.txt
-test.ipynb
-email_count.txt
-email_count.txt
-analysis.ipynb
-test.py
-cron.log
 __pycache__/
-charts/
-bls_unemployment.json
-forecast_model.joblib
-discord_notified.json
+cron.log
+# Built daily by generate_report.py
+site/charts/
+# Runtime state (the log in data/ is tracked)
+data/*
+!data/tf2_balloon_log.txt
