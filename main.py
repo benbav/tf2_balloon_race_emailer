@@ -15,7 +15,7 @@ FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
 # Branch the website reads "who's on now" from; force-pushed every check so it stays one commit
 LIVE_BRANCH = 'live'
 MIN_PLAYER_THRESHOLD = 10
-# Servers that were over MIN_PLAYER_THRESHOLD last check, so Discord is only pinged when a lobby fills up
+# Servers that had MIN_PLAYER_THRESHOLD+ players last check, so Discord is only pinged when a lobby fills up
 DISCORD_STATE_FILE = os.path.join(SCRIPT_DIR, 'discord_notified.json')
 
 def get_server_list():
@@ -31,7 +31,7 @@ def get_server_list():
     ]
 
 def notify_discord(servers):
-    """Post to the Discord webhook for each server that just went over MIN_PLAYER_THRESHOLD players."""
+    """Post to the Discord webhook for each server that just reached MIN_PLAYER_THRESHOLD or more players."""
     webhook_url = os.getenv('discord_webhook_url')
     if not webhook_url:
         return
@@ -41,7 +41,7 @@ def notify_discord(servers):
     except (FileNotFoundError, ValueError):
         already_notified = set()
 
-    busy = [s for s in servers if s['players'] > MIN_PLAYER_THRESHOLD]
+    busy = [s for s in servers if s['players'] >= MIN_PLAYER_THRESHOLD]
     for s in busy:
         if s['addr'] in already_notified:
             continue

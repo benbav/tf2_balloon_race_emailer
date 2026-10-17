@@ -31,7 +31,7 @@ To favorite one: Steam → View → Game Servers → Favorites → **+** and pas
 
 ### How it works
 
-- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`. If `discord_webhook_url` is set, it posts to Discord when a server goes over `MIN_PLAYER_THRESHOLD` players.
+- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`. If `discord_webhook_url` is set, it posts to Discord when a server reaches `MIN_PLAYER_THRESHOLD` (10) or more players.
 - `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
 - `generate_report.py` runs once a day. It turns the log into the website's charts, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
 - `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
@@ -63,7 +63,7 @@ Where to get each value:
 | Key | Where to get it |
 |---|---|
 | `steam_api_key` | Sign in at https://steamcommunity.com/dev/apikey, enter any domain name (e.g. `localhost`), and copy the key. |
-| `discord_webhook_url` | Optional. In Discord: channel settings (gear icon) → Integrations → Webhooks → New Webhook → Copy Webhook URL. Posts once when a server goes over `MIN_PLAYER_THRESHOLD` players, and again only after it empties out and refills. |
+| `discord_webhook_url` | Optional. In Discord: channel settings (gear icon) → Integrations → Webhooks → New Webhook → Copy Webhook URL. Posts once when a server reaches `MIN_PLAYER_THRESHOLD` or more players, and again only after it empties out and refills. |
 
 **3. Test it**
 
