@@ -16,11 +16,11 @@ Ranked by how often they have people on. Favorite these so they're one click awa
 <!-- TOP_SERVERS_START -->
 | # | Server | Connect (paste in TF2 console) | Best time | Best day | Has players | Avg players when on | Peak |
 |---|---|---|---|---|---|---|---|
-| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Thu · 11 PM – 1 AM MT (100%) | Sunday | 50% of checks | 1.2 | 6 |
-| 2 | Wacky Races | `connect 169.254.226.130:52208` | Thu · 9 PM – 11 PM MT (75%) | Thursday | 30% of checks | 4.0 | 4 |
-| 3 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 5 PM – 7 PM MT (100%) | Friday | 1% of checks | 18.1 | 48 |
-| 4 | [TR]  Türk Ninjalar sunucusu | `connect 88.233.138.82:27017` | Sun · 5 AM – 7 AM MT (100%) | Sunday | 1% of checks | 13.6 | 17 |
-| 5 | Server Testing | `connect 69.41.182.173:27015` | Wed · 10 PM – 12 AM MT (29%) | Friday | 1% of checks | 4.8 | 12 |
+| 1 | Balloon Race 24/7 | `connect 45.88.229.19:27024` | Tue · 11 AM – 1 PM MT (96%) | Sunday | 51% of checks | 1.2 | 6 |
+| 2 | Server hosted by Physgun.com | `connect 45.45.238.134:27105` | Fri · 6 PM – 8 PM MT (83%) | Friday | 9% of checks | 21.8 | 23 |
+| 3 | Wacky Races | `connect 169.254.226.130:52208` | Thu · 9 PM – 11 PM MT (75%) | Thursday | 2% of checks | 4.0 | 4 |
+| 4 | IdleServer.Com \| BALLOON \| BALLOON_01 | `connect 108.181.244.76:48800` | Fri · 3 PM – 5 PM MT (12%) | Friday | 1% of checks | 1.0 | 1 |
+| 5 | shounic trenches (USA Chicago) | `connect 193.243.190.25:27015` | Fri · 2 PM – 4 PM MT (12%) | Friday | 1% of checks | 15.4 | 48 |
 
 To favorite one: Steam → View → Game Servers → Favorites → **+** and paste the address.
 <!-- TOP_SERVERS_END -->
@@ -29,7 +29,7 @@ To favorite one: Steam → View → Game Servers → Favorites → **+** and pas
 
 ### How it works
 
-- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day).
+- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day). If `discord_webhook_url` is set, it also posts to Discord when a server goes over that threshold.
 - `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
 - `generate_report.py` runs once a day. It turns the log into the website's charts, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
 - `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
@@ -60,6 +60,9 @@ email_app_pass=
 
 # Comma-separated recipients, no spaces: a@x.com,b@y.com
 to_email=
+
+# Optional: Discord channel webhook for "lobby is up" pings
+discord_webhook_url=
 ```
 
 Where to get each value:
@@ -70,6 +73,7 @@ Where to get each value:
 | `from_email` | Any Gmail address you want the alerts to come from. |
 | `email_app_pass` | Turn on 2-Step Verification for that Google account, then create an app password at https://myaccount.google.com/apppasswords. Paste the 16 characters (spaces optional). |
 | `to_email` | Whoever should get the alerts. Can be the same as `from_email`. |
+| `discord_webhook_url` | Optional. In Discord: channel settings (gear icon) → Integrations → Webhooks → New Webhook → Copy Webhook URL. Posts once when a server goes over `MIN_PLAYER_THRESHOLD` players, and again only after it empties out and refills. |
 
 **3. Test it**
 
