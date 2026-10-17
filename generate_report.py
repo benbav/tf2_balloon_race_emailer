@@ -47,6 +47,8 @@ SCORECARD_RECENT_DAYS = 28
 # A lobby with at least this many human players counts as "busy"
 BUSY_THRESHOLD = 10
 TOP_SERVER_COUNT = 5
+# Windows the website's "next likely lobby" countdown picks from
+LOBBY_WINDOW_COUNT = 5
 # The website's server table has room for more
 SITE_SERVER_COUNT = 10
 CHECK_MINUTES = 5
@@ -184,10 +186,25 @@ def top_windows(window, n):
     return picked
 
 
+# The last SCORECARD_RECENT_DAYS of checks, so the best times follow changing habits
+def recent_checks(df):
+    return df[df['ts'] >= df['ts'].max() - pd.Timedelta(days=SCORECARD_RECENT_DAYS)] if len(df) else df
+
+
+# The website's "next likely lobby" countdown: the best 2-hour windows for a BUSY_THRESHOLD+ lobby,
+# as hours of the week in the current DISPLAY_TIMEZONE
+def lobby_windows(df):
+    if days_of_data(df) < MIN_DAYS_FOR_SCORECARD:
+        return []
+    recent = recent_checks(df)
+    window = window_rates(recent, recent['online_players'] >= BUSY_THRESHOLD)
+    return [{'start': p, 'pct': round(float(window.loc[p, 'pct']), 3)} for p in top_windows(window, LOBBY_WINDOW_COUNT)]
+
+
 # Big scorecard: the single 2-hour window of the week most likely to have a BUSY_THRESHOLD+ lobby
 def generate_scorecard(df, variant=ALL_SERVERS):
     total_days = days_of_data(df)
-    recent = df[df['ts'] >= df['ts'].max() - pd.Timedelta(days=SCORECARD_RECENT_DAYS)] if len(df) else df
+    recent = recent_checks(df)
     window = window_rates(recent, recent['online_players'] >= BUSY_THRESHOLD)
     all_time = window_rates(df, df['online_players'] >= BUSY_THRESHOLD)
 
@@ -699,9 +716,9 @@ def update_readme(stats):
 
 
 # Top servers for each timezone and filter on the website
-def write_site_data(stats_by_zone, forecast):
+def write_site_data(stats_by_zone, windows, forecast):
     data = {'updated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'top_servers': {},
-            'forecast': forecast}
+            'lobby_windows': {'timezone': ZONES[0][0], **windows}, 'forecast': forecast}
     for (zone_key, key), (stats, label) in stats_by_zone.items():
         data['top_servers'].setdefault(zone_key, {})[key] = [{
             'name': s['name'],
@@ -762,6 +779,7 @@ if __name__ == "__main__":
     graph_df, server_df = load_and_preprocess_data(log_path)
     unemployment = load_unemployment()
     stats_by_zone = {}
+    windows = {}
     for DISPLAY_TIMEZONE, TZ_LABEL, ZONE_SUFFIX in ZONES:
         default_zone = ZONE_SUFFIX == ZONES[0][2]
         zone_df, zone_servers = in_zone(graph_df), in_zone(server_df)
@@ -785,6 +803,7 @@ if __name__ == "__main__":
                                                                                     TZ_LABEL)
             # These don't depend on the time of day, so they're only drawn once
             if default_zone:
+                windows[variant[0].lstrip('_') or 'all'] = lobby_windows(df)
                 generate_session_length_plot(df, variant)
                 generate_weekly_trend_plot(df, variant)
                 generate_monthly_avg_plot(df, variant)
@@ -797,7 +816,7 @@ if __name__ == "__main__":
     forecast, fit = train_lobby_forecast(graph_df, server_df, holiday_dates, BUSY_THRESHOLD, CHECK_MINUTES,
                                          ZONES[0][0], FORECAST_MODEL_PATH)
     generate_forecast_regression(fit, BUSY_THRESHOLD)
-    write_site_data(stats_by_zone, forecast)
+    write_site_data(stats_by_zone, windows, forecast)
     if '--no-readme' not in sys.argv:
         update_readme(stats)
     if '--no-push' not in sys.argv:

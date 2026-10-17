@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Balloon Race Tracker</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="When are people on TF2 Balloon Race? Live server status and charts from checks every 5 minutes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,6 +194,8 @@
   .forecast .what { min-width: 0; }
   .forecast .what strong { display: block; font-size: 18px; }
   .forecast .what span { color: var(--muted); font-size: 13px; }
+  .forecast .next { font-size: 15px; }
+  .forecast .next span { color: var(--muted); font-size: 13px; }
   .forecast .metrics { color: var(--muted); font-size: 11px; line-height: 1.45; border-top: 1px solid var(--line); padding-top: 10px; }
 
   .server { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
@@ -299,6 +303,7 @@
         <strong id="forecast-title">Will a lobby form in the next hour?</strong>
         <span id="forecast-note">Loading…</span>
       </div>
+      <div class="next" id="next-lobby"></div>
       <div class="metrics" id="forecast-metrics"></div>
     </div>
     <figure class="forecast-chart" id="forecast-chart" hidden></figure>
@@ -321,7 +326,7 @@
     Dedicated = runs Balloon Race all day. Rotating = lands on the map now and then as part of a map cycle.
     Player counts are humans only, bots excluded.
     <span id="updated"></span>
-    · <a href="https://github.com/benbav/tf2_balloon_race_emailer">Source on GitHub</a>
+    · <a href="https://github.com/benbav/tf2_balloon_race_forecast">Source on GitHub</a>
   </footer>
 </main>
 <div class="chaos-omg" aria-hidden="true">
@@ -343,6 +348,8 @@
   const CHAOS_EMOJI = ['🎈', '🎈', '🎈', '🚨', '🔥', '💥', '🎉', '🫃', '🤰'];
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const PAGE_TITLE = document.title;
+  // Windows where under this share of checks had a lobby aren't "likely"; the best one is still shown
+  const NEXT_LOBBY_MIN_PCT = 0.15;
 
   const FILTERS = {
     all: { suffix: '', label: 'All servers' },
@@ -352,12 +359,25 @@
 
   // Charts that depend on the time of day are drawn once per zone; MT has no file suffix
   const ZONES = {
-    pt: { suffix: '_pt', label: 'Pacific Time' },
-    mt: { suffix: '', label: 'Mountain Time' },
-    ct: { suffix: '_ct', label: 'Central Time' },
-    et: { suffix: '_et', label: 'Eastern Time' },
+    pt: { suffix: '_pt', label: 'Pacific Time', tz: 'America/Los_Angeles' },
+    mt: { suffix: '', label: 'Mountain Time', tz: 'America/Denver' },
+    ct: { suffix: '_ct', label: 'Central Time', tz: 'America/Chicago' },
+    et: { suffix: '_et', label: 'Eastern Time', tz: 'America/New_York' },
   };
-  const DEFAULT_ZONE = 'mt';
+
+  // The visitor's own zone: by name, else whichever one has the same clock right now; MT if none match
+  function detectZone() {
+    const offset = (timeZone) => new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
+      .formatToParts().find((p) => p.type === 'timeZoneName').value;
+    try {
+      const own = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const keys = Object.keys(ZONES);
+      return keys.find((k) => ZONES[k].tz === own) ?? keys.find((k) => offset(ZONES[k].tz) === offset(own)) ?? 'mt';
+    } catch {
+      return 'mt';
+    }
+  }
+  const DEFAULT_ZONE = detectZone();
 
   const SECTIONS = [
     { title: 'When to play', charts: [
@@ -507,6 +527,57 @@
     return text;
   }
 
+  const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const HOUR_MS = 3600 * 1000;
+
+  // When the soonest of these windows (hours of the week in timeZone) starts, or started if it's on now
+  function nextWindowStart(windows, timeZone) {
+    const fmt = new Intl.DateTimeFormat('en-US', { timeZone, weekday: 'short', hour: 'numeric', hourCycle: 'h23' });
+    const starts = new Set(windows.map((w) => w.start));
+    // Every zone here is a whole number of hours off UTC, so stepping through UTC hours hits each local hour
+    const thisHour = Math.floor(Date.now() / HOUR_MS) * HOUR_MS;
+    for (let t = thisHour - HOUR_MS; t <= thisHour + 169 * HOUR_MS; t += HOUR_MS) {
+      const parts = Object.fromEntries(fmt.formatToParts(t).map((p) => [p.type, p.value]));
+      const how = WEEKDAYS.indexOf(parts.weekday) * 24 + Number(parts.hour);
+      if (starts.has(how) && t + 2 * HOUR_MS > Date.now()) return { start: t, window: windows.find((w) => w.start === how) };
+    }
+    return null;
+  }
+
+  function countdown(ms) {
+    const mins = Math.max(1, Math.round(ms / 60000));
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 1) return `${mins} min`;
+    if (hrs < 24) return `${hrs} hr ${mins % 60} min`;
+    return `${Math.floor(hrs / 24)} day${hrs >= 48 ? 's' : ''} ${hrs % 24} hr`;
+  }
+
+  // Countdown to the soonest of the best lobby windows, shown in the chosen timezone
+  function renderNextLobby() {
+    const box = $('#next-lobby');
+    const data = siteData?.lobby_windows;
+    const threshold = siteData?.forecast?.threshold ?? ALARM_PLAYERS;
+    if (!data?.[filter]) {
+      box.textContent = '';
+      return;
+    }
+    const likely = data[filter].filter((w) => w.pct >= NEXT_LOBBY_MIN_PCT);
+    const next = nextWindowStart(likely.length ? likely : data[filter].slice(0, 1), data.timezone);
+    if (!next) {
+      const which = filter === 'all' ? '' : ` on ${FILTERS[filter].label.toLowerCase()} servers`;
+      box.innerHTML = `No ${threshold}+ lobbies seen recently${which}`;
+      return;
+    }
+    const z = ZONES[zone];
+    const day = new Intl.DateTimeFormat('en-US', { timeZone: z.tz, weekday: 'short' }).format(next.start);
+    const hour = (t) => new Intl.DateTimeFormat('en-US', { timeZone: z.tz, hour: 'numeric' }).format(t);
+    const end = next.start + 2 * HOUR_MS;
+    const when = next.start <= Date.now()
+      ? `<strong>Likely lobby time now</strong>, until ${hour(end)} ${zone.toUpperCase()}`
+      : `<strong>Next likely lobby: ${day} ${hour(next.start)} – ${hour(end)} ${zone.toUpperCase()}</strong>, in ${countdown(next.start - Date.now())}`;
+    box.innerHTML = `${when}<br><span>${Math.round(next.window.pct * 100)}% of recent checks in that window had a ${threshold}+ player server</span>`;
+  }
+
   // The poller scores the latest check against the model on every run and publishes it with the live status
   function renderForecast() {
     const f = siteData?.forecast;
@@ -514,6 +585,7 @@
     const note = $('#forecast-note');
     $('#forecast-title').textContent = `Chance of a ${f?.threshold ?? ALARM_PLAYERS}+ player lobby in the next hour`;
     $('#forecast-metrics').textContent = f?.ready ? forecastMetrics(f) : '';
+    renderNextLobby();
     // Redrawn with each daily update; versioned like the other charts
     const chart = $('#forecast-chart');
     chart.hidden = !f?.ready;
@@ -605,6 +677,7 @@
       history.replaceState(null, '', location.pathname + (params.size ? `?${params}` : ''));
     }
     renderLive();
+    renderNextLobby();
     renderCharts();
   }
 
