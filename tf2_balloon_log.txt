@@ -153,18 +153,12 @@
 2026-10-10 00:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 00:50:02 - INFO - shounic trenches (USA Chicago) : 17
 2026-10-10 00:50:02 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 17
-2026-10-10 00:50:02 - INFO - Sending email
-2026-10-10 00:50:03 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-10 00:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 00:55:02 - INFO - shounic trenches (USA Chicago) : 17
 2026-10-10 00:55:02 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 17
-2026-10-10 00:55:02 - INFO - Sending email
-2026-10-10 00:55:02 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-10 01:00:03 - INFO - Found people playing Balloon Race
 2026-10-10 01:00:03 - INFO - shounic trenches (USA Chicago) : 23
 2026-10-10 01:00:03 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 23
-2026-10-10 01:00:03 - INFO - Sending email
-2026-10-10 01:00:03 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-10 01:05:03 - INFO - No one playing balloon race :(
 2026-10-10 01:10:02 - INFO - No one playing balloon race :(
 2026-10-10 01:15:03 - INFO - No one playing balloon race :(
@@ -361,358 +355,273 @@
 2026-10-10 16:30:02 - INFO - Found people playing Balloon Race
 2026-10-10 16:30:02 - INFO - shounic trenches (USA Chicago) : 17
 2026-10-10 16:30:02 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 17
-2026-10-10 16:30:02 - INFO - Sending email
-2026-10-10 16:30:02 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-10 16:35:03 - INFO - Found people playing Balloon Race
 2026-10-10 16:35:03 - INFO - shounic trenches (USA Chicago) : 21
 2026-10-10 16:35:03 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 21
 2026-10-10 16:35:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-10 16:35:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 16:40:02 - INFO - Found people playing Balloon Race
 2026-10-10 16:40:02 - INFO - Balloon Race 24/7 : 3
 2026-10-10 16:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-10 16:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 16:45:03 - INFO - Found people playing Balloon Race
 2026-10-10 16:45:03 - INFO - Balloon Race 24/7 : 4
 2026-10-10 16:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 4
-2026-10-10 16:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 16:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 16:50:02 - INFO - Balloon Race 24/7 : 4
 2026-10-10 16:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 4
-2026-10-10 16:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 16:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 16:55:02 - INFO - Balloon Race 24/7 : 3
 2026-10-10 16:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-10 16:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:00:03 - INFO - Found people playing Balloon Race
 2026-10-10 17:00:03 - INFO - Balloon Race 24/7 : 3
 2026-10-10 17:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-10 17:00:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:05:03 - INFO - Found people playing Balloon Race
 2026-10-10 17:05:03 - INFO - Balloon Race 24/7 : 6
 2026-10-10 17:05:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 6
-2026-10-10 17:05:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:10:02 - INFO - Balloon Race 24/7 : 5
 2026-10-10 17:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 5
-2026-10-10 17:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:15:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:15:02 - INFO - Balloon Race 24/7 : 4
 2026-10-10 17:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 4
 2026-10-10 17:15:02 - INFO - SERVER 91.230.199.49:27015 | [24/7 Funbox] Dυɱρʂƚҽɾ ɾαTʂ + ϝɾҽҽ Bυɱρz : 1
-2026-10-10 17:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:20:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:20:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 17:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
 2026-10-10 17:20:02 - INFO - SERVER 91.230.199.49:27015 | [24/7 Funbox] Dυɱρʂƚҽɾ ɾαTʂ + ϝɾҽҽ Bυɱρz : 1
-2026-10-10 17:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:25:03 - INFO - Found people playing Balloon Race
 2026-10-10 17:25:03 - INFO - Balloon Race 24/7 : 2
 2026-10-10 17:25:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
 2026-10-10 17:25:03 - INFO - SERVER 91.230.199.49:27015 | [24/7 Funbox] Dυɱρʂƚҽɾ ɾαTʂ + ϝɾҽҽ Bυɱρz : 2
-2026-10-10 17:25:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:30:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:30:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 17:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
 2026-10-10 17:30:02 - INFO - SERVER 91.230.199.49:27015 | [24/7 Funbox] Dυɱρʂƚҽɾ ɾαTʂ + ϝɾҽҽ Bυɱρz : 2
-2026-10-10 17:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:35:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 17:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 17:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:40:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 17:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 17:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:45:01 - INFO - Found people playing Balloon Race
 2026-10-10 17:45:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 17:45:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 17:45:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 17:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 17:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 17:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 17:55:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 17:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 17:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:00:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:05:03 - INFO - No one playing balloon race :(
 2026-10-10 18:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:15:01 - INFO - Found people playing Balloon Race
 2026-10-10 18:15:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:15:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:15:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:20:03 - INFO - Found people playing Balloon Race
 2026-10-10 18:20:03 - INFO - Balloon Race 24/7 : 4
 2026-10-10 18:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 4
-2026-10-10 18:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:25:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:30:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:35:03 - INFO - Found people playing Balloon Race
 2026-10-10 18:35:03 - INFO - Balloon Race 24/7 : 2
 2026-10-10 18:35:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 18:35:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:40:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:45:03 - INFO - Found people playing Balloon Race
 2026-10-10 18:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 18:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 18:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 18:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 18:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:00:03 - INFO - Found people playing Balloon Race
 2026-10-10 19:00:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:00:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:05:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:15:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:20:01 - INFO - No one playing balloon race :(
 2026-10-10 19:25:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:30:03 - INFO - Found people playing Balloon Race
 2026-10-10 19:30:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:30:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:30:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:35:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:40:03 - INFO - Found people playing Balloon Race
 2026-10-10 19:40:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:40:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:45:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:45:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:45:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:45:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 19:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 19:55:01 - INFO - Found people playing Balloon Race
 2026-10-10 19:55:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 19:55:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 19:55:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:00:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:00:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 20:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 20:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:05:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:15:03 - INFO - Found people playing Balloon Race
 2026-10-10 20:15:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:15:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:15:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:20:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:25:02 - INFO - No one playing balloon race :(
 2026-10-10 20:30:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:35:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 20:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:40:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:40:02 - INFO - Aar's Server | Map Testing | Virginia : 24
 2026-10-10 20:40:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 24
 2026-10-10 20:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:45:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:45:02 - INFO - Aar's Server | Map Testing | Virginia : 26
 2026-10-10 20:45:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 26
 2026-10-10 20:45:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:45:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:50:02 - INFO - Aar's Server | Map Testing | Virginia : 24
 2026-10-10 20:50:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 24
 2026-10-10 20:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 20:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 20:55:02 - INFO - Aar's Server | Map Testing | Virginia : 25
 2026-10-10 20:55:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 25
 2026-10-10 20:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 20:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:00:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:00:02 - INFO - Aar's Server | Map Testing | Virginia : 24
 2026-10-10 21:00:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 24
 2026-10-10 21:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:05:03 - INFO - Found people playing Balloon Race
 2026-10-10 21:05:03 - INFO - Aar's Server | Map Testing | Virginia : 26
 2026-10-10 21:05:03 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 26
 2026-10-10 21:05:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:05:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:10:02 - INFO - Aar's Server | Map Testing | Virginia : 24
 2026-10-10 21:10:02 - INFO - SERVER 169.254.112.56:12184 | Aar's Server | Map Testing | Virginia : 24
 2026-10-10 21:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 21:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:15:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:15:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 21:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 21:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:20:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:20:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 21:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 21:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:25:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:30:03 - INFO - No one playing balloon race :(
 2026-10-10 21:35:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:40:03 - INFO - Found people playing Balloon Race
 2026-10-10 21:40:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:40:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:45:01 - INFO - Found people playing Balloon Race
 2026-10-10 21:45:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:45:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:45:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 21:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 21:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 21:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 21:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:00:03 - INFO - Found people playing Balloon Race
 2026-10-10 22:00:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:00:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:05:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:15:03 - INFO - Found people playing Balloon Race
 2026-10-10 22:15:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:15:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:15:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:20:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:25:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:30:03 - INFO - Found people playing Balloon Race
 2026-10-10 22:30:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:30:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:30:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:35:02 - INFO - No one playing balloon race :(
 2026-10-10 22:40:03 - INFO - Found people playing Balloon Race
 2026-10-10 22:40:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:40:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:45:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:45:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:45:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:45:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 22:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 22:55:01 - INFO - Found people playing Balloon Race
 2026-10-10 22:55:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 22:55:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 22:55:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:00:05 - INFO - Found people playing Balloon Race
 2026-10-10 23:00:05 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:00:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:00:05 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:05:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:05:02 - INFO - Balloon Race 24/7 : 2
 2026-10-10 23:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-10 23:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:10:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:15:03 - INFO - Found people playing Balloon Race
 2026-10-10 23:15:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:15:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:15:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:20:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:25:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:30:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:35:01 - INFO - Found people playing Balloon Race
 2026-10-10 23:35:01 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:35:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:35:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:40:02 - INFO - No one playing balloon race :(
 2026-10-10 23:45:03 - INFO - Found people playing Balloon Race
 2026-10-10 23:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:50:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-10 23:55:02 - INFO - Found people playing Balloon Race
 2026-10-10 23:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-10 23:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-10 23:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 00:00:03 - INFO - Found people playing Balloon Race
 2026-10-11 00:00:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 00:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
@@ -772,14 +681,10 @@
 2026-10-11 01:35:02 - INFO - Twerkborea.com  : 12
 2026-10-11 01:35:02 - INFO - SERVER 69.41.182.173:27015 | Twerkborea.com  : 12
 2026-10-11 01:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 01:35:02 - INFO - Sending email
-2026-10-11 01:35:02 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-11 01:40:03 - INFO - Found people playing Balloon Race
 2026-10-11 01:40:03 - INFO - Twerkborea.com  : 11
 2026-10-11 01:40:03 - INFO - SERVER 69.41.182.173:27015 | Twerkborea.com  : 11
 2026-10-11 01:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 01:40:03 - INFO - Sending email
-2026-10-11 01:40:03 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-11 01:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 01:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 01:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
@@ -1084,520 +989,393 @@
 2026-10-11 12:55:03 - INFO - [TR]  Türk Ninjalar sunucusu : 16
 2026-10-11 12:55:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
 2026-10-11 12:55:03 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 16
-2026-10-11 12:55:03 - INFO - Sending email
-2026-10-11 12:55:03 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-11 13:00:03 - INFO - Found people playing Balloon Race
 2026-10-11 13:00:03 - INFO - [TR]  Türk Ninjalar sunucusu : 15
 2026-10-11 13:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:00:03 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 15
-2026-10-11 13:00:03 - INFO - Sending email
-2026-10-11 13:00:04 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-11 13:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:05:02 - INFO - [TR]  Türk Ninjalar sunucusu : 17
 2026-10-11 13:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:05:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 17
-2026-10-11 13:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:10:02 - INFO - [TR]  Türk Ninjalar sunucusu : 14
 2026-10-11 13:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:10:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 14
-2026-10-11 13:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:15:02 - INFO - [TR]  Türk Ninjalar sunucusu : 13
 2026-10-11 13:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:15:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 13
-2026-10-11 13:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 13:20:03 - INFO - [TR]  Türk Ninjalar sunucusu : 14
 2026-10-11 13:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:20:03 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 14
-2026-10-11 13:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:25:02 - INFO - [TR]  Türk Ninjalar sunucusu : 15
 2026-10-11 13:25:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 15
-2026-10-11 13:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:30:02 - INFO - [TR]  Türk Ninjalar sunucusu : 14
 2026-10-11 13:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:30:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 14
-2026-10-11 13:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:35:02 - INFO - [TR]  Türk Ninjalar sunucusu : 14
 2026-10-11 13:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
 2026-10-11 13:35:02 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 14
-2026-10-11 13:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 13:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 13:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 13:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 13:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 13:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:50:03 - INFO - Found people playing Balloon Race
 2026-10-11 13:50:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 13:50:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 13:50:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 13:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 13:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 13:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 13:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:05:03 - INFO - Found people playing Balloon Race
 2026-10-11 14:05:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:05:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:05:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:10:02 - INFO - Balloon Race 24/7 : 2
 2026-10-11 14:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 14:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:15:02 - INFO - Balloon Race 24/7 : 2
 2026-10-11 14:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 14:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 14:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:30:02 - INFO - No one playing balloon race :(
 2026-10-11 14:35:03 - INFO - Found people playing Balloon Race
 2026-10-11 14:35:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:35:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:35:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:45:01 - INFO - Found people playing Balloon Race
 2026-10-11 14:45:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:45:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:45:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:50:03 - INFO - Found people playing Balloon Race
 2026-10-11 14:50:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:50:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:50:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 14:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 14:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 14:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 14:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:00:03 - INFO - Found people playing Balloon Race
 2026-10-11 15:00:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:00:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:05:03 - INFO - Found people playing Balloon Race
 2026-10-11 15:05:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:05:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:05:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:15:03 - INFO - Found people playing Balloon Race
 2026-10-11 15:15:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:15:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:15:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:20:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:25:03 - INFO - Found people playing Balloon Race
 2026-10-11 15:25:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:25:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:25:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:35:01 - INFO - No one playing balloon race :(
 2026-10-11 15:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 15:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 15:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 15:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 15:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 15:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:05:01 - INFO - Found people playing Balloon Race
 2026-10-11 16:05:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:05:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:05:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:10:01 - INFO - Found people playing Balloon Race
 2026-10-11 16:10:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:10:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:10:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:15:01 - INFO - Found people playing Balloon Race
 2026-10-11 16:15:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:15:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:15:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:20:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 16:45:03 - INFO - Balloon Race 24/7 : 2
 2026-10-11 16:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 16:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 16:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 16:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 16:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 16:55:02 - INFO - Balloon Race 24/7 : 2
 2026-10-11 16:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 16:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:00:01 - INFO - Found people playing Balloon Race
 2026-10-11 17:00:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:00:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:00:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:05:01 - INFO - Found people playing Balloon Race
 2026-10-11 17:05:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:05:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:05:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:10:01 - INFO - Found people playing Balloon Race
 2026-10-11 17:10:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:10:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:10:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 17:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:45:02 - INFO - No one playing balloon race :(
 2026-10-11 17:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 17:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 17:55:01 - INFO - Found people playing Balloon Race
 2026-10-11 17:55:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 17:55:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 17:55:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:15:01 - INFO - Found people playing Balloon Race
 2026-10-11 18:15:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:15:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:15:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 18:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:35:03 - INFO - No one playing balloon race :(
 2026-10-11 18:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:45:01 - INFO - Found people playing Balloon Race
 2026-10-11 18:45:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:45:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:45:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 18:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 18:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 18:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 18:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:05:03 - INFO - Found people playing Balloon Race
 2026-10-11 19:05:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:05:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:05:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 19:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:30:03 - INFO - Found people playing Balloon Race
 2026-10-11 19:30:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:30:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:30:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:40:03 - INFO - No one playing balloon race :(
 2026-10-11 19:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 19:45:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 19:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 19:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 19:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 19:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:00:03 - INFO - Found people playing Balloon Race
 2026-10-11 20:00:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:00:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:00:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:05:02 - INFO - Balloon Race 24/7 : 2
 2026-10-11 20:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 20:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:10:03 - INFO - Found people playing Balloon Race
 2026-10-11 20:10:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:10:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:10:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:20:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:40:02 - INFO - Balloon Race 24/7 : 3
 2026-10-11 20:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-11 20:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:45:03 - INFO - Found people playing Balloon Race
 2026-10-11 20:45:03 - INFO - Balloon Race 24/7 : 2
 2026-10-11 20:45:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 2
-2026-10-11 20:45:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:50:02 - INFO - Balloon Race 24/7 : 3
 2026-10-11 20:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 3
-2026-10-11 20:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 20:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 20:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 20:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 20:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:20:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:20:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:20:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:20:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:40:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:40:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:40:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:40:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:45:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:45:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:45:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:45:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 21:50:03 - INFO - No one playing balloon race :(
 2026-10-11 21:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 21:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 21:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 21:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:00:02 - INFO - Found people playing Balloon Race
 2026-10-11 22:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:00:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 22:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:10:03 - INFO - Found people playing Balloon Race
 2026-10-11 22:10:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:10:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:10:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 22:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 22:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:25:01 - INFO - Found people playing Balloon Race
 2026-10-11 22:25:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:25:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:25:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:30:01 - INFO - Found people playing Balloon Race
 2026-10-11 22:30:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:30:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:30:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 22:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:40:03 - INFO - Found people playing Balloon Race
 2026-10-11 22:40:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:40:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:45:01 - INFO - Found people playing Balloon Race
 2026-10-11 22:45:01 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:45:01 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:45:01 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 22:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 22:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 22:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 22:55:02 - INFO - No one playing balloon race :(
 2026-10-11 23:00:03 - INFO - No one playing balloon race :(
 2026-10-11 23:05:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:05:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:05:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:05:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:10:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:10:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:10:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:10:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:15:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:15:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:15:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:15:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:20:03 - INFO - Found people playing Balloon Race
 2026-10-11 23:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:20:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:25:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:25:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:25:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:25:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:30:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:30:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:30:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:30:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:35:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:35:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:35:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:35:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:40:03 - INFO - Found people playing Balloon Race
 2026-10-11 23:40:03 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:40:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:40:03 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:45:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:45:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:45:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:45:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:50:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:50:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:50:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:50:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-11 23:55:02 - INFO - Found people playing Balloon Race
 2026-10-11 23:55:02 - INFO - Balloon Race 24/7 : 1
 2026-10-11 23:55:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-11 23:55:02 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-12 00:00:02 - INFO - Found people playing Balloon Race
 2026-10-12 00:00:02 - INFO - Balloon Race 24/7 : 1
 2026-10-12 00:00:02 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
@@ -1609,8 +1387,6 @@
 2026-10-12 00:15:03 - INFO - shounic trenches (USA Chicago) : 45
 2026-10-12 00:15:03 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 45
 2026-10-12 00:15:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
-2026-10-12 00:15:03 - INFO - Sending email
-2026-10-12 00:15:03 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-12 00:20:03 - INFO - Found people playing Balloon Race
 2026-10-12 00:20:03 - INFO - Balloon Race 24/7 : 1
 2026-10-12 00:20:03 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
@@ -1782,8 +1558,6 @@
 2026-10-12 05:50:02 - INFO - Found people playing Balloon Race
 2026-10-12 05:50:02 - INFO - shounic trenches (USA Chicago) : 48
 2026-10-12 05:50:02 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 48
-2026-10-12 05:50:02 - INFO - Sending email
-2026-10-12 05:50:02 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-12 05:55:01 - INFO - No one playing balloon race :(
 2026-10-12 06:00:03 - INFO - No one playing balloon race :(
 2026-10-12 06:05:03 - INFO - No one playing balloon race :(
@@ -2119,13 +1893,9 @@
 2026-10-13 00:45:04 - INFO - Found people playing Balloon Race
 2026-10-13 00:45:04 - INFO - shounic trenches (USA Chicago) : 22
 2026-10-13 00:45:04 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 22
-2026-10-13 00:45:04 - INFO - Sending email
-2026-10-13 00:45:04 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-13 00:50:04 - INFO - Found people playing Balloon Race
 2026-10-13 00:50:04 - INFO - shounic trenches (USA Chicago) : 26
 2026-10-13 00:50:04 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 26
-2026-10-13 00:50:04 - INFO - Sending email
-2026-10-13 00:50:05 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-13 00:55:03 - INFO - No one playing balloon race :(
 2026-10-13 01:00:04 - INFO - No one playing balloon race :(
 2026-10-13 01:05:04 - INFO - No one playing balloon race :(
@@ -4558,27 +4328,18 @@
 2026-10-17 01:30:06 - INFO - Found people playing Balloon Race
 2026-10-17 01:30:06 - INFO - Server hosted by Physgun.com : 21
 2026-10-17 01:30:06 - INFO - SERVER 45.45.238.134:27105 | Server hosted by Physgun.com : 21
-2026-10-17 01:30:06 - INFO - Sending email
-2026-10-17 01:30:06 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-17 01:35:05 - INFO - Found people playing Balloon Race
 2026-10-17 01:35:05 - INFO - Server hosted by Physgun.com : 21
 2026-10-17 01:35:05 - INFO - SERVER 45.45.238.134:27105 | Server hosted by Physgun.com : 21
-2026-10-17 01:35:05 - INFO - Sending email
-2026-10-17 01:35:05 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-17 01:40:05 - INFO - Found people playing Balloon Race
 2026-10-17 01:40:05 - INFO - Server hosted by Physgun.com : 23
 2026-10-17 01:40:05 - INFO - SERVER 45.45.238.134:27105 | Server hosted by Physgun.com : 23
-2026-10-17 01:40:05 - INFO - Sending email
-2026-10-17 01:40:05 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-17 01:45:05 - INFO - Found people playing Balloon Race
 2026-10-17 01:45:05 - INFO - Server hosted by Physgun.com : 22
 2026-10-17 01:45:05 - INFO - SERVER 45.45.238.134:27105 | Server hosted by Physgun.com : 22
-2026-10-17 01:45:05 - INFO - Sending email
-2026-10-17 01:45:05 - ERROR - Error sending email: Connection unexpectedly closed
 2026-10-17 01:50:05 - INFO - Found people playing Balloon Race
 2026-10-17 01:50:05 - INFO - Server hosted by Physgun.com : 22
 2026-10-17 01:50:05 - INFO - SERVER 45.45.238.134:27105 | Server hosted by Physgun.com : 22
-2026-10-17 01:50:05 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-17 01:55:05 - INFO - No one playing balloon race :(
 2026-10-17 02:00:06 - INFO - No one playing balloon race :(
 2026-10-17 02:05:05 - INFO - No one playing balloon race :(
@@ -4595,11 +4356,9 @@
 2026-10-17 03:00:06 - INFO - Found people playing Balloon Race
 2026-10-17 03:00:06 - INFO - shounic trenches (USA Chicago) : 8
 2026-10-17 03:00:06 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 8
-2026-10-17 03:00:06 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-17 03:05:05 - INFO - Found people playing Balloon Race
 2026-10-17 03:05:05 - INFO - shounic trenches (USA Chicago) : 8
 2026-10-17 03:05:05 - INFO - SERVER 193.243.190.25:27015 | shounic trenches (USA Chicago) : 8
-2026-10-17 03:05:05 - INFO - Email limit of 4 reached for today. No email will be sent.
 2026-10-17 03:10:05 - INFO - No one playing balloon race :(
 2026-10-17 03:15:05 - INFO - No one playing balloon race :(
 2026-10-17 03:20:05 - INFO - No one playing balloon race :(
@@ -4635,3 +4394,177 @@
 2026-10-17 05:50:05 - INFO - No one playing balloon race :(
 2026-10-17 05:55:05 - INFO - No one playing balloon race :(
 2026-10-17 06:00:06 - INFO - No one playing balloon race :(
+2026-10-17 06:05:08 - INFO - No one playing balloon race :(
+2026-10-17 06:10:05 - INFO - No one playing balloon race :(
+2026-10-17 06:15:06 - INFO - No one playing balloon race :(
+2026-10-17 06:20:05 - INFO - No one playing balloon race :(
+2026-10-17 06:25:05 - INFO - No one playing balloon race :(
+2026-10-17 06:30:06 - INFO - No one playing balloon race :(
+2026-10-17 06:35:05 - INFO - No one playing balloon race :(
+2026-10-17 06:40:05 - INFO - No one playing balloon race :(
+2026-10-17 06:45:05 - INFO - No one playing balloon race :(
+2026-10-17 06:50:05 - INFO - No one playing balloon race :(
+2026-10-17 06:55:05 - INFO - No one playing balloon race :(
+2026-10-17 07:00:06 - INFO - No one playing balloon race :(
+2026-10-17 07:05:05 - INFO - No one playing balloon race :(
+2026-10-17 07:10:05 - INFO - No one playing balloon race :(
+2026-10-17 07:15:05 - INFO - No one playing balloon race :(
+2026-10-17 07:20:05 - INFO - No one playing balloon race :(
+2026-10-17 07:25:05 - INFO - No one playing balloon race :(
+2026-10-17 07:30:05 - INFO - No one playing balloon race :(
+2026-10-17 07:35:05 - INFO - No one playing balloon race :(
+2026-10-17 07:40:05 - INFO - No one playing balloon race :(
+2026-10-17 07:45:05 - INFO - No one playing balloon race :(
+2026-10-17 07:50:05 - INFO - No one playing balloon race :(
+2026-10-17 07:55:05 - INFO - No one playing balloon race :(
+2026-10-17 08:00:06 - INFO - No one playing balloon race :(
+2026-10-17 08:05:05 - INFO - No one playing balloon race :(
+2026-10-17 08:10:05 - INFO - No one playing balloon race :(
+2026-10-17 08:15:05 - INFO - No one playing balloon race :(
+2026-10-17 08:20:05 - INFO - No one playing balloon race :(
+2026-10-17 08:25:05 - INFO - No one playing balloon race :(
+2026-10-17 08:30:06 - INFO - No one playing balloon race :(
+2026-10-17 08:35:05 - INFO - No one playing balloon race :(
+2026-10-17 08:40:05 - INFO - No one playing balloon race :(
+2026-10-17 08:45:06 - INFO - No one playing balloon race :(
+2026-10-17 08:50:05 - INFO - No one playing balloon race :(
+2026-10-17 08:55:05 - INFO - No one playing balloon race :(
+2026-10-17 09:00:05 - INFO - No one playing balloon race :(
+2026-10-17 09:05:05 - INFO - No one playing balloon race :(
+2026-10-17 09:10:05 - INFO - No one playing balloon race :(
+2026-10-17 09:15:05 - INFO - No one playing balloon race :(
+2026-10-17 09:20:05 - INFO - No one playing balloon race :(
+2026-10-17 09:25:05 - INFO - No one playing balloon race :(
+2026-10-17 09:30:06 - INFO - No one playing balloon race :(
+2026-10-17 09:35:05 - INFO - No one playing balloon race :(
+2026-10-17 09:40:05 - INFO - No one playing balloon race :(
+2026-10-17 09:45:05 - INFO - No one playing balloon race :(
+2026-10-17 09:50:04 - INFO - No one playing balloon race :(
+2026-10-17 09:55:05 - INFO - No one playing balloon race :(
+2026-10-17 10:00:06 - INFO - No one playing balloon race :(
+2026-10-17 10:05:04 - INFO - No one playing balloon race :(
+2026-10-17 10:10:04 - INFO - No one playing balloon race :(
+2026-10-17 10:15:05 - INFO - No one playing balloon race :(
+2026-10-17 10:20:05 - INFO - No one playing balloon race :(
+2026-10-17 10:25:05 - INFO - No one playing balloon race :(
+2026-10-17 10:30:06 - INFO - No one playing balloon race :(
+2026-10-17 10:35:05 - INFO - No one playing balloon race :(
+2026-10-17 10:40:06 - INFO - No one playing balloon race :(
+2026-10-17 10:45:04 - INFO - No one playing balloon race :(
+2026-10-17 10:50:05 - INFO - No one playing balloon race :(
+2026-10-17 10:55:04 - INFO - No one playing balloon race :(
+2026-10-17 11:00:06 - INFO - No one playing balloon race :(
+2026-10-17 11:05:05 - INFO - No one playing balloon race :(
+2026-10-17 11:10:04 - INFO - No one playing balloon race :(
+2026-10-17 11:15:05 - INFO - No one playing balloon race :(
+2026-10-17 11:20:05 - INFO - No one playing balloon race :(
+2026-10-17 11:25:05 - INFO - No one playing balloon race :(
+2026-10-17 11:30:06 - INFO - No one playing balloon race :(
+2026-10-17 11:35:05 - INFO - No one playing balloon race :(
+2026-10-17 11:40:05 - INFO - No one playing balloon race :(
+2026-10-17 11:45:04 - INFO - No one playing balloon race :(
+2026-10-17 11:50:05 - INFO - No one playing balloon race :(
+2026-10-17 11:55:05 - INFO - No one playing balloon race :(
+2026-10-17 12:00:06 - INFO - No one playing balloon race :(
+2026-10-17 12:05:06 - INFO - No one playing balloon race :(
+2026-10-17 12:10:05 - INFO - No one playing balloon race :(
+2026-10-17 12:15:05 - INFO - No one playing balloon race :(
+2026-10-17 12:20:05 - INFO - No one playing balloon race :(
+2026-10-17 12:25:05 - INFO - No one playing balloon race :(
+2026-10-17 12:30:06 - INFO - No one playing balloon race :(
+2026-10-17 12:35:04 - INFO - No one playing balloon race :(
+2026-10-17 12:40:06 - INFO - No one playing balloon race :(
+2026-10-17 12:45:05 - INFO - No one playing balloon race :(
+2026-10-17 12:50:05 - INFO - No one playing balloon race :(
+2026-10-17 12:55:05 - INFO - No one playing balloon race :(
+2026-10-17 13:00:06 - INFO - No one playing balloon race :(
+2026-10-17 13:05:05 - INFO - No one playing balloon race :(
+2026-10-17 13:10:05 - INFO - No one playing balloon race :(
+2026-10-17 13:15:05 - INFO - No one playing balloon race :(
+2026-10-17 13:20:05 - INFO - No one playing balloon race :(
+2026-10-17 13:25:06 - INFO - No one playing balloon race :(
+2026-10-17 13:30:06 - INFO - No one playing balloon race :(
+2026-10-17 13:35:05 - INFO - No one playing balloon race :(
+2026-10-17 13:40:05 - INFO - No one playing balloon race :(
+2026-10-17 13:45:05 - INFO - No one playing balloon race :(
+2026-10-17 13:50:05 - INFO - No one playing balloon race :(
+2026-10-17 13:55:04 - INFO - No one playing balloon race :(
+2026-10-17 14:00:05 - INFO - No one playing balloon race :(
+2026-10-17 14:05:05 - INFO - No one playing balloon race :(
+2026-10-17 14:10:05 - INFO - No one playing balloon race :(
+2026-10-17 14:15:05 - INFO - No one playing balloon race :(
+2026-10-17 14:20:04 - INFO - No one playing balloon race :(
+2026-10-17 14:25:05 - INFO - No one playing balloon race :(
+2026-10-17 14:30:05 - INFO - No one playing balloon race :(
+2026-10-17 14:35:05 - INFO - No one playing balloon race :(
+2026-10-17 14:40:05 - INFO - No one playing balloon race :(
+2026-10-17 14:45:05 - INFO - No one playing balloon race :(
+2026-10-17 14:50:05 - INFO - No one playing balloon race :(
+2026-10-17 14:55:04 - INFO - No one playing balloon race :(
+2026-10-17 15:00:05 - INFO - No one playing balloon race :(
+2026-10-17 15:05:05 - INFO - No one playing balloon race :(
+2026-10-17 15:10:05 - INFO - No one playing balloon race :(
+2026-10-17 15:15:05 - INFO - No one playing balloon race :(
+2026-10-17 15:20:04 - INFO - No one playing balloon race :(
+2026-10-17 15:25:05 - INFO - No one playing balloon race :(
+2026-10-17 15:30:06 - INFO - No one playing balloon race :(
+2026-10-17 15:35:05 - INFO - No one playing balloon race :(
+2026-10-17 15:40:05 - INFO - No one playing balloon race :(
+2026-10-17 15:45:04 - INFO - No one playing balloon race :(
+2026-10-17 15:50:05 - INFO - No one playing balloon race :(
+2026-10-17 15:55:05 - INFO - Found people playing Balloon Race
+2026-10-17 15:55:05 - INFO - [TR]  Türk Ninjalar sunucusu : 18
+2026-10-17 15:55:05 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 18
+2026-10-17 15:55:05 - INFO - Sent Discord notification for [TR]  Türk Ninjalar sunucusu
+2026-10-17 16:00:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:00:05 - INFO - [TR]  Türk Ninjalar sunucusu : 13
+2026-10-17 16:00:05 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 13
+2026-10-17 16:05:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:05:05 - INFO - [TR]  Türk Ninjalar sunucusu : 11
+2026-10-17 16:05:05 - INFO - SERVER 88.233.138.82:27017 | [TR]  Türk Ninjalar sunucusu : 11
+2026-10-17 16:10:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:10:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:10:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:15:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:15:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:15:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:20:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:20:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:20:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:25:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:25:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:25:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:30:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:30:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:30:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:35:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:35:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:35:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:40:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:40:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:40:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:45:04 - INFO - Found people playing Balloon Race
+2026-10-17 16:45:04 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:45:04 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:50:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:50:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:50:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 16:55:05 - INFO - Found people playing Balloon Race
+2026-10-17 16:55:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 16:55:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 17:00:05 - INFO - Found people playing Balloon Race
+2026-10-17 17:00:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 17:00:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 17:05:04 - INFO - No one playing balloon race :(
+2026-10-17 17:10:05 - INFO - Found people playing Balloon Race
+2026-10-17 17:10:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 17:10:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 17:15:05 - INFO - Found people playing Balloon Race
+2026-10-17 17:15:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 17:15:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 17:20:05 - INFO - Found people playing Balloon Race
+2026-10-17 17:20:05 - INFO - Balloon Race 24/7 : 1
+2026-10-17 17:20:05 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
+2026-10-17 17:25:08 - INFO - Found people playing Balloon Race
+2026-10-17 17:25:08 - INFO - Balloon Race 24/7 : 1
+2026-10-17 17:25:08 - INFO - SERVER 45.88.229.19:27024 | Balloon Race 24/7 : 1
