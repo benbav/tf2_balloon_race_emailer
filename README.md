@@ -29,7 +29,7 @@ To favorite one: Steam → View → Game Servers → Favorites → **+** and pas
 
 ### How it works
 
-- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`, and emails you when a server has more than `MIN_PLAYER_THRESHOLD` players (max `EMAIL_SEND_LIMIT` emails a day). If `discord_webhook_url` is set, it also posts to Discord when a server goes over that threshold.
+- `main.py` runs every 5 minutes. It asks the Steam API which TF2 servers are on `balloon_race_v2b`, logs every server with human players (bots excluded) to `tf2_balloon_log.txt`. If `discord_webhook_url` is set, it posts to Discord when a server goes over `MIN_PLAYER_THRESHOLD` players.
 - `index.html` is the website, served free by GitHub Pages. It shows the charts, the top servers from `charts/site_data.json`, and the live server list.
 - `generate_report.py` runs once a day. It turns the log into the website's charts, rewrites the top servers table, and pushes the README and log to `main`. The page and charts go to the `site` branch as a single commit that's replaced daily, so ~16MB of charts a day doesn't pile up in the history. The log lives in `main` so its history is never lost.
 - `main.py` also pushes the current server list to the `live` branch every check, the same single-commit way, for the website's "who's on now" list.
@@ -52,15 +52,6 @@ python3 -m venv .venv
 # Steam Web API key
 steam_api_key=
 
-# Gmail account the alerts are sent FROM
-from_email=
-
-# Gmail App Password for from_email (not your normal password)
-email_app_pass=
-
-# Comma-separated recipients, no spaces: a@x.com,b@y.com
-to_email=
-
 # Optional: Discord channel webhook for "lobby is up" pings
 discord_webhook_url=
 ```
@@ -70,9 +61,6 @@ Where to get each value:
 | Key | Where to get it |
 |---|---|
 | `steam_api_key` | Sign in at https://steamcommunity.com/dev/apikey, enter any domain name (e.g. `localhost`), and copy the key. |
-| `from_email` | Any Gmail address you want the alerts to come from. |
-| `email_app_pass` | Turn on 2-Step Verification for that Google account, then create an app password at https://myaccount.google.com/apppasswords. Paste the 16 characters (spaces optional). |
-| `to_email` | Whoever should get the alerts. Can be the same as `from_email`. |
 | `discord_webhook_url` | Optional. In Discord: channel settings (gear icon) → Integrations → Webhooks → New Webhook → Copy Webhook URL. Posts once when a server goes over `MIN_PLAYER_THRESHOLD` players, and again only after it empties out and refills. |
 
 **3. Test it**
@@ -95,6 +83,6 @@ The daily report pushes to GitHub, so the repo remote needs to use SSH (`git rem
 
 ### Settings
 
-- `main.py`: `EMAIL_SEND_LIMIT`, `MIN_PLAYER_THRESHOLD`
+- `main.py`: `MIN_PLAYER_THRESHOLD`
 - `server_types.py`: `DEDICATED_NAME_RE` / `DEDICATED_ADDRS` (which servers count as dedicated 24/7)
 - `generate_report.py`: `DISPLAY_TIMEZONE` / `TZ_LABEL` (chart timezone), `LOG_TIMEZONE` (clock the log was written in), `MIN_DAYS_FOR_SCORECARD`, `SCORECARD_RECENT_DAYS`, `BUSY_THRESHOLD`, `TOP_SERVER_COUNT`
