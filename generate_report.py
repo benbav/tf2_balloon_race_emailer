@@ -180,12 +180,12 @@ def top_windows(window, n):
     return picked
 
 
-# Big scorecard: the single 2-hour window of the week most likely to have players
+# Big scorecard: the single 2-hour window of the week most likely to have a BUSY_THRESHOLD+ lobby
 def generate_scorecard(df, variant=ALL_SERVERS):
     total_days = days_of_data(df)
     recent = df[df['ts'] >= df['ts'].max() - pd.Timedelta(days=SCORECARD_RECENT_DAYS)] if len(df) else df
-    window = window_rates(recent, recent['online_players'] > 0)
-    all_time = window_rates(df, df['online_players'] > 0)
+    window = window_rates(recent, recent['online_players'] >= BUSY_THRESHOLD)
+    all_time = window_rates(df, df['online_players'] >= BUSY_THRESHOLD)
 
     fig = go.Figure()
     fig.update_layout(base_layout('', height=480), xaxis=dict(visible=False), yaxis=dict(visible=False))
@@ -197,17 +197,20 @@ def generate_scorecard(df, variant=ALL_SERVERS):
             text=f"<b>{s}</b>" if bold else s, font=dict(size=size, color=color, family=FONT),
         )
 
-    text(0.88, 'BEST TIME TO FIND PEOPLE ON BALLOON RACE', 16, TEXT_SECONDARY, bold=True)
+    text(0.88, f'BEST TIME FOR A {BUSY_THRESHOLD}+ PLAYER BALLOON RACE LOBBY', 16, TEXT_SECONDARY, bold=True)
     if variant[1]:
         text(0.77, variant[1].upper(), 14, variant[2], bold=True)
-    if total_days < MIN_DAYS_FOR_SCORECARD or window['sum'].max() == 0:
+    if total_days < MIN_DAYS_FOR_SCORECARD:
         text(0.55, 'Not enough data yet', 56, TEXT_PRIMARY, bold=True)
         text(0.28, f'{total_days} of {MIN_DAYS_FOR_SCORECARD} days of checks collected', 18, TEXT_SECONDARY)
+    elif window['sum'].max() == 0:
+        text(0.55, f'No {BUSY_THRESHOLD}+ lobbies yet', 56, TEXT_PRIMARY, bold=True)
+        text(0.28, f'None seen in the last {min(SCORECARD_RECENT_DAYS, total_days)} days', 18, TEXT_SECONDARY)
     else:
         best = int(window['pct'].idxmax())
         all_time_best = int(all_time['pct'].idxmax())
         text(0.62, f"{window_label(best)} {TZ_LABEL}", 60, TEXT_PRIMARY, bold=True)
-        text(0.4, f"<b>{window.loc[best, 'pct']:.0%}</b> chance people are on", 30, TEXT_PRIMARY)
+        text(0.4, f"<b>{window.loc[best, 'pct']:.0%}</b> chance a server has {BUSY_THRESHOLD}+ players", 30, TEXT_PRIMARY)
         text(0.24, f"Based on checks in this window over the last {min(SCORECARD_RECENT_DAYS, total_days)} days",
              16, TEXT_SECONDARY)
         text(0.1, f"All-time best: {window_label(all_time_best)} ({all_time.loc[all_time_best, 'pct']:.0%}) "

@@ -3,6 +3,8 @@
 
 ##### Checks every 5 minutes, charts update every day (times in Mountain Time)
 
+**Get pinged when a 10+ player server is going: [join the Discord](https://discord.gg/gdDVEeH7Y)**
+
 **Website with a live "who's on now" list and server filters: https://benbav.github.io/tf2_balloon_race_forecast/**
 
 Example of the live lobby forecast (a static screenshot - on the website it updates every 5 minutes):

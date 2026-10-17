@@ -39,6 +39,7 @@
   h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
   h2 { font-size: 20px; margin: 48px 0 16px; letter-spacing: -0.01em; }
   .lede { color: var(--muted); margin: 0 0 24px; }
+  .discord { margin: -12px 0 24px; font-weight: 600; }
   a { color: var(--dedicated); }
 
   /* Filter */
@@ -272,6 +273,7 @@
 <main>
   <h1>WHEN ARE PEOPLE PLAYING BALLOON RACE????</h1>
   <p class="lede">Every TF2 server on <code>balloon_race_v2b</code> is checked every 5 minutes. Charts update daily.</p>
+  <p class="discord">Get pinged when a 10+ player server is going: <a href="https://discord.gg/gdDVEeH7Y">join the Discord</a></p>
 
   <div class="filter-bar">
     <div class="row">
@@ -359,7 +361,7 @@
 
   const SECTIONS = [
     { title: 'When to play', charts: [
-      ['best_time', 'Best time to find people', true],
+      ['best_time', 'Best time for a 10+ player lobby', true],
       ['top_windows', 'Top 5 times to play', true],
       ['busy_heatmap', 'How often there is a busy lobby', true, true],
     ]},
