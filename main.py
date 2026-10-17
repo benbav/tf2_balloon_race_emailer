@@ -20,6 +20,8 @@ FORECAST_MODEL_PATH = os.path.join(SCRIPT_DIR, 'forecast_model.joblib')
 # Branch the website reads "who's on now" from; force-pushed every check so it stays one commit
 LIVE_BRANCH = 'live'
 MIN_PLAYER_THRESHOLD = 10
+# Servers that were over MIN_PLAYER_THRESHOLD last check, so Discord is only pinged when a lobby fills up
+DISCORD_STATE_FILE = os.path.join(SCRIPT_DIR, 'discord_notified.json')
 
 def get_server_list():
     api_key = os.getenv('steam_api_key')
@@ -56,6 +58,35 @@ def send_email(message):
         print("email sent")
     except Exception as e:
         logging.error(f'Error sending email: {e}')
+
+def notify_discord(servers):
+    """Post to the Discord webhook for each server that just went over MIN_PLAYER_THRESHOLD players."""
+    webhook_url = os.getenv('discord_webhook_url')
+    if not webhook_url:
+        return
+    try:
+        with open(DISCORD_STATE_FILE) as f:
+            already_notified = set(json.load(f))
+    except (FileNotFoundError, ValueError):
+        already_notified = set()
+
+    busy = [s for s in servers if s['players'] > MIN_PLAYER_THRESHOLD]
+    for s in busy:
+        if s['addr'] in already_notified:
+            continue
+        content = (f"**PEOPLE ON BALLOON RACE:** {clean_name(s['name'])} has {s['players']}"
+                   f"{'/' + str(s['max_players']) if s.get('max_players') else ''} players\n"
+                   f"`connect {s['addr']}`")
+        try:
+            requests.post(webhook_url, json={'content': content}, timeout=15).raise_for_status()
+            logging.info(f"Sent Discord notification for {s['name']}")
+        except requests.RequestException as e:
+            print(f'Error sending Discord notification: {e}')
+            # Leave it out of the state file so the next check retries
+            busy = [b for b in busy if b is not s]
+
+    with open(DISCORD_STATE_FILE, 'w') as f:
+        json.dump([s['addr'] for s in busy], f)
 
 def lobby_forecast():
     """Chance of a lobby in the next hour from the checks logged so far, or None if it can't be worked out."""
@@ -149,6 +180,8 @@ def main():
             logging.info(f"Email limit of {EMAIL_SEND_LIMIT} reached for today. No email will be sent.")
     else:
         logging.info('No one playing balloon race :(')
+
+    notify_discord(servers)
 
     # After logging, so the forecast includes this check
     publish_status(servers, lobby_forecast())
